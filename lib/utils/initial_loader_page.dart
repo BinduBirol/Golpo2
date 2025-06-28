@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../home/story_page.dart';
+import '../service/BookService.dart';
 import '../user/age_input_page.dart';
 import '../utils/background_audio.dart';
 import '../l10n/app_localizations.dart';
-
-
 
 class InitialLoaderPage extends StatefulWidget {
   final Function(bool) onThemeChange;
@@ -23,6 +22,8 @@ class InitialLoaderPage extends StatefulWidget {
 
 class _InitialLoaderPageState extends State<InitialLoaderPage> {
   bool _hasTapped = false;
+  bool _loadingDone = false;
+  double _progress = 0.0; // Progress from 0.0 to 1.0
 
   late bool isDarkMode;
   Locale _locale = const Locale('en');
@@ -39,13 +40,30 @@ class _InitialLoaderPageState extends State<InitialLoaderPage> {
     });
   }
 
-  Future<void> _startApp() async {
+  Future<void> _loadData() async {
     try {
       await BackgroundAudio.initAndPlayIfEnabled();
     } catch (e) {
       print('Audio error: $e');
     }
 
+    // Simulate loading books with progress update
+    final totalSteps = 100;
+    for (int i = 1; i <= totalSteps; i++) {
+      await Future.delayed(
+        const Duration(milliseconds: 30),
+      ); // simulate loading delay
+      setState(() {
+        _progress = i / totalSteps;
+      });
+    }
+
+    setState(() {
+      _loadingDone = true; // Loading finished
+    });
+  }
+
+  Future<void> _startApp() async {
     final prefs = await SharedPreferences.getInstance();
     final hasAgeGroup = prefs.containsKey('age_group');
 
@@ -55,25 +73,29 @@ class _InitialLoaderPageState extends State<InitialLoaderPage> {
         MaterialPageRoute(
           builder: (_) => StoryPage(
             onThemeChange: _updateTheme,
-            onLocaleChange: _updateLocale, // ✅ Must be passed here
+            onLocaleChange: _updateLocale,
           ),
         ),
       );
     } else {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-          builder: (_) => AgeInputPage(),
-        ),
+        MaterialPageRoute(builder: (_) => AgeInputPage()),
       );
     }
   }
 
   void _onTap() {
-    if (!_hasTapped) {
+    if (!_hasTapped && _loadingDone) {
       setState(() => _hasTapped = true);
       _startApp();
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData(); // Start loading immediately on page load
   }
 
   @override
@@ -86,19 +108,39 @@ class _InitialLoaderPageState extends State<InitialLoaderPage> {
       behavior: HitTestBehavior.opaque,
       child: Scaffold(
         body: Center(
-          child: AnimatedOpacity(
-            duration: const Duration(milliseconds: 500),
-            opacity: _hasTapped ? 0.0 : 1.0,
-            child: Text(
-              local.tapToContinue,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: theme.colorScheme.primary, // dynamic pink accent
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
+          child: !_loadingDone
+              ? Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CircularProgressIndicator(
+                      value: _progress,
+                      strokeWidth: 6,
+                      color: theme.colorScheme.primary,
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      '${AppLocalizations.of(context)!.loadingData} ${(_progress * 100).toInt()}%',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: theme.colorScheme.primary,
+                      ),
+                    ),
+                  ],
+                )
+              : AnimatedOpacity(
+                  duration: const Duration(milliseconds: 500),
+                  opacity: 1.0,
+                  child: Text(
+                    local.tapToContinue,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.primary,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
         ),
       ),
     );

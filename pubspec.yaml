@@ -72,8 +72,15 @@ flutter:
         - asset: fonts/asap/AsapCondensed-Regular.ttf
         - asset: fonts/asap/AsapCondensed-Bold.ttf
           weight: 700
+
+    - family: open-sans
+      fonts:
+        - asset: fonts/open-sans/OpenSans-Regular.ttf
+        - asset: fonts/open-sans/OpenSans-Bold.ttf
+          weight: 700
   assets:
-    - music/bg/szbg1.mp3
+    - assets/music/bg/szbg1.mp3
+    - assets/data/books.json
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg

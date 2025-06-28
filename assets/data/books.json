@@ -1,0 +1,66 @@
+[
+  {
+    "title": "Green Book",
+    "author": "Nick Vallelonga",
+    "genre": "Biography",
+    "description": "A story of unexpected friendship in the 60s during a road trip through the segregated American South.",
+    "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9jJoQfWhTRSyoBYLLIwIIbL__K04UfgQFjg&s",
+    "publishedYear": 2018
+  },
+  {
+    "title": "1984",
+    "author": "George Orwell",
+    "genre": "Dystopian",
+    "description": "A chilling prophecy about the future, depicting a totalitarian regime that watches every move.",
+    "imageUrl": "https://eboighar-static.s3.ap-southeast-1.amazonaws.com/static/Books/book_75042021-07-08_1625718517.jpg",
+    "publishedYear": 1949
+  },
+  {
+    "title": "Harry Potter and the Sorcerer's Stone",
+    "author": "J.K. Rowling",
+    "genre": "Fantasy",
+    "description": "An orphan boy discovers he's a wizard and enters a world of magic and adventure.",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/6/6b/Harry_Potter_and_the_Philosopher%27s_Stone_Book_Cover.jpg",
+    "publishedYear": 1997
+  },
+  {
+    "title": "The Hobbit",
+    "author": "J.R.R. Tolkien",
+    "genre": "Fantasy",
+    "description": "Bilbo Baggins embarks on an epic quest with dwarves to reclaim their treasure from a dragon.",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/3/30/Hobbit_cover.JPG",
+    "publishedYear": 1937
+  },
+  {
+    "title": "To Kill a Mockingbird",
+    "author": "Harper Lee",
+    "genre": "Classic",
+    "description": "A powerful tale of racial injustice and childhood in the Deep South.",
+    "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEzPNAtbkDTOPu9k7W72Xz-z-aynrzxrKD5A&s",
+    "publishedYear": 1960
+  },
+  {
+    "title": "পথের পাঁচালী",
+    "author": "বিভূতিভূষণ বন্দ্যোপাধ্যায়",
+    "genre": "উপন্যাস",
+    "description": "বাংলাদেশ ও ভারতের গ্রামীণ জীবনের নিখুঁত চিত্রায়ন।",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/1/1a/Pather_Panchali_cover.jpg",
+    "publishedYear": 1929
+  },
+  {
+    "title": "গীতাঞ্জলি",
+    "author": "রবীন্দ্রনাথ ঠাকুর",
+    "genre": "কবিতা",
+    "description": "বিশ্বকবির অনবদ্য কবিতার সংকলন, যার জন্য তিনি নোবেল পেয়েছিলেন।",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/9/9d/Gitanjali_1912_cover.jpg",
+    "publishedYear": 1910
+  },
+  {
+    "title": "চাঁদের পাহাড়",
+    "author": "এনায়েত আলী",
+    "genre": "উপন্যাস",
+    "description": "বাংলাদেশের পার্বত্য অঞ্চলের গল্প।",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/en/thumb/7/7a/Chander_Pahar_cover.jpg/220px-Chander_Pahar_cover.jpg",
+    "publishedYear": 1937
+  }
+]

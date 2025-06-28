@@ -14,6 +14,11 @@ void main() async {
   bool isDark = false;
   String langCode = 'bn';
 
+  FlutterError.onError = (FlutterErrorDetails details) {
+    FlutterError.dumpErrorToConsole(details);
+    // You can also report this error to a service
+  };
+
   runApp(MyApp(isDarkMode: isDark, initialLangCode: langCode));
 }
 
@@ -73,7 +78,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       title: 'Interactive Story App',
       theme: ThemeData(
-        fontFamily: 'asap',
+        fontFamily: 'open-sans',
         brightness: Brightness.light,
         scaffoldBackgroundColor: Colors.white,
         appBarTheme: const AppBarTheme(
@@ -82,7 +87,7 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
       darkTheme: ThemeData(
-        fontFamily: 'asap',
+        fontFamily: 'open-sans',
         brightness: Brightness.dark,
         scaffoldBackgroundColor: Colors.black,
         appBarTheme: const AppBarTheme(

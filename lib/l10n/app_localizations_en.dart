@@ -67,4 +67,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get storyIntro => 'This is where your interactive story will begin!';
+
+  @override
+  String get musicVolume => 'Music Volume';
+
+  @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get loadingData => 'Data is loading';
+
+  @override
+  String get searchBoxText => 'Search books..';
+
+  @override
+  String get read => 'Read';
 }

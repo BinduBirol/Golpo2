@@ -18,5 +18,11 @@
   "over30": "Over 30",
   "unknown" : "Unknown",
   "preferences" : "Preferences",
-  "storyIntro": "This is where your interactive story will begin!"
+  "storyIntro": "This is where your interactive story will begin!",
+  "musicVolume": "Music Volume",
+  "notifications": "Notifications",
+  "loadingData" : "Data is loading",
+  "searchBoxText" : "Search books..",
+  "read" : "Read"
+
 }

@@ -20,7 +20,7 @@ class BackgroundAudio {
     _player.setVolume(volume);
 
     if (isMusicEnabled) {
-      await _player.play(AssetSource('music/bg/szbg1.mp3'));
+      await _player.play(AssetSource('assets/music/bg/szbg1.mp3'));
     }
 
     _isInitialized = true;

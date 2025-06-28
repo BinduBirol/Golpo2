@@ -214,6 +214,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This is where your interactive story will begin!'**
   String get storyIntro;
+
+  /// No description provided for @musicVolume.
+  ///
+  /// In en, this message translates to:
+  /// **'Music Volume'**
+  String get musicVolume;
+
+  /// No description provided for @notifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notifications;
+
+  /// No description provided for @loadingData.
+  ///
+  /// In en, this message translates to:
+  /// **'Data is loading'**
+  String get loadingData;
+
+  /// No description provided for @searchBoxText.
+  ///
+  /// In en, this message translates to:
+  /// **'Search books..'**
+  String get searchBoxText;
+
+  /// No description provided for @read.
+  ///
+  /// In en, this message translates to:
+  /// **'Read'**
+  String get read;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

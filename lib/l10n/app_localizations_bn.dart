@@ -67,4 +67,19 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get storyIntro => 'এখান থেকেই আপনার ইন্টার‍্যাকটিভ গল্প শুরু হবে!';
+
+  @override
+  String get musicVolume => 'সংগীতের ভলিউম';
+
+  @override
+  String get notifications => 'নোটিফিকেশন';
+
+  @override
+  String get loadingData => 'ডেটা লোড হচ্ছে';
+
+  @override
+  String get searchBoxText => 'বই খুঁজুন..';
+
+  @override
+  String get read => 'পড়ুন';
 }

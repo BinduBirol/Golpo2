@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:golpo/book/BookDetailPage.dart';
 import 'package:golpo/home/drawer_header_widget.dart';
+import 'package:golpo/service/BookService.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../DTO/Book.dart';
+import '../book/book_grid_view.dart';
 import '../l10n/app_localizations.dart';
 import '../user/profile_page.dart';
 import '../user/settings_page.dart';
 import '../widgets/CustomListTile.dart';
 import '../widgets/StoryAppBar.dart';
 import 'category_page.dart';
-
 
 class StoryPage extends StatefulWidget {
   final Function(bool) onThemeChange;
@@ -24,14 +27,42 @@ class StoryPage extends StatefulWidget {
   _StoryPageState createState() => _StoryPageState();
 }
 
-
 class _StoryPageState extends State<StoryPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
+  List<Book> _books = [];
+  bool _isLoading = true;
+  String? _error;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadBooks(); // <-- Load books here
+  }
 
   Future<void> _resetAge(BuildContext context) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('age_group');
     Navigator.pushReplacementNamed(context, '/age');
+  }
+
+  Future<void> _loadBooks() async {
+    try {
+      final books = await BookService.fetchBooks();
+      print('Loaded books:');
+      for (var book in books) {
+        print('Title: ${book.title}, Description: ${book.description}');
+      }
+      setState(() {
+        _books = books;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _error = e.toString();
+        _isLoading = false;
+      });
+    }
   }
 
   void _navigateTo(BuildContext context, Widget page) {
@@ -43,29 +74,42 @@ class _StoryPageState extends State<StoryPage> {
   Widget build(BuildContext context) {
     final appBarTheme = Theme.of(context).appBarTheme;
 
+    if (_isLoading) {
+      return Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    if (_error != null) {
+      return Scaffold(
+        body: Center(child: Text('Error loading books: $_error')),
+      );
+    }
 
     return Scaffold(
       key: _scaffoldKey, // Assign the scaffold key here
-      appBar: StoryAppBar(title: AppLocalizations.of(context)!.appTitle, scaffoldKey: _scaffoldKey),
+      appBar: StoryAppBar(
+        title: 'Your App',
+        scaffoldKey: _scaffoldKey,
+        books: _books, // pass loaded list here
+      ),
       drawer: Drawer(
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
             DrawerHeaderWidget(),
             CustomListTile(
-              iconData: FontAwesomeIcons.layerGroup,
+              iconData: Icons.library_books,
               title: AppLocalizations.of(context)!.library,
               onTap: () => _navigateTo(context, CategoryPage()),
             ),
 
             CustomListTile(
-              iconData: FontAwesomeIcons.user,
+              iconData: Icons.person_outline,
 
               title: AppLocalizations.of(context)!.profile,
               onTap: () => _navigateTo(context, ProfilePage()),
             ),
             CustomListTile(
-              iconData: FontAwesomeIcons.gear,
+              iconData: Icons.settings,
               title: AppLocalizations.of(context)!.settings,
 
               onTap: () => _navigateTo(
@@ -75,19 +119,21 @@ class _StoryPageState extends State<StoryPage> {
                   onLocaleChange: widget.onLocaleChange,
                 ),
               ),
-
             ),
           ],
         ),
       ),
-      body: Center(
-        child: Text(
-          AppLocalizations.of(context)!.storyIntro,
-          style: TextStyle(fontSize: 18),
-          textAlign: TextAlign.center,
-        ),
+      body: BookGridView(
+        books: _books,
+        onBookTap: (Book book) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => BookDetailPage(book: book),
+            ),
+          );
+        },
       ),
-
     );
   }
 }
