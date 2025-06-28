@@ -1,0 +1,22 @@
+{
+  "appTitle": "Golpo",
+  "tapToContinue": "Tap to continue",
+  "welcomeText": "Welcome to the Story App",
+  "enterApp": "Enter App",
+  "settings": "Settings",
+  "library": "Library",
+  "profile": "Profile",
+  "darkMode": "Dark Mode",
+  "theme": "Theme",
+  "audio": "Audio",
+  "soundEffects": "Sound Effects (SFX)",
+  "ageGroupSelect" : "Please select your age group",
+  "ageGroup": "Age Group",
+  "language": "Language",
+  "ageGroup18to30": "18 – 30",
+  "under18": "Under 18",
+  "over30": "Over 30",
+  "unknown" : "Unknown",
+  "preferences" : "Preferences",
+  "storyIntro": "This is where your interactive story will begin!"
+}

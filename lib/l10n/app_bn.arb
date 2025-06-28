@@ -1,0 +1,22 @@
+{
+  "appTitle": "গল্প",
+  "tapToContinue": "চালিয়ে যেতে ট্যাপ করুন",
+  "welcomeText": "স্টোরি অ্যাপে স্বাগতম",
+  "enterApp": "অ্যাপে প্রবেশ করুন",
+  "settings": "সেটিংস",
+  "library": "লাইব্রেরি",
+  "profile": "প্রোফাইল",
+  "darkMode": "ডার্ক মোড",
+  "theme": "থিম",
+  "audio": "অডিও",
+  "soundEffects": "সাউন্ড ইফেক্ট (SFX)",
+  "ageGroupSelect": "অনুগ্রহ করে আপনার বয়স নির্বাচন করুন",
+  "ageGroup": "বয়সের গ্রুপ",
+  "language": "ভাষা",
+  "ageGroup18to30": "১৮ – ৩০",
+  "under18": "১৮-এর নিচে",
+  "over30": "৩০-এর উপরে",
+  "unknown": "অজানা",
+  "preferences": "পছন্দসমূহ",
+  "storyIntro": "এখান থেকেই আপনার ইন্টার‍্যাকটিভ গল্প শুরু হবে!"
+}
