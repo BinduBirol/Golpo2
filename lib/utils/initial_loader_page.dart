@@ -71,10 +71,11 @@ class _InitialLoaderPageState extends State<InitialLoaderPage> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (_) => StoryPage(
-            onThemeChange: _updateTheme,
-            onLocaleChange: _updateLocale,
-          ),
+          builder: (_) =>
+              StoryPage(
+                onThemeChange: _updateTheme,
+                onLocaleChange: _updateLocale,
+              ),
         ),
       );
     } else {
@@ -110,37 +111,38 @@ class _InitialLoaderPageState extends State<InitialLoaderPage> {
         body: Center(
           child: !_loadingDone
               ? Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    CircularProgressIndicator(
-                      value: _progress,
-                      strokeWidth: 6,
-                      color: theme.colorScheme.primary,
-                    ),
-                    const SizedBox(height: 16),
-                    Text(
-                      '${AppLocalizations.of(context)!.loadingData} ${(_progress * 100).toInt()}%',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.primary,
-                      ),
-                    ),
-                  ],
-                )
-              : AnimatedOpacity(
-                  duration: const Duration(milliseconds: 500),
-                  opacity: 1.0,
-                  child: Text(
-                    local.tapToContinue,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.primary,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              CircularProgressIndicator(
+                value: _progress,
+                strokeWidth: 6,
+                color: theme.colorScheme.primary,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                '${AppLocalizations.of(context)!.loadingData} ${(_progress *
+                    100).toInt()}%',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: theme.colorScheme.primary,
                 ),
+              ),
+            ],
+          )
+              : AnimatedOpacity(
+            duration: const Duration(milliseconds: 500),
+            opacity: 1.0,
+            child: Text(
+              local.tapToContinue,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: theme.colorScheme.primary,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
         ),
       ),
     );

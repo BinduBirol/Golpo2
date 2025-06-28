@@ -23,25 +23,23 @@ class StoryAppBar extends StatefulWidget implements PreferredSizeWidget {
   @override
   _StoryAppBarState createState() => _StoryAppBarState();
 
+  // Set a large enough preferredSize to handle both search bar and suggestions
   @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight + 120); // accommodate search and suggestions
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight + 140);
 }
 
 class _StoryAppBarState extends State<StoryAppBar> {
-  String _languageLabel = '';
   final TextEditingController _searchController = TextEditingController();
   List<Book> _filteredBooks = [];
 
   @override
   void initState() {
     super.initState();
-    _loadLanguage();
     _searchController.addListener(_onSearchChanged);
   }
 
   void _onSearchChanged() {
     final query = _searchController.text.toLowerCase();
-
     setState(() {
       if (query.isEmpty) {
         _filteredBooks = [];
@@ -50,14 +48,6 @@ class _StoryAppBarState extends State<StoryAppBar> {
             .where((book) => book.title.toLowerCase().contains(query))
             .toList();
       }
-    });
-  }
-
-  Future<void> _loadLanguage() async {
-    final prefs = await SharedPreferences.getInstance();
-    final langCode = prefs.getString('language') ?? 'bn';
-    setState(() {
-      _languageLabel = langCode == 'bn' ? '' : 'English';
     });
   }
 
@@ -70,25 +60,18 @@ class _StoryAppBarState extends State<StoryAppBar> {
   @override
   Widget build(BuildContext context) {
     final appBarTheme = Theme.of(context).appBarTheme;
-
     final hasQuery = _searchController.text.isNotEmpty;
 
-    final double appBarHeight = hasQuery
-        ? kToolbarHeight + 120
-        : kToolbarHeight;
-
-    return SizedBox(
-      height: appBarHeight,
+    return Material(
+      color: appBarTheme.backgroundColor,
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           AppBar(
             backgroundColor: appBarTheme.backgroundColor,
             foregroundColor: appBarTheme.foregroundColor,
             leading: IconButton(
-              icon: FaIcon(
-                FontAwesomeIcons.bars,
-                color: appBarTheme.foregroundColor,
-              ),
+              icon: FaIcon(FontAwesomeIcons.bars, color: appBarTheme.foregroundColor),
               onPressed: () => widget.scaffoldKey.currentState?.openDrawer(),
             ),
             title: Padding(
@@ -103,10 +86,7 @@ class _StoryAppBarState extends State<StoryAppBar> {
                     prefixIcon: Icon(Icons.search, color: Colors.white70),
                     filled: true,
                     fillColor: Colors.white.withOpacity(0.15),
-                    contentPadding: EdgeInsets.symmetric(
-                      vertical: 0,
-                      horizontal: 12,
-                    ),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
@@ -118,10 +98,7 @@ class _StoryAppBarState extends State<StoryAppBar> {
             ),
             actions: [
               IconButton(
-                icon: FaIcon(
-                  FontAwesomeIcons.bell,
-                  color: appBarTheme.foregroundColor,
-                ),
+                icon: FaIcon(FontAwesomeIcons.bell, color: appBarTheme.foregroundColor),
                 onPressed: () {
                   Navigator.push(
                     context,
@@ -132,25 +109,34 @@ class _StoryAppBarState extends State<StoryAppBar> {
             ],
           ),
 
-          // Only show suggestions if there's a search query AND filtered books are available
+          // Suggestions Box
           if (hasQuery && _filteredBooks.isNotEmpty)
-            Flexible(
-              child: BookViewingList(
-                books: _filteredBooks,
-                onBookTap: (book) {
-                  _searchController.clear();
-                  setState(() => _filteredBooks.clear());
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => BookDetailPage(book: book),
+            Container(
+              height: 100, // Adjust to fit nicely
+              padding: EdgeInsets.symmetric(horizontal: 12),
+              child: ListView.builder(
+                itemCount: _filteredBooks.length,
+                itemBuilder: (context, index) {
+                  final book = _filteredBooks[index];
+                  return ListTile(
+                    title: Text(
+                      book.title,
+                      style: TextStyle(color: Colors.white),
                     ),
+                    onTap: () {
+                      _searchController.clear();
+                      setState(() => _filteredBooks.clear());
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => BookDetailPage(book: book),
+                        ),
+                      );
+                    },
                   );
                 },
               ),
-            )
-          else
-            SizedBox.shrink(),
+            ),
         ],
       ),
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../DTO/Book.dart';
+import '../l10n/app_localizations.dart';
 import '../widgets/my_app_bar.dart';
 
 class BookDetailPage extends StatelessWidget {
@@ -58,6 +59,15 @@ class BookDetailPage extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: Colors.black,
+                    ),
+                    icon: const Icon(Icons.menu_book),
+                    label: Text(AppLocalizations.of(context)!.read),
+                    onPressed: () => _showToast('Reading: ${book.title}'),
+                  ),
                   Text(
                     book.title,
                     style: const TextStyle(
@@ -86,15 +96,7 @@ class BookDetailPage extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
 
-                  ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: Colors.black,
-                    ),
-                    icon: const Icon(Icons.menu_book),
-                    label: const Text('Read'),
-                    onPressed: () => _showToast('Reading: ${book.title}'),
-                  ),
+
                 ],
               ),
             ),
