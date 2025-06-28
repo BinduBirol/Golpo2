@@ -87,7 +87,7 @@ class _StoryPageState extends State<StoryPage> {
     return Scaffold(
       key: _scaffoldKey, // Assign the scaffold key here
       appBar: StoryAppBar(
-        title: 'Your App',
+        title: AppLocalizations.of(context)!.appTitle,
         scaffoldKey: _scaffoldKey,
         books: _books, // pass loaded list here
       ),
