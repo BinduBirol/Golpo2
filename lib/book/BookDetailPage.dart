@@ -3,7 +3,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../DTO/Book.dart';
+import '../DTO/User.dart';
 import '../l10n/app_localizations.dart';
+import '../service/UserService.dart';
 import '../utils/confirm_dialog.dart';
 import '../widgets/my_app_bar.dart';
 
@@ -20,7 +22,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
   bool _isExpanded = false;
   bool _isFavorite = false;
   bool _isRedeemed = false; // Assume false by default
-  int _userCoins = 500; // Demo user coin balance
+  int _userCoins = 0; // Demo user coin balance
 
   void _toggleFavorite() {
     setState(() {
@@ -41,6 +43,9 @@ class _BookDetailPageState extends State<BookDetailPage> {
   }
 
   void _onRedeem() async {
+
+    User user = await UserService.getUser();
+    _userCoins = user.walletCoin;
     if (_userCoins < widget.book.price) {
       _showToast('Not enough coins to redeem.');
       return;
@@ -54,9 +59,11 @@ class _BookDetailPageState extends State<BookDetailPage> {
 
     if (confirm == true) {
       setState(() {
-        _userCoins -= widget.book.price;
+        UserService.deductCoins(widget.book.price);
+        _userCoins = user.walletCoin;
         _isRedeemed = true;
       });
+
       _showToast('Redeemed successfully! Remaining: $_userCoins coins');
     }
   }
