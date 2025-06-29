@@ -46,7 +46,7 @@ class DrawerHeaderWidget extends StatelessWidget {
 
                 // Line 2: Following and Followers combined
                 Text(
-                  'Following 120    Followers 350',
+                  'Followers 350',
                   style: TextStyle(
                     fontSize: 14,
                     color: Colors.white70,

@@ -104,7 +104,7 @@ abstract class AppLocalizations {
   /// No description provided for @tapToContinue.
   ///
   /// In en, this message translates to:
-  /// **'Tap to continue'**
+  /// **'Tap to enter app'**
   String get tapToContinue;
 
   /// No description provided for @welcomeText.
@@ -230,7 +230,7 @@ abstract class AppLocalizations {
   /// No description provided for @loadingData.
   ///
   /// In en, this message translates to:
-  /// **'Data is loading'**
+  /// **'Loading data'**
   String get loadingData;
 
   /// No description provided for @searchBoxText.
@@ -244,6 +244,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Read'**
   String get read;
+
+  /// No description provided for @tapToValidateData.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to validate data'**
+  String get tapToValidateData;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

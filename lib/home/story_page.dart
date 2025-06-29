@@ -49,10 +49,6 @@ class _StoryPageState extends State<StoryPage> {
   Future<void> _loadBooks() async {
     try {
       final books = await BookService.fetchBooks();
-      print('Loaded books:');
-      for (var book in books) {
-        print('Title: ${book.title}, Description: ${book.description}');
-      }
       setState(() {
         _books = books;
         _isLoading = false;

@@ -5,7 +5,11 @@
     "genre": "Biography",
     "description": "A story of unexpected friendship in the 60s during a road trip through the segregated American South.",
     "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS9jJoQfWhTRSyoBYLLIwIIbL__K04UfgQFjg&s",
-    "publishedYear": 2018
+    "publishedYear": 2018,
+    "isMyFavorite": true,
+    "price": 0,
+    "rating": 4.8,
+    "viewCount": "1.1M"
   },
   {
     "title": "1984",
@@ -13,7 +17,11 @@
     "genre": "Dystopian",
     "description": "A chilling prophecy about the future, depicting a totalitarian regime that watches every move.",
     "imageUrl": "https://eboighar-static.s3.ap-southeast-1.amazonaws.com/static/Books/book_75042021-07-08_1625718517.jpg",
-    "publishedYear": 1949
+    "publishedYear": 1949,
+    "isMyFavorite": false,
+    "price": 95,
+    "rating": 4.6,
+    "viewCount": "750K"
   },
   {
     "title": "Harry Potter and the Sorcerer's Stone",
@@ -21,7 +29,11 @@
     "genre": "Fantasy",
     "description": "An orphan boy discovers he's a wizard and enters a world of magic and adventure.",
     "imageUrl": "https://upload.wikimedia.org/wikipedia/en/6/6b/Harry_Potter_and_the_Philosopher%27s_Stone_Book_Cover.jpg",
-    "publishedYear": 1997
+    "publishedYear": 1997,
+    "isMyFavorite": true,
+    "price": 180,
+    "rating": 4.9,
+    "viewCount": "2.3M"
   },
   {
     "title": "The Hobbit",
@@ -29,7 +41,11 @@
     "genre": "Fantasy",
     "description": "Bilbo Baggins embarks on an epic quest with dwarves to reclaim their treasure from a dragon.",
     "imageUrl": "https://upload.wikimedia.org/wikipedia/en/3/30/Hobbit_cover.JPG",
-    "publishedYear": 1937
+    "publishedYear": 1937,
+    "isMyFavorite": false,
+    "price": 150,
+    "rating": 4.7,
+    "viewCount": "900K"
   },
   {
     "title": "To Kill a Mockingbird",
@@ -37,7 +53,11 @@
     "genre": "Classic",
     "description": "A powerful tale of racial injustice and childhood in the Deep South.",
     "imageUrl": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSEzPNAtbkDTOPu9k7W72Xz-z-aynrzxrKD5A&s",
-    "publishedYear": 1960
+    "publishedYear": 1960,
+    "isMyFavorite": true,
+    "price": 100,
+    "rating": 4.5,
+    "viewCount": "1.7M"
   },
   {
     "title": "পথের পাঁচালী",
@@ -45,7 +65,11 @@
     "genre": "উপন্যাস",
     "description": "বাংলাদেশ ও ভারতের গ্রামীণ জীবনের নিখুঁত চিত্রায়ন।",
     "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/1/1a/Pather_Panchali_cover.jpg",
-    "publishedYear": 1929
+    "publishedYear": 1929,
+    "isMyFavorite": false,
+    "price": 0,
+    "rating": 4.4,
+    "viewCount": "640K"
   },
   {
     "title": "গীতাঞ্জলি",
@@ -53,7 +77,11 @@
     "genre": "কবিতা",
     "description": "বিশ্বকবির অনবদ্য কবিতার সংকলন, যার জন্য তিনি নোবেল পেয়েছিলেন।",
     "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/9/9d/Gitanjali_1912_cover.jpg",
-    "publishedYear": 1910
+    "publishedYear": 1910,
+    "isMyFavorite": true,
+    "price": 0,
+    "rating": 4.9,
+    "viewCount": "1.3M"
   },
   {
     "title": "চাঁদের পাহাড়",
@@ -61,6 +89,10 @@
     "genre": "উপন্যাস",
     "description": "বাংলাদেশের পার্বত্য অঞ্চলের গল্প।",
     "imageUrl": "https://upload.wikimedia.org/wikipedia/en/thumb/7/7a/Chander_Pahar_cover.jpg/220px-Chander_Pahar_cover.jpg",
-    "publishedYear": 1937
+    "publishedYear": 1937,
+    "isMyFavorite": false,
+    "price": 90,
+    "rating": 4.2,
+    "viewCount": "510K"
   }
 ]

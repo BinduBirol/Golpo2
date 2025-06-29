@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../home/story_page.dart';
-import '../service/BookService.dart';
+import '../service/data_loader.dart';
 import '../user/age_input_page.dart';
 import '../utils/background_audio.dart';
 import '../l10n/app_localizations.dart';
@@ -21,45 +23,33 @@ class InitialLoaderPage extends StatefulWidget {
 }
 
 class _InitialLoaderPageState extends State<InitialLoaderPage> {
-  bool _hasTapped = false;
+  bool _hasTappedToLoad = false;
   bool _loadingDone = false;
-  double _progress = 0.0; // Progress from 0.0 to 1.0
+  double _progress = 0.0;
+  String _loadingStage = "";
 
   late bool isDarkMode;
   Locale _locale = const Locale('en');
 
-  void _updateTheme(bool isDark) {
-    setState(() {
-      isDarkMode = isDark;
-    });
-  }
+  void _updateTheme(bool isDark) => setState(() => isDarkMode = isDark);
+  void _updateLocale(String langCode) => setState(() => _locale = Locale(langCode));
 
-  void _updateLocale(String langCode) {
-    setState(() {
-      _locale = Locale(langCode);
-    });
-  }
-
-  Future<void> _loadData() async {
+  Future<void> _loadEverything() async {
     try {
       await BackgroundAudio.initAndPlayIfEnabled();
     } catch (e) {
       print('Audio error: $e');
     }
 
-    // Simulate loading books with progress update
-    final totalSteps = 100;
-    for (int i = 1; i <= totalSteps; i++) {
-      await Future.delayed(
-        const Duration(milliseconds: 30),
-      ); // simulate loading delay
+    await DataLoader.loadDataWithProgress((progress, stage) {
       setState(() {
-        _progress = i / totalSteps;
+        _progress = progress;
+        _loadingStage = stage;
       });
-    }
+    });
 
     setState(() {
-      _loadingDone = true; // Loading finished
+      _loadingDone = true;
     });
   }
 
@@ -71,11 +61,10 @@ class _InitialLoaderPageState extends State<InitialLoaderPage> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (_) =>
-              StoryPage(
-                onThemeChange: _updateTheme,
-                onLocaleChange: _updateLocale,
-              ),
+          builder: (_) => StoryPage(
+            onThemeChange: _updateTheme,
+            onLocaleChange: _updateLocale,
+          ),
         ),
       );
     } else {
@@ -87,16 +76,18 @@ class _InitialLoaderPageState extends State<InitialLoaderPage> {
   }
 
   void _onTap() {
-    if (!_hasTapped && _loadingDone) {
-      setState(() => _hasTapped = true);
+    if (_loadingDone) {
       _startApp();
+    } else if (!_hasTappedToLoad) {
+      setState(() => _hasTappedToLoad = true);
+      _loadEverything();
     }
   }
 
   @override
   void initState() {
     super.initState();
-    _loadData(); // Start loading immediately on page load
+    // Don't load on init — wait for tap
   }
 
   @override
@@ -108,42 +99,70 @@ class _InitialLoaderPageState extends State<InitialLoaderPage> {
       onTap: _onTap,
       behavior: HitTestBehavior.opaque,
       child: Scaffold(
-        body: Center(
-          child: !_loadingDone
-              ? Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              CircularProgressIndicator(
-                value: _progress,
-                strokeWidth: 6,
-                color: theme.colorScheme.primary,
+        body: Stack(
+          children: [
+            // Background SVG
+            Positioned.fill(
+              child: SvgPicture.asset(
+                'assets/img/loader_background.svg',
+                fit: BoxFit.cover,
               ),
-              const SizedBox(height: 16),
-              Text(
-                '${AppLocalizations.of(context)!.loadingData} ${(_progress *
-                    100).toInt()}%',
+            ),
+
+            // Foreground content
+            Center(
+              child: !_hasTappedToLoad
+                  ? Text(
+                local.tapToValidateData,
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                   color: theme.colorScheme.primary,
                 ),
+                textAlign: TextAlign.center,
+              )
+                  : !_loadingDone
+                  ? Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CircularProgressIndicator(
+                    value: _progress,
+                    strokeWidth: 6,
+                    color: theme.colorScheme.primary,
+                  ),
+                  const SizedBox(height: 16),
+                  Text(
+                    _loadingStage,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: theme.colorScheme.primary,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    '${local.loadingData} ${(100 * _progress).toInt()}%',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.primary,
+                    ),
+                  ),
+                ],
+              )
+                  : Text(
+                local.tapToContinue,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: theme.colorScheme.primary,
+                ),
+                textAlign: TextAlign.center,
               ),
-            ],
-          )
-              : AnimatedOpacity(
-            duration: const Duration(milliseconds: 500),
-            opacity: 1.0,
-            child: Text(
-              local.tapToContinue,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: theme.colorScheme.primary,
-              ),
-              textAlign: TextAlign.center,
             ),
-          ),
+          ],
         ),
+
       ),
     );
   }

@@ -33,6 +33,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Future<void> _loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
+    if (!mounted) return;
     setState(() {
       darkMode = prefs.getBool('dark_mode') ?? false;
       music = prefs.getBool('music') ?? true;
@@ -74,6 +75,7 @@ class _SettingsPageState extends State<SettingsPage> {
             title: Text(AppLocalizations.of(context)!.darkMode),
             value: darkMode,
             onChanged: (val) {
+              if (!mounted) return;
               setState(() => darkMode = val);
               _updateSetting('dark_mode', val);
               widget.onThemeChange(val);
@@ -85,9 +87,22 @@ class _SettingsPageState extends State<SettingsPage> {
           _buildSectionTitle(AppLocalizations.of(context)!.audio),
           SwitchListTile(
             contentPadding: EdgeInsets.zero,
+            title: Text(AppLocalizations.of(context)!.audio),
+            value: music,
+            onChanged: (val) {
+              if (!mounted) return;
+              setState(() => music = val);
+              _updateSetting('music', val);
+              BackgroundAudio.toggleMusic(val);
+            },
+            secondary: Icon(Icons.music_note),
+          ),
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
             title: Text(AppLocalizations.of(context)!.soundEffects),
             value: sfx,
             onChanged: (val) {
+              if (!mounted) return;
               setState(() => sfx = val);
               _updateSetting('sfx', val);
             },
@@ -105,11 +120,14 @@ class _SettingsPageState extends State<SettingsPage> {
               Expanded(
                 child: Slider(
                   value: musicVolume,
-                  onChanged: (val) {
+                  onChanged: music
+                      ? (val) {
+                    if (!mounted) return;
                     setState(() => musicVolume = val);
                     _updateSetting('music_volume', val);
                     BackgroundAudio.setVolume(val);
-                  },
+                  }
+                      : null,
                   min: 0.0,
                   max: 1.0,
                   divisions: 10,
@@ -130,7 +148,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   value: ageGroup,
                   items: ageOptions,
                   onChanged: (val) {
-                    if (val != null) {
+                    if (val != null && mounted) {
                       setState(() => ageGroup = val);
                       _updateSetting('age_group', val);
                     }
@@ -143,10 +161,10 @@ class _SettingsPageState extends State<SettingsPage> {
                   label: AppLocalizations.of(context)!.language,
                   value: language,
                   items: languageOptions,
-                  onChanged: (val) {
-                    if (val != null) {
+                  onChanged: (val) async {
+                    if (val != null && mounted) {
                       setState(() => language = val);
-                      _updateSetting('language', val);
+                      await _updateSetting('language', val);
                       widget.onLocaleChange(val);
                     }
                   },

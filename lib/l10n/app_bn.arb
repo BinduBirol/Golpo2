@@ -23,5 +23,9 @@
   "notifications": "নোটিফিকেশন",
   "loadingData": "ডেটা লোড হচ্ছে",
     "searchBoxText": "বই খুঁজুন..",
-    "read": "পড়ুন"
+    "read": "পড়ুন",
+    "tapToValidateData": "তথ্য যাচাই করতে ট্যাপ করুন",
+    "tapToContinue": "অ্যাপে প্রবেশ করতে ট্যাপ করুন",
+    "loadingData": "তথ্য লোড হচ্ছে"
+
 }

@@ -23,6 +23,11 @@
   "notifications": "Notifications",
   "loadingData" : "Data is loading",
   "searchBoxText" : "Search books..",
-  "read" : "Read"
+  "read" : "Read",
+
+  "tapToValidateData": "Tap to validate data",
+  "tapToContinue": "Tap to enter app",
+  "loadingData": "Loading data"
+
 
 }

@@ -12,7 +12,7 @@ class AppLocalizationsBn extends AppLocalizations {
   String get appTitle => 'গল্প';
 
   @override
-  String get tapToContinue => 'চালিয়ে যেতে ট্যাপ করুন';
+  String get tapToContinue => 'অ্যাপে প্রবেশ করতে ট্যাপ করুন';
 
   @override
   String get welcomeText => 'স্টোরি অ্যাপে স্বাগতম';
@@ -75,11 +75,14 @@ class AppLocalizationsBn extends AppLocalizations {
   String get notifications => 'নোটিফিকেশন';
 
   @override
-  String get loadingData => 'ডেটা লোড হচ্ছে';
+  String get loadingData => 'তথ্য লোড হচ্ছে';
 
   @override
   String get searchBoxText => 'বই খুঁজুন..';
 
   @override
   String get read => 'পড়ুন';
+
+  @override
+  String get tapToValidateData => 'তথ্য যাচাই করতে ট্যাপ করুন';
 }

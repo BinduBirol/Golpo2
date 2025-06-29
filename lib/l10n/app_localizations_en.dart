@@ -12,7 +12,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'Golpo';
 
   @override
-  String get tapToContinue => 'Tap to continue';
+  String get tapToContinue => 'Tap to enter app';
 
   @override
   String get welcomeText => 'Welcome to the Story App';
@@ -75,11 +75,14 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notifications => 'Notifications';
 
   @override
-  String get loadingData => 'Data is loading';
+  String get loadingData => 'Loading data';
 
   @override
   String get searchBoxText => 'Search books..';
 
   @override
   String get read => 'Read';
+
+  @override
+  String get tapToValidateData => 'Tap to validate data';
 }
