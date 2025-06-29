@@ -107,14 +107,13 @@ class _StoryPageState extends State<StoryPage> {
             CustomListTile(
               iconData: Icons.settings,
               title: AppLocalizations.of(context)!.settings,
+              onTap: () => Navigator.pushNamed(context, '/settings'),
+            ),
 
-              onTap: () => _navigateTo(
-                context,
-                SettingsPage(
-                  onThemeChange: widget.onThemeChange,
-                  onLocaleChange: widget.onLocaleChange,
-                ),
-              ),
+            CustomListTile(
+              iconData: FontAwesomeIcons.coins,
+              title: "Buy coins",
+              onTap: () => Navigator.pushNamed(context, '/buy'),
             ),
           ],
         ),
@@ -124,9 +123,7 @@ class _StoryPageState extends State<StoryPage> {
         onBookTap: (Book book) {
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (_) => BookDetailPage(book: book),
-            ),
+            MaterialPageRoute(builder: (_) => BookDetailPage(book: book)),
           );
         },
       ),

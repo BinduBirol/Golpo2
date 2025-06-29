@@ -1,8 +1,10 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:golpo/pages/BuyCoinsPage.dart';
+import 'package:golpo/service/UserService.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
+import 'DTO/User.dart'; // Your User & UserPreferences class
 import 'utils/initial_loader_page.dart';
 import 'user/age_input_page.dart';
 import 'home/story_page.dart';
@@ -11,72 +13,58 @@ import 'l10n/app_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  bool isDark = false;
-  String langCode = 'bn';
 
-  FlutterError.onError = (FlutterErrorDetails details) {
-    FlutterError.dumpErrorToConsole(details);
-    // You can also report this error to a service
-  };
+  final user = await UserService.getUser(); // ✅ Load user with preferences
 
-  runApp(MyApp(isDarkMode: isDark, initialLangCode: langCode));
+  runApp(MyApp(user: user));
 }
 
-
 class MyApp extends StatefulWidget {
-  final bool isDarkMode;
-  final String initialLangCode;
+  final User user;
 
-  const MyApp({
-    super.key,
-    required this.isDarkMode,
-    required this.initialLangCode,
-  });
+  const MyApp({super.key, required this.user});
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  late bool isDarkMode;
-  late Locale _locale;
+  late User _user;
 
   @override
   void initState() {
     super.initState();
-
-    // Handle language code like 'en' or 'en_US'
-    final parts = widget.initialLangCode.split('_');
-    _locale = parts.length == 1
-        ? Locale(parts[0])
-        : Locale(parts[0], parts[1]);
-
-    isDarkMode = widget.isDarkMode;
+    _user = widget.user;
   }
 
-  void _updateTheme(bool isDark) {
-    setState(() {
-      isDarkMode = isDark;
-    });
+  void _updateTheme(bool isDark) async {
+    final updatedPrefs = _user.preferences..isDarkMode = isDark;
+    final updatedUser = _user.copyWith(preferences: updatedPrefs);
+
+    setState(() => _user = updatedUser);
+    await UserService.setUser(updatedUser);
   }
 
   void _updateLocale(String langCode) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('language', langCode);
+    final updatedPrefs = _user.preferences..language = langCode;
+    final updatedUser = _user.copyWith(preferences: updatedPrefs);
 
-    final parts = langCode.split('_');
-    setState(() {
-      _locale = parts.length == 1
-          ? Locale(parts[0])
-          : Locale(parts[0], parts[1]);
-    });
+    setState(() => _user = updatedUser);
+    await UserService.setUser(updatedUser);
   }
 
   @override
   Widget build(BuildContext context) {
+    final prefs = _user.preferences;
+    final localeParts = prefs.language.split('_');
+    final locale = localeParts.length == 1
+        ? Locale(localeParts[0])
+        : Locale(localeParts[0], localeParts[1]);
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Interactive Story App',
+      themeMode: prefs.isDarkMode ? ThemeMode.dark : ThemeMode.light,
       theme: ThemeData(
         fontFamily: 'open-sans',
         brightness: Brightness.light,
@@ -95,8 +83,7 @@ class _MyAppState extends State<MyApp> {
           foregroundColor: Colors.black,
         ),
       ),
-      themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
-      locale: _locale,
+      locale: locale,
       supportedLocales: const [
         Locale('en'),
         Locale('bn'),
@@ -118,9 +105,11 @@ class _MyAppState extends State<MyApp> {
           onLocaleChange: _updateLocale,
         ),
         '/settings': (context) => SettingsPage(
+          user: _user, // ✅ Now this is defined
           onThemeChange: _updateTheme,
           onLocaleChange: _updateLocale,
         ),
+        '/buy': (context) => BuyCoinsPage(),
       },
     );
   }

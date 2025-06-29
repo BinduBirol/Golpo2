@@ -32,7 +32,9 @@ class _InitialLoaderPageState extends State<InitialLoaderPage> {
   Locale _locale = const Locale('en');
 
   void _updateTheme(bool isDark) => setState(() => isDarkMode = isDark);
-  void _updateLocale(String langCode) => setState(() => _locale = Locale(langCode));
+
+  void _updateLocale(String langCode) =>
+      setState(() => _locale = Locale(langCode));
 
   Future<void> _loadEverything() async {
     try {
@@ -113,56 +115,61 @@ class _InitialLoaderPageState extends State<InitialLoaderPage> {
             Center(
               child: !_hasTappedToLoad
                   ? Text(
-                local.tapToValidateData,
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: theme.colorScheme.primary,
-                ),
-                textAlign: TextAlign.center,
-              )
+                      local.tapToValidateData,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: theme.colorScheme.primary,
+                      ),
+                      textAlign: TextAlign.center,
+                    )
                   : !_loadingDone
                   ? Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  CircularProgressIndicator(
-                    value: _progress,
-                    strokeWidth: 6,
-                    color: theme.colorScheme.primary,
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    _loadingStage,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: theme.colorScheme.primary,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    '${local.loadingData} ${(100 * _progress).toInt()}%',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: theme.colorScheme.primary,
-                    ),
-                  ),
-                ],
-              )
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TweenAnimationBuilder<double>(
+                          tween: Tween<double>(begin: 0, end: _progress),
+                          duration: const Duration(milliseconds: 500),
+                          builder: (context, value, _) {
+                            return CircularProgressIndicator(
+                              value: value,
+                              strokeWidth: 6,
+                              color: theme.colorScheme.primary,
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          _loadingStage,
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: theme.colorScheme.primary,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          '${local.loadingData} ${(100 * _progress).toInt()}%',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: theme.colorScheme.primary,
+                          ),
+                        ),
+                      ],
+                    )
                   : Text(
-                local.tapToContinue,
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: theme.colorScheme.primary,
-                ),
-                textAlign: TextAlign.center,
-              ),
+                      local.tapToContinue,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: theme.colorScheme.primary,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
             ),
           ],
         ),
-
       ),
     );
   }

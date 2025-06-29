@@ -83,7 +83,7 @@ class BookGridView extends StatelessWidget {
                 ),
 
                 // Top right - Premium badge
-                if (book.price==0)
+                if (book.price == 0)
                   Positioned(
                     top: 8,
                     right: 8,
@@ -107,22 +107,23 @@ class BookGridView extends StatelessWidget {
                     ),
                   ),
 
-                if (book.price>0)
+                if (book.price > 0)
                   Positioned(
                     top: 8,
                     right: 8,
                     child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 6,
-                        vertical: 3,
-                      ),
+                      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                       decoration: BoxDecoration(
                         color: Colors.deepOrange.withOpacity(0.9),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Row(
                         children: [
-                          Icon(FontAwesomeIcons.coins, size: 10, color: Colors.yellow[700]),
+                          Icon(
+                            FontAwesomeIcons.coins,
+                            size: 10,
+                            color: Colors.yellow[700],
+                          ),
                           const SizedBox(width: 2),
                           Text(
                             book.price.toString(),
@@ -143,17 +144,14 @@ class BookGridView extends StatelessWidget {
                   bottom: 0,
                   child: Container(
                     padding: const EdgeInsets.only(
-                      top: 14,       // 👈 padding on top
+                      top: 14, // 👈 padding on top
                       left: 8,
                       right: 8,
                       bottom: 6,
                     ),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
-                        colors: [
-                          Colors.black,
-                          Colors.transparent,
-                        ],
+                        colors: [Colors.black, Colors.transparent],
                         begin: Alignment.bottomCenter,
                         end: Alignment.topCenter,
                       ),
@@ -173,7 +171,6 @@ class BookGridView extends StatelessWidget {
                             ),
                             const SizedBox(width: 4),
                             Text(
-
                               book.viewCount,
                               style: const TextStyle(
                                 color: Colors.white70,

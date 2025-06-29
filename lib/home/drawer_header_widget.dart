@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import '../service/UserService.dart';
 import '../DTO/User.dart';
 
@@ -58,23 +59,32 @@ class DrawerHeaderWidget extends StatelessWidget {
 
                     const SizedBox(height: 8),
 
-                    // Line 2: Wallet coins
-                    Row(
-                      children: [
-                        const FaIcon(
-                          FontAwesomeIcons.coins,
-                          size: 16,
-                          color: Colors.amberAccent,
-                        ),
-                        const SizedBox(width: 6),
-                        Text(
-                          '${user.walletCoin} coins',
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Colors.white70,
+                    // Line 2: Wallet coins with navigation
+                    GestureDetector(
+                      onTap: () => Navigator.pushNamed(context, '/buy'),
+                      child: Row(
+                        children: [
+                          const FaIcon(
+                            FontAwesomeIcons.coins,
+                            size: 16,
+                            color: Colors.amberAccent,
                           ),
-                        ),
-                      ],
+                          const SizedBox(width: 6),
+                          ValueListenableBuilder<int>(
+                            valueListenable: UserService.walletCoinNotifier,
+                            builder: (context, coinValue, _) {
+                              return Text(
+                                NumberFormat.decimalPattern('en_IN').format(coinValue),
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.amberAccent,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),

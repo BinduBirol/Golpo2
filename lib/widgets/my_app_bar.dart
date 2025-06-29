@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 
 import '../DTO/User.dart';
 
@@ -22,48 +23,58 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final appBarTheme = Theme.of(context).appBarTheme;
 
     return AppBar(
       title: Text(title),
       leading: IconButton(
-        icon: Icon(Icons.arrow_back_ios_new_rounded, color: appBarTheme.foregroundColor),
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
+        icon: Icon(
+          Icons.arrow_back_ios_new_rounded,
+          color: appBarTheme.foregroundColor,
+        ),
+        onPressed: () => Navigator.of(context).pop(),
         tooltip: 'Back',
       ),
-      actions: actions ??
+      actions:
+          actions ??
           [
-            FutureBuilder<User>(
-              future: UserService.getUser(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return const SizedBox(); // or a loading spinner
-                }
-
-                final user = snapshot.data!;
-
-                return TextButton.icon(
-                  onPressed: () => Navigator.pushNamed(context, '/story'),
-                  label: Text(
-                    '${user.walletCoin}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
+            ValueListenableBuilder<int>(
+              valueListenable: UserService.walletCoinNotifier,
+              builder: (context, walletCoin, _) {
+                return Padding(
+                  padding: const EdgeInsets.only(right: 12),
+                  child: GestureDetector(
+                    onTap: () => Navigator.pushNamed(context, '/buy'),
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.orange.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: Colors.orange, width: 1),
+                      ),
+                      child: Row(
+                        children: [
+                          const FaIcon(
+                            FontAwesomeIcons.coins,
+                            color: Colors.amberAccent,
+                            size: 14,
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            NumberFormat.decimalPattern('en_IN').format(walletCoin),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  icon: const FaIcon(
-                    FontAwesomeIcons.coins,
-                    color: Colors.orange,
-                    size: 22,
-                  ),
-
-                  style: TextButton.styleFrom(
-                    foregroundColor: Colors.orange,
-                    //padding: const EdgeInsets.symmetric(horizontal: 10),
                   ),
                 );
               },

@@ -1,59 +1,42 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import '../l10n/app_localizations.dart';
+import '../DTO/User.dart';
+import '../DTO/UserPreferences.dart';
+import '../service/UserService.dart';
 import '../utils/background_audio.dart';
 import '../widgets/my_app_bar.dart';
+import '../l10n/app_localizations.dart';
 
 class SettingsPage extends StatefulWidget {
+  final User user;
   final Function(bool isDarkMode) onThemeChange;
   final Function(String) onLocaleChange;
 
-  SettingsPage({required this.onThemeChange, required this.onLocaleChange});
+  const SettingsPage({
+    super.key,
+    required this.user,
+    required this.onThemeChange,
+    required this.onLocaleChange,
+  });
 
   @override
-  _SettingsPageState createState() => _SettingsPageState();
+  State<SettingsPage> createState() => _SettingsPageState();
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  bool darkMode = false;
-  bool music = true;
-  bool sfx = true;
-  double musicVolume = 1.0;
-  String ageGroup = '18_30';
-  String language = 'bn';
+  late UserPreferences prefs;
 
   final languageOptions = {'en': 'English', 'bn': 'বাংলা'};
 
   @override
   void initState() {
     super.initState();
-    _loadSettings();
+    prefs = widget.user.preferences;
+    BackgroundAudio.setVolume(prefs.musicVolume);
   }
 
-  Future<void> _loadSettings() async {
-    final prefs = await SharedPreferences.getInstance();
-    if (!mounted) return;
-    setState(() {
-      darkMode = prefs.getBool('dark_mode') ?? false;
-      music = prefs.getBool('music') ?? true;
-      sfx = prefs.getBool('sfx') ?? true;
-      musicVolume = prefs.getDouble('music_volume') ?? 1.0;
-      ageGroup = prefs.getString('age_group') ?? '18_30';
-      language = prefs.getString('language') ?? 'bn';
-    });
-    BackgroundAudio.setVolume(musicVolume);
-  }
-
-  Future<void> _updateSetting(String key, dynamic value) async {
-    final prefs = await SharedPreferences.getInstance();
-    if (value is bool) {
-      await prefs.setBool(key, value);
-    } else if (value is String) {
-      await prefs.setString(key, value);
-    } else if (value is double) {
-      await prefs.setDouble(key, value);
-    }
+  Future<void> _savePreferences() async {
+    final updatedUser = widget.user.copyWith(preferences: prefs);
+    await UserService.setUser(updatedUser);
   }
 
   @override
@@ -73,11 +56,10 @@ class _SettingsPageState extends State<SettingsPage> {
           SwitchListTile(
             contentPadding: EdgeInsets.zero,
             title: Text(AppLocalizations.of(context)!.darkMode),
-            value: darkMode,
+            value: prefs.isDarkMode,
             onChanged: (val) {
-              if (!mounted) return;
-              setState(() => darkMode = val);
-              _updateSetting('dark_mode', val);
+              setState(() => prefs.isDarkMode = val);
+              _savePreferences();
               widget.onThemeChange(val);
             },
             secondary: Icon(Icons.dark_mode),
@@ -88,11 +70,10 @@ class _SettingsPageState extends State<SettingsPage> {
           SwitchListTile(
             contentPadding: EdgeInsets.zero,
             title: Text(AppLocalizations.of(context)!.audio),
-            value: music,
+            value: prefs.musicEnabled,
             onChanged: (val) {
-              if (!mounted) return;
-              setState(() => music = val);
-              _updateSetting('music', val);
+              setState(() => prefs.musicEnabled = val);
+              _savePreferences();
               BackgroundAudio.toggleMusic(val);
             },
             secondary: Icon(Icons.music_note),
@@ -100,11 +81,10 @@ class _SettingsPageState extends State<SettingsPage> {
           SwitchListTile(
             contentPadding: EdgeInsets.zero,
             title: Text(AppLocalizations.of(context)!.soundEffects),
-            value: sfx,
+            value: prefs.sfxEnabled,
             onChanged: (val) {
-              if (!mounted) return;
-              setState(() => sfx = val);
-              _updateSetting('sfx', val);
+              setState(() => prefs.sfxEnabled = val);
+              _savePreferences();
             },
             secondary: Icon(Icons.surround_sound),
           ),
@@ -115,23 +95,22 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
           Row(
             children: [
-              Icon(musicVolume == 0 ? Icons.volume_off : Icons.volume_up),
+              Icon(prefs.musicVolume == 0 ? Icons.volume_off : Icons.volume_up),
               SizedBox(width: 8),
               Expanded(
                 child: Slider(
-                  value: musicVolume,
-                  onChanged: music
+                  value: prefs.musicVolume,
+                  onChanged: prefs.musicEnabled
                       ? (val) {
-                    if (!mounted) return;
-                    setState(() => musicVolume = val);
-                    _updateSetting('music_volume', val);
+                    setState(() => prefs.musicVolume = val);
+                    _savePreferences();
                     BackgroundAudio.setVolume(val);
                   }
                       : null,
                   min: 0.0,
                   max: 1.0,
                   divisions: 10,
-                  label: "${(musicVolume * 100).round()}%",
+                  label: "${(prefs.musicVolume * 100).round()}%",
                 ),
               ),
             ],
@@ -145,12 +124,12 @@ class _SettingsPageState extends State<SettingsPage> {
               Expanded(
                 child: _buildDropdownField(
                   label: AppLocalizations.of(context)!.ageGroup,
-                  value: ageGroup,
+                  value: prefs.ageGroup,
                   items: ageOptions,
                   onChanged: (val) {
-                    if (val != null && mounted) {
-                      setState(() => ageGroup = val);
-                      _updateSetting('age_group', val);
+                    if (val != null) {
+                      setState(() => prefs.ageGroup = val);
+                      _savePreferences();
                     }
                   },
                 ),
@@ -159,12 +138,12 @@ class _SettingsPageState extends State<SettingsPage> {
               Expanded(
                 child: _buildDropdownField(
                   label: AppLocalizations.of(context)!.language,
-                  value: language,
+                  value: prefs.language,
                   items: languageOptions,
-                  onChanged: (val) async {
-                    if (val != null && mounted) {
-                      setState(() => language = val);
-                      await _updateSetting('language', val);
+                  onChanged: (val) {
+                    if (val != null) {
+                      setState(() => prefs.language = val);
+                      _savePreferences();
                       widget.onLocaleChange(val);
                     }
                   },

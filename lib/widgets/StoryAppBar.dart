@@ -38,19 +38,24 @@ class StoryAppBar extends StatelessWidget implements PreferredSizeWidget {
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (_) => SearchPage(allBooks: books),
-              ),
-            );
-          },        ),
-        IconButton(
-          icon: FaIcon(FontAwesomeIcons.bell, color: appBarTheme.foregroundColor),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => NotificationPage()),
+              MaterialPageRoute(builder: (_) => SearchPage(allBooks: books)),
             );
           },
+        ),
+        Padding(
+          padding: const EdgeInsets.only(right: 10),
+          child: IconButton(
+            icon: FaIcon(
+              FontAwesomeIcons.bell,
+              color: appBarTheme.foregroundColor,
+            ),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => NotificationPage()),
+              );
+            },
+          ),
         ),
       ],
     );

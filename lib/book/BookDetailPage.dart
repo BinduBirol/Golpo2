@@ -7,12 +7,13 @@ import '../DTO/User.dart';
 import '../l10n/app_localizations.dart';
 import '../service/UserService.dart';
 import '../utils/confirm_dialog.dart';
+import '../widgets/animated_coin.dart';
 import '../widgets/my_app_bar.dart';
 
 class BookDetailPage extends StatefulWidget {
   final Book book;
 
-  const BookDetailPage({Key? key, required this.book}) : super(key: key);
+  const BookDetailPage({super.key, required this.book});
 
   @override
   State<BookDetailPage> createState() => _BookDetailPageState();
@@ -23,6 +24,9 @@ class _BookDetailPageState extends State<BookDetailPage> {
   bool _isFavorite = false;
   bool _isRedeemed = false; // Assume false by default
   int _userCoins = 0; // Demo user coin balance
+  final GlobalKey _redeemButtonKey = GlobalKey(); // to track button position
+  OverlayEntry? _overlayEntry;                    // for animation overlay
+
 
   void _toggleFavorite() {
     setState(() {
@@ -30,6 +34,31 @@ class _BookDetailPageState extends State<BookDetailPage> {
     });
     _showToast(_isFavorite ? 'Added to favorites' : 'Removed from favorites');
   }
+
+  void _showCoinAnimation() {
+    final renderBox = _redeemButtonKey.currentContext?.findRenderObject() as RenderBox?;
+    if (renderBox == null) return;
+
+    final startOffset = renderBox.localToGlobal(Offset.zero);
+
+    _overlayEntry = OverlayEntry(
+      builder: (context) {
+        return Positioned(
+          left: startOffset.dx + renderBox.size.width / 2 - 12,
+          top: startOffset.dy,
+          child: AnimatedCoin(
+            onEnd: () {
+              _overlayEntry?.remove();
+              _overlayEntry = null;
+            },
+          ),
+        );
+      },
+    );
+
+    Overlay.of(context).insert(_overlayEntry!);
+  }
+
 
   void _showToast(String message) {
     Fluttertoast.showToast(
@@ -43,24 +72,39 @@ class _BookDetailPageState extends State<BookDetailPage> {
   }
 
   void _onRedeem() async {
-
     User user = await UserService.getUser();
     _userCoins = user.walletCoin;
+
     if (_userCoins < widget.book.price) {
-      _showToast('Not enough coins to redeem.');
+
+      final confirmBuy = await showConfirmDialog(
+        context: context,
+        //title: "Confirm Redemption",
+        content:
+        "Not enough coins to redeem. Want to get coins now?", title: 'Opps..!',
+      );
+
+      if (confirmBuy == true) {
+        Navigator.pushNamed(context, '/buy');
+      }
+
       return;
     }
 
     final confirm = await showConfirmDialog(
       context: context,
       title: "Confirm Redemption",
-      content: "Are you sure you want to redeem this book for 50 coins?",
+      content:
+      "Are you sure you want to redeem this book for ${widget.book.price} coins?",
     );
 
     if (confirm == true) {
+      _showCoinAnimation();
+      await UserService.deductCoins(widget.book.price); // Wait for deduction
+      User updatedUser = await UserService.getUser(); // Fetch updated coins
+
       setState(() {
-        UserService.deductCoins(widget.book.price);
-        _userCoins = user.walletCoin;
+        _userCoins = updatedUser.walletCoin;
         _isRedeemed = true;
       });
 
@@ -68,12 +112,13 @@ class _BookDetailPageState extends State<BookDetailPage> {
     }
   }
 
+
   Widget _buildActionButton() {
     if (widget.book.price == 0 || _isRedeemed) {
       return ElevatedButton.icon(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.black,
+          backgroundColor: Colors.green,
+          foregroundColor: Colors.white,
         ),
         icon: const Icon(Icons.menu_book),
         label: Text(AppLocalizations.of(context)!.read),
@@ -81,6 +126,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
       );
     } else {
       return ElevatedButton.icon(
+        key: _redeemButtonKey,
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.orange,
           foregroundColor: Colors.white,
