@@ -9,7 +9,10 @@
     "isMyFavorite": true,
     "price": 0,
     "rating": 4.8,
-    "viewCount": "1.1M"
+    "viewCount": "1.1M",
+    "storyTime": "14 min",
+    "commentsCount": "520",
+    "category": ["Biography", "Drama"]
   },
   {
     "title": "1984",
@@ -21,7 +24,10 @@
     "isMyFavorite": false,
     "price": 95,
     "rating": 4.6,
-    "viewCount": "750K"
+    "viewCount": "750K",
+    "storyTime": "10 min",
+    "commentsCount": "290",
+    "category": ["Politics", "Sci-Fi", "Classic"]
   },
   {
     "title": "Harry Potter and the Sorcerer's Stone",
@@ -33,7 +39,10 @@
     "isMyFavorite": true,
     "price": 180,
     "rating": 4.9,
-    "viewCount": "2.3M"
+    "viewCount": "2.3M",
+    "storyTime": "18 min",
+    "commentsCount": "1200",
+    "category": ["Fantasy", "Adventure"]
   },
   {
     "title": "The Hobbit",
@@ -45,7 +54,10 @@
     "isMyFavorite": false,
     "price": 150,
     "rating": 4.7,
-    "viewCount": "900K"
+    "viewCount": "900K",
+    "storyTime": "16 min",
+    "commentsCount": "890",
+    "category": ["Fantasy", "Adventure"]
   },
   {
     "title": "To Kill a Mockingbird",
@@ -57,42 +69,54 @@
     "isMyFavorite": true,
     "price": 100,
     "rating": 4.5,
-    "viewCount": "1.7M"
+    "viewCount": "1.7M",
+    "storyTime": "13 min",
+    "commentsCount": "470",
+    "category": ["Classic", "Drama"]
   },
   {
     "title": "পথের পাঁচালী",
     "author": "বিভূতিভূষণ বন্দ্যোপাধ্যায়",
     "genre": "উপন্যাস",
-    "description": "বাংলাদেশ ও ভারতের গ্রামীণ জীবনের নিখুঁত চিত্রায়ন।",
+    "description": "বাংলাদেশ ও ভারতের গ্রামীণ জীবনের নিখুঁত চিত্রায়ন। অপুর শৈশব থেকে তার জীবনের জার্নি, দারিদ্র্য, প্রকৃতির রূপ এবং পারিবারিক আবেগকে গভীরভাবে তুলে ধরা হয়েছে। এই বইটি বাংলা সাহিত্যের এক অমূল্য রত্ন।",
     "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/1/1a/Pather_Panchali_cover.jpg",
     "publishedYear": 1929,
-    "isMyFavorite": false,
+    "isMyFavorite": true,
     "price": 0,
     "rating": 4.4,
-    "viewCount": "640K"
+    "viewCount": "640K",
+    "storyTime": "11 min",
+    "commentsCount": "380",
+    "category": ["বাংলা", "উপন্যাস", "সাহিত্য"]
   },
   {
     "title": "গীতাঞ্জলি",
     "author": "রবীন্দ্রনাথ ঠাকুর",
     "genre": "কবিতা",
-    "description": "বিশ্বকবির অনবদ্য কবিতার সংকলন, যার জন্য তিনি নোবেল পেয়েছিলেন।",
+    "description": "বিশ্বকবির অনবদ্য কবিতার সংকলন, যার জন্য তিনি নোবেল পেয়েছিলেন। মানবতা, ঈশ্বরের প্রতি ভালোবাসা এবং আত্মিক মুক্তির অনুভব এই কবিতাগুলোর মূল থিম। প্রতিটি কবিতা একেকটি দর্শনের অনুবাদ।",
     "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/9/9d/Gitanjali_1912_cover.jpg",
     "publishedYear": 1910,
     "isMyFavorite": true,
     "price": 0,
     "rating": 4.9,
-    "viewCount": "1.3M"
+    "viewCount": "1.3M",
+    "storyTime": "9 min",
+    "commentsCount": "650",
+    "category": ["বাংলা", "কবিতা", "ক্লাসিক"]
   },
   {
     "title": "চাঁদের পাহাড়",
-    "author": "এনায়েত আলী",
+    "author": "বিভূতিভূষণ বন্দ্যোপাধ্যায়",
     "genre": "উপন্যাস",
-    "description": "বাংলাদেশের পার্বত্য অঞ্চলের গল্প।",
+    "description": "অ্যাডভেঞ্চারের খোঁজে এক তরুণ ছেলেকে নিয়ে এই গল্প, যে আফ্রিকার জঙ্গলে যায় সিংহ, হাতি, এবং রাক্ষসদের মুখোমুখি হতে। দুর্ধর্ষ ও রোমাঞ্চকর এই উপন্যাস বাংলায় অ্যাডভেঞ্চার সাহিত্যের পথপ্রদর্শক।",
     "imageUrl": "https://upload.wikimedia.org/wikipedia/en/thumb/7/7a/Chander_Pahar_cover.jpg/220px-Chander_Pahar_cover.jpg",
     "publishedYear": 1937,
-    "isMyFavorite": false,
+    "isMyFavorite": true,
     "price": 90,
     "rating": 4.2,
-    "viewCount": "510K"
+    "viewCount": "510K",
+    "storyTime": "15 min",
+    "commentsCount": "340",
+    "category": ["বাংলা", "অ্যাডভেঞ্চার", "উপন্যাস"]
   }
 ]

@@ -104,7 +104,7 @@ abstract class AppLocalizations {
   /// No description provided for @tapToContinue.
   ///
   /// In en, this message translates to:
-  /// **'Tap to enter app'**
+  /// **'Tap to continue'**
   String get tapToContinue;
 
   /// No description provided for @welcomeText.
@@ -230,7 +230,7 @@ abstract class AppLocalizations {
   /// No description provided for @loadingData.
   ///
   /// In en, this message translates to:
-  /// **'Loading data'**
+  /// **'Data is loading'**
   String get loadingData;
 
   /// No description provided for @searchBoxText.
@@ -250,6 +250,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tap to validate data'**
   String get tapToValidateData;
+
+  /// No description provided for @coinStore.
+  ///
+  /// In en, this message translates to:
+  /// **'Coin store'**
+  String get coinStore;
+
+  /// No description provided for @confirmRedemption.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Redemption'**
+  String get confirmRedemption;
+
+  /// No description provided for @sureRedemption.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to redeem this book?'**
+  String get sureRedemption;
+
+  /// No description provided for @redeemedSuccessfully.
+  ///
+  /// In en, this message translates to:
+  /// **'Redeemed successfully!'**
+  String get redeemedSuccessfully;
+
+  /// No description provided for @notEnoughCoin.
+  ///
+  /// In en, this message translates to:
+  /// **'Not enough coins to redeem. Want to get coins now?'**
+  String get notEnoughCoin;
+
+  /// No description provided for @oops.
+  ///
+  /// In en, this message translates to:
+  /// **'Oopss...'**
+  String get oops;
+
+  /// No description provided for @yes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get yes;
+
+  /// No description provided for @no.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get no;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

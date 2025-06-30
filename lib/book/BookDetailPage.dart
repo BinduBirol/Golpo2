@@ -80,8 +80,8 @@ class _BookDetailPageState extends State<BookDetailPage> {
       final confirmBuy = await showConfirmDialog(
         context: context,
         //title: "Confirm Redemption",
-        content: "Not enough coins to redeem. Want to get coins now?",
-        title: 'Opps..!',
+        content: AppLocalizations.of(context)!.notEnoughCoin,
+        title: AppLocalizations.of(context)!.oops,
       );
 
       if (confirmBuy == true) {
@@ -93,9 +93,9 @@ class _BookDetailPageState extends State<BookDetailPage> {
 
     final confirm = await showConfirmDialog(
       context: context,
-      title: "Confirm Redemption",
+      title: AppLocalizations.of(context)!.confirmRedemption,
       content:
-          "Are you sure you want to redeem this book for ${widget.book.price} coins?",
+      AppLocalizations.of(context)!.sureRedemption,
     );
 
     if (confirm == true) {
@@ -108,7 +108,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
         _isRedeemed = true;
       });
 
-      _showToast('Redeemed successfully! Remaining: $_userCoins coins');
+      _showToast(AppLocalizations.of(context)!.redeemedSuccessfully);
     }
   }
 
@@ -156,7 +156,6 @@ class _BookDetailPageState extends State<BookDetailPage> {
             fit: BoxFit.cover,
             loadingBuilder: (context, child, loadingProgress) {
               if (loadingProgress == null) {
-                print("null loadingProgress");
                 return child;
               }
               print("loading in progress");
@@ -241,7 +240,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
                         const SizedBox(height: 20),
                         _buildStatsRow(book),
                         const SizedBox(height: 12),
-                        _buildActionButtons(),
+                        _buildActionButtons(book),
                       ],
                     ),
                   ),
@@ -258,14 +257,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          '1 chapters 289 scenes',
-          style: const TextStyle(
-            fontSize: 12,
-            color: Colors.white70,
-            fontWeight: FontWeight.normal,
-          ),
-        ),
+
         Text(
           book.title,
           style: const TextStyle(
@@ -291,19 +283,8 @@ class _BookDetailPageState extends State<BookDetailPage> {
         SizedBox(
           height: 30,
           child: ScrollableCategoryList(
-            categories: [
-              'Adventure',
-              'Romance',
-              'Mystery',
-              'Sci-Fi',
-              'Fantasy',
-              'Adventure',
-              'Romance',
-              'Mystery',
-              'Sci-Fi',
-              'Fantasy',
-            ],
-            onTap: (selected) => print('Selected: $selected'),
+            categories: book.category,
+            //onTap: (selected) => print('Selected: $selected'),
           ),
         ),
       ],
@@ -327,9 +308,9 @@ class _BookDetailPageState extends State<BookDetailPage> {
           Text(
             '${book.author} • ${book.genre} • ${book.publishedYear}',
             style: const TextStyle(
-              fontSize: 16,
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
+              fontSize: 14,
+              color: Colors.white70,
+              fontWeight: FontWeight.w600,
             ),
           ),
           const SizedBox(height: 12),
@@ -359,7 +340,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
                 padding: EdgeInsets.only(top: 4),
                 child: Text(
                   'Show Less',
-                  style: TextStyle(color: Colors.blueAccent, fontSize: 12),
+                  style: TextStyle(color: Colors.deepOrange, fontSize: 12),
                 ),
               ),
             ),
@@ -431,7 +412,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
     );
   }
 
-  Widget _buildActionButtons() {
+  Widget _buildActionButtons(Book book) {
     return Wrap(
       spacing: 12,
       runSpacing: 8,
@@ -454,7 +435,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
         ElevatedButton.icon(
           onPressed: () => _showToast('Loading comments...'),
           icon: const Icon(Icons.comment),
-          label: const Text('100K'),
+          label:  Text(book.commentsCount),
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.cyan,
             foregroundColor: Colors.white,
@@ -465,7 +446,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
         ElevatedButton(
           onPressed: _toggleFavorite,
           style: ElevatedButton.styleFrom(
-            backgroundColor: _isFavorite ? Colors.red : Colors.grey,
+            backgroundColor: book.isMyFavorite ? Colors.red : Colors.grey,
             foregroundColor: Colors.white,
             shape: const CircleBorder(),
             padding: const EdgeInsets.all(12),
@@ -474,7 +455,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
               40,
             ), // fixed size to keep circle shape consistent
           ),
-          child: Icon(_isFavorite ? Icons.favorite : Icons.favorite_border),
+          child: Icon(book.isMyFavorite ? Icons.favorite : Icons.favorite_border),
         ),
       ],
     );

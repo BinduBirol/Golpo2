@@ -12,7 +12,7 @@ class AppLocalizationsBn extends AppLocalizations {
   String get appTitle => 'গল্প';
 
   @override
-  String get tapToContinue => 'অ্যাপে প্রবেশ করতে ট্যাপ করুন';
+  String get tapToContinue => 'চালিয়ে যেতে ট্যাপ করুন';
 
   @override
   String get welcomeText => 'স্টোরি অ্যাপে স্বাগতম';
@@ -75,7 +75,7 @@ class AppLocalizationsBn extends AppLocalizations {
   String get notifications => 'নোটিফিকেশন';
 
   @override
-  String get loadingData => 'তথ্য লোড হচ্ছে';
+  String get loadingData => 'ডেটা লোড হচ্ছে';
 
   @override
   String get searchBoxText => 'বই খুঁজুন..';
@@ -85,4 +85,28 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get tapToValidateData => 'তথ্য যাচাই করতে ট্যাপ করুন';
+
+  @override
+  String get coinStore => 'কয়েন স্টোর';
+
+  @override
+  String get confirmRedemption => 'রিডেম্পশন নিশ্চিত করুন';
+
+  @override
+  String get sureRedemption => 'আপনি কি নিশ্চিত যে এই বইটি রিডেম করতে চান?';
+
+  @override
+  String get redeemedSuccessfully => 'সফলভাবে রিডেম হয়েছে!';
+
+  @override
+  String get notEnoughCoin => 'রিডেম করার জন্য পর্যাপ্ত কয়েন নেই। এখন কয়েন পেতে চান?';
+
+  @override
+  String get oops => 'উফ্‌স...';
+
+  @override
+  String get yes => 'হ্যাঁ';
+
+  @override
+  String get no => 'না';
 }

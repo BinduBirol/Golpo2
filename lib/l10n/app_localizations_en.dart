@@ -12,7 +12,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'Golpo';
 
   @override
-  String get tapToContinue => 'Tap to enter app';
+  String get tapToContinue => 'Tap to continue';
 
   @override
   String get welcomeText => 'Welcome to the Story App';
@@ -75,7 +75,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notifications => 'Notifications';
 
   @override
-  String get loadingData => 'Loading data';
+  String get loadingData => 'Data is loading';
 
   @override
   String get searchBoxText => 'Search books..';
@@ -85,4 +85,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tapToValidateData => 'Tap to validate data';
+
+  @override
+  String get coinStore => 'Coin store';
+
+  @override
+  String get confirmRedemption => 'Confirm Redemption';
+
+  @override
+  String get sureRedemption => 'Are you sure you want to redeem this book?';
+
+  @override
+  String get redeemedSuccessfully => 'Redeemed successfully!';
+
+  @override
+  String get notEnoughCoin => 'Not enough coins to redeem. Want to get coins now?';
+
+  @override
+  String get oops => 'Oopss...';
+
+  @override
+  String get yes => 'Yes';
+
+  @override
+  String get no => 'No';
 }

@@ -10,24 +10,28 @@
   "theme": "Theme",
   "audio": "Audio",
   "soundEffects": "Sound Effects (SFX)",
-  "ageGroupSelect" : "Please select your age group",
+  "ageGroupSelect": "Please select your age group",
   "ageGroup": "Age Group",
   "language": "Language",
   "ageGroup18to30": "18 – 30",
   "under18": "Under 18",
   "over30": "Over 30",
-  "unknown" : "Unknown",
-  "preferences" : "Preferences",
+  "unknown": "Unknown",
+  "preferences": "Preferences",
   "storyIntro": "This is where your interactive story will begin!",
   "musicVolume": "Music Volume",
   "notifications": "Notifications",
-  "loadingData" : "Data is loading",
-  "searchBoxText" : "Search books..",
-  "read" : "Read",
-
+  "loadingData": "Data is loading",
+  "searchBoxText": "Search books..",
+  "read": "Read",
   "tapToValidateData": "Tap to validate data",
-  "tapToContinue": "Tap to enter app",
-  "loadingData": "Loading data"
+  "coinStore": "Coin store",
+  "confirmRedemption": "Confirm Redemption",
+  "sureRedemption": "Are you sure you want to redeem this book?",
+  "redeemedSuccessfully": "Redeemed successfully!",
 
-
+  "notEnoughCoin": "Not enough coins to redeem. Want to get coins now?",
+  "oops" : "Oopss...",
+  "yes": "Yes",
+  "no" : "No"
 }

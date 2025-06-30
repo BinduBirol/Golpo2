@@ -22,10 +22,15 @@
   "musicVolume": "সংগীতের ভলিউম",
   "notifications": "নোটিফিকেশন",
   "loadingData": "ডেটা লোড হচ্ছে",
-    "searchBoxText": "বই খুঁজুন..",
-    "read": "পড়ুন",
-    "tapToValidateData": "তথ্য যাচাই করতে ট্যাপ করুন",
-    "tapToContinue": "অ্যাপে প্রবেশ করতে ট্যাপ করুন",
-    "loadingData": "তথ্য লোড হচ্ছে"
-
+  "searchBoxText": "বই খুঁজুন..",
+  "read": "পড়ুন",
+  "tapToValidateData": "তথ্য যাচাই করতে ট্যাপ করুন",
+  "coinStore": "কয়েন স্টোর",
+  "confirmRedemption": "রিডেম্পশন নিশ্চিত করুন",
+  "sureRedemption": "আপনি কি নিশ্চিত যে এই বইটি রিডেম করতে চান?",
+  "redeemedSuccessfully": "সফলভাবে রিডেম হয়েছে!",
+  "notEnoughCoin": "রিডেম করার জন্য পর্যাপ্ত কয়েন নেই। এখন কয়েন পেতে চান?",
+  "oops": "উফ্‌স...",
+  "yes": "হ্যাঁ",
+  "no": "না"
 }

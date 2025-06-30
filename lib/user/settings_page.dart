@@ -35,8 +35,9 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<void> _savePreferences() async {
-    final updatedUser = widget.user.copyWith(preferences: prefs);
-    await UserService.setUser(updatedUser);
+    final latestUser = await UserService.getUser(); // ✅ get up-to-date user
+    final updatedUser = latestUser.copyWith(preferences: prefs); // ✅ update only preferences
+    await UserService.setUser(updatedUser); // ✅ save updated user
   }
 
   @override
@@ -62,9 +63,9 @@ class _SettingsPageState extends State<SettingsPage> {
               _savePreferences();
               widget.onThemeChange(val);
             },
-            secondary: Icon(Icons.dark_mode),
+            secondary: const Icon(Icons.dark_mode),
           ),
-          Divider(height: 32),
+          const Divider(height: 32),
 
           _buildSectionTitle(AppLocalizations.of(context)!.audio),
           SwitchListTile(
@@ -76,7 +77,7 @@ class _SettingsPageState extends State<SettingsPage> {
               _savePreferences();
               BackgroundAudio.toggleMusic(val);
             },
-            secondary: Icon(Icons.music_note),
+            secondary: const Icon(Icons.music_note),
           ),
           SwitchListTile(
             contentPadding: EdgeInsets.zero,
@@ -86,17 +87,17 @@ class _SettingsPageState extends State<SettingsPage> {
               setState(() => prefs.sfxEnabled = val);
               _savePreferences();
             },
-            secondary: Icon(Icons.surround_sound),
+            secondary: const Icon(Icons.surround_sound),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Text(
             AppLocalizations.of(context)!.musicVolume,
-            style: TextStyle(fontWeight: FontWeight.w600),
+            style: const TextStyle(fontWeight: FontWeight.w600),
           ),
           Row(
             children: [
               Icon(prefs.musicVolume == 0 ? Icons.volume_off : Icons.volume_up),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Expanded(
                 child: Slider(
                   value: prefs.musicVolume,
@@ -115,10 +116,10 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ],
           ),
-          Divider(height: 32),
+          const Divider(height: 32),
 
           _buildSectionTitle(AppLocalizations.of(context)!.preferences),
-          SizedBox(height: 4),
+          const SizedBox(height: 4),
           Row(
             children: [
               Expanded(
@@ -134,7 +135,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   },
                 ),
               ),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
               Expanded(
                 child: _buildDropdownField(
                   label: AppLocalizations.of(context)!.language,
@@ -161,7 +162,7 @@ class _SettingsPageState extends State<SettingsPage> {
       padding: const EdgeInsets.only(bottom: 8.0),
       child: Text(
         title,
-        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -177,19 +178,21 @@ class _SettingsPageState extends State<SettingsPage> {
       children: [
         Text(
           label,
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         DropdownButtonFormField<String>(
           value: value,
           items: items.entries
-              .map((entry) => DropdownMenuItem(
-            value: entry.key,
-            child: Text(entry.value),
-          ))
+              .map(
+                (entry) => DropdownMenuItem(
+              value: entry.key,
+              child: Text(entry.value),
+            ),
+          )
               .toList(),
           onChanged: onChanged,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             border: OutlineInputBorder(),
             contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           ),

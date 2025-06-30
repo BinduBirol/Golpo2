@@ -88,6 +88,7 @@ class _StoryPageState extends State<StoryPage> {
         books: _books, // pass loaded list here
       ),
       drawer: Drawer(
+        //backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
@@ -112,7 +113,7 @@ class _StoryPageState extends State<StoryPage> {
 
             CustomListTile(
               iconData: FontAwesomeIcons.coins,
-              title: "G coins",
+              title: AppLocalizations.of(context)!.coinStore,
               onTap: () => Navigator.pushNamed(context, '/buy'),
             ),
           ],

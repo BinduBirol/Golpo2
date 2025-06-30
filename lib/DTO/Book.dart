@@ -11,6 +11,10 @@ class Book {
   final double rating;
   final String viewCount;
 
+  final String storyTime;
+  final String commentsCount;
+  final List<String> category;
+
   Book({
     required this.title,
     required this.description,
@@ -22,6 +26,9 @@ class Book {
     required this.price,
     required this.rating,
     required this.viewCount,
+    required this.storyTime,
+    required this.commentsCount,
+    required this.category,
   });
 
   factory Book.fromJson(Map<String, dynamic> json) {
@@ -38,6 +45,12 @@ class Book {
           ? (json['rating'] as int).toDouble()
           : (json['rating'] ?? 0.0),
       viewCount: json['viewCount'] ?? '0',
+      storyTime: json['storyTime'] ?? '0 min',
+      commentsCount: json['commentsCount'] ?? '0',
+      category: (json['category'] as List<dynamic>?)
+          ?.map((e) => e.toString())
+          .toList() ??
+          [],
     );
   }
 }
