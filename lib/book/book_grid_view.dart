@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:lottie/lottie.dart';
 
 import '../DTO/Book.dart';
 
@@ -40,6 +41,20 @@ class BookGridView extends StatelessWidget {
                       ? Image.network(
                           book.imageUrl,
                           fit: BoxFit.cover,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            if (loadingProgress == null) return child;
+
+                            // While loading, show a spinner
+                            return Center(
+                              child: SizedBox(
+                                width: 150,
+                                child: Lottie.asset(
+                                  'assets/animations/image_loading.json',
+                                ),
+                              ),
+                            );
+                          },
+
                           errorBuilder: (_, __, ___) => Center(
                             child: Icon(
                               Icons.broken_image,
@@ -47,6 +62,22 @@ class BookGridView extends StatelessWidget {
                               color: Colors.grey,
                             ),
                           ),
+
+                          /*    errorBuilder: (_, __, ___) => Container(
+                            color: Theme.of(
+                              context,
+                            ).appBarTheme.foregroundColor,
+                            width: double.infinity,
+                            height: double.infinity,
+                            child: SvgPicture.asset(
+                              'assets/svg/book_cover/1.svg',
+                              fit: BoxFit.cover,
+                              width: double.infinity,
+                              height: double.infinity,
+                              alignment: Alignment.topCenter,
+                            ),
+                          ),
+                    */
                         )
                       : Center(
                           child: Icon(Icons.book, size: 50, color: Colors.grey),

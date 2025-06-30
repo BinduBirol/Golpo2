@@ -18,19 +18,19 @@ class CustomListTile extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    final color = isDark ? Colors.deepOrange : Colors.deepPurple;
+    final color = Theme.of(context).appBarTheme.backgroundColor ?? Colors.white;
 
     return ListTile(
       leading: FaIcon(
         iconData,
         color: color,
-        size: 26,
+        size: 16,
       ),
       title: Text(
         title,
         style: TextStyle(
           fontWeight: FontWeight.w600,
-          fontSize: 16,  // smaller font size
+          fontSize: 14,  // smaller font size
           color: color,
         ),
       ),
@@ -39,9 +39,9 @@ class CustomListTile extends StatelessWidget {
         size: 16,
         color: color.withOpacity(0.6),
       ),
-      contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+      //contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 6),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+        //borderRadius: BorderRadius.circular(12),
       ),
       onTap: onTap,
     );

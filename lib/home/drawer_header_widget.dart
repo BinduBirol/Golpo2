@@ -49,7 +49,7 @@ class DrawerHeaderWidget extends StatelessWidget {
                   children: [
                     // Line 1: User ID
                     Text(
-                      'User ID : ${user.id}',
+                      user.name,
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,

@@ -10,10 +10,16 @@ Future<bool?> showConfirmDialog({
   return showDialog<bool>(
     context: context,
     builder: (context) => AlertDialog(
-      title: Text(title),
+      title: Text(
+        title,
+        style: const TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.bold,
+        ), // smaller title
+      ),
       content: Text(content),
       actions: [
-        TextButton(
+        ElevatedButton(
           onPressed: () => Navigator.of(context).pop(false),
           child: Text(cancelText),
         ),

@@ -112,7 +112,7 @@ class _StoryPageState extends State<StoryPage> {
 
             CustomListTile(
               iconData: FontAwesomeIcons.coins,
-              title: "Buy coins",
+              title: "G coins",
               onTap: () => Navigator.pushNamed(context, '/buy'),
             ),
           ],

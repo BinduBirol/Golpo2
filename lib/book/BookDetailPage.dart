@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:lottie/lottie.dart';
 
 import '../DTO/Book.dart';
 import '../DTO/User.dart';
 import '../l10n/app_localizations.dart';
 import '../service/UserService.dart';
 import '../utils/confirm_dialog.dart';
+import '../widgets/ScrollableCategoryList.dart';
 import '../widgets/animated_coin.dart';
-import '../widgets/my_app_bar.dart';
+import '../widgets/book_app_bar.dart';
 
 class BookDetailPage extends StatefulWidget {
   final Book book;
@@ -25,8 +27,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
   bool _isRedeemed = false; // Assume false by default
   int _userCoins = 0; // Demo user coin balance
   final GlobalKey _redeemButtonKey = GlobalKey(); // to track button position
-  OverlayEntry? _overlayEntry;                    // for animation overlay
-
+  OverlayEntry? _overlayEntry; // for animation overlay
 
   void _toggleFavorite() {
     setState(() {
@@ -36,7 +37,8 @@ class _BookDetailPageState extends State<BookDetailPage> {
   }
 
   void _showCoinAnimation() {
-    final renderBox = _redeemButtonKey.currentContext?.findRenderObject() as RenderBox?;
+    final renderBox =
+        _redeemButtonKey.currentContext?.findRenderObject() as RenderBox?;
     if (renderBox == null) return;
 
     final startOffset = renderBox.localToGlobal(Offset.zero);
@@ -59,7 +61,6 @@ class _BookDetailPageState extends State<BookDetailPage> {
     Overlay.of(context).insert(_overlayEntry!);
   }
 
-
   void _showToast(String message) {
     Fluttertoast.showToast(
       msg: message,
@@ -76,12 +77,11 @@ class _BookDetailPageState extends State<BookDetailPage> {
     _userCoins = user.walletCoin;
 
     if (_userCoins < widget.book.price) {
-
       final confirmBuy = await showConfirmDialog(
         context: context,
         //title: "Confirm Redemption",
-        content:
-        "Not enough coins to redeem. Want to get coins now?", title: 'Opps..!',
+        content: "Not enough coins to redeem. Want to get coins now?",
+        title: 'Opps..!',
       );
 
       if (confirmBuy == true) {
@@ -95,7 +95,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
       context: context,
       title: "Confirm Redemption",
       content:
-      "Are you sure you want to redeem this book for ${widget.book.price} coins?",
+          "Are you sure you want to redeem this book for ${widget.book.price} coins?",
     );
 
     if (confirm == true) {
@@ -111,7 +111,6 @@ class _BookDetailPageState extends State<BookDetailPage> {
       _showToast('Redeemed successfully! Remaining: $_userCoins coins');
     }
   }
-
 
   Widget _buildActionButton() {
     if (widget.book.price == 0 || _isRedeemed) {
@@ -144,49 +143,42 @@ class _BookDetailPageState extends State<BookDetailPage> {
   @override
   Widget build(BuildContext context) {
     final book = widget.book;
+    final appBarTheme = Theme.of(context).appBarTheme;
 
     return Scaffold(
-      appBar: MyAppBar(title: book.title),
+      appBar: BookAppBar(title: book.title),
+      extendBodyBehindAppBar: true,
       body: Stack(
         fit: StackFit.expand,
         children: [
           Image.network(
             book.imageUrl,
             fit: BoxFit.cover,
-            loadingBuilder:
-                (
-                  BuildContext context,
-                  Widget child,
-                  ImageChunkEvent? loadingProgress,
-                ) {
-                  if (loadingProgress == null) return child;
-                  return Container(
-                    color: Colors.yellow,
-                    width: double.infinity,
-                    height: double.infinity,
-                    child: const Center(
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                          top: 20,
-                        ), // padding from top
-                        child: Align(
-                          alignment:
-                              Alignment.topCenter, // top horizontal center
-                          child: CircularProgressIndicator(
-                            color: Colors.deepOrange, // sets spinner color to red
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                },
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) {
+                print("null loadingProgress");
+                return child;
+              }
+              print("loading in progress");
+              return SizedBox(
+                width: 100,
+                height: 100,
+                child: Center(
+                  child: SizedBox(
+                    width: 150,
+                    child: Lottie.asset('assets/animations/image_loading.json'),
+                  ),
+                ),
+              );
+            },
+
             errorBuilder: (_, __, ___) => Container(
-              color: Colors.grey[300],
+              color: Theme.of(context).scaffoldBackgroundColor,
               child: Container(
                 width: double.infinity,
                 // Optional: set height if needed, e.g. height: 200,
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 20),
+                  padding: const EdgeInsets.only(top: 90),
                   // padding from top
                   child: Align(
                     alignment: Alignment.topCenter, // top horizontal center
@@ -199,6 +191,19 @@ class _BookDetailPageState extends State<BookDetailPage> {
                 ),
               ),
             ),
+
+            /*
+            errorBuilder: (_, __, ___) => Container(
+              color: Theme.of(context).appBarTheme.foregroundColor,
+              width: double.infinity,
+              height: double.infinity,
+              child: SvgPicture.asset(
+                'assets/background_dark.svg',
+                fit: BoxFit.cover,
+                width: double.infinity,
+                height: double.infinity,
+              ),
+            ),*/
           ),
 
           Align(
@@ -254,6 +259,14 @@ class _BookDetailPageState extends State<BookDetailPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
+          '1 chapters 289 scenes',
+          style: const TextStyle(
+            fontSize: 12,
+            color: Colors.white70,
+            fontWeight: FontWeight.normal,
+          ),
+        ),
+        Text(
           book.title,
           style: const TextStyle(
             fontSize: 24,
@@ -272,6 +285,27 @@ class _BookDetailPageState extends State<BookDetailPage> {
         ),
         const SizedBox(height: 12),
         _buildDescription(book.description),
+        const SizedBox(height: 12),
+
+        /// ✅ This must be wrapped with fixed height to scroll!
+        SizedBox(
+          height: 30,
+          child: ScrollableCategoryList(
+            categories: [
+              'Adventure',
+              'Romance',
+              'Mystery',
+              'Sci-Fi',
+              'Fantasy',
+              'Adventure',
+              'Romance',
+              'Mystery',
+              'Sci-Fi',
+              'Fantasy',
+            ],
+            onTap: (selected) => print('Selected: $selected'),
+          ),
+        ),
       ],
     );
   }
@@ -382,6 +416,17 @@ class _BookDetailPageState extends State<BookDetailPage> {
             fontSize: 16,
           ),
         ),
+        const SizedBox(width: 16),
+        const Icon(Icons.access_time, color: Colors.teal, size: 18),
+        const SizedBox(width: 4),
+        Text(
+          "${book.rating} Min",
+          style: const TextStyle(
+            color: Colors.teal,
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
+        ),
       ],
     );
   }
@@ -390,6 +435,10 @@ class _BookDetailPageState extends State<BookDetailPage> {
     return Wrap(
       spacing: 12,
       runSpacing: 8,
+      alignment: WrapAlignment.center,
+      // center items in run
+      crossAxisAlignment: WrapCrossAlignment.center,
+      // vertically align centers
       children: [
         ElevatedButton.icon(
           onPressed: () => _showToast('Opening preview...'),
@@ -398,18 +447,21 @@ class _BookDetailPageState extends State<BookDetailPage> {
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.teal,
             foregroundColor: Colors.white,
+            fixedSize: const Size.fromHeight(40), // fixed height & min width
           ),
         ),
-        ElevatedButton(
+
+        ElevatedButton.icon(
           onPressed: () => _showToast('Loading comments...'),
+          icon: const Icon(Icons.comment),
+          label: const Text('100K'),
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.deepOrange,
+            backgroundColor: Colors.cyan,
             foregroundColor: Colors.white,
-            shape: const CircleBorder(),
-            padding: const EdgeInsets.all(12),
+            fixedSize: const Size.fromHeight(40), // fixed height & min width
           ),
-          child: const Icon(Icons.comment),
         ),
+
         ElevatedButton(
           onPressed: _toggleFavorite,
           style: ElevatedButton.styleFrom(
@@ -417,6 +469,10 @@ class _BookDetailPageState extends State<BookDetailPage> {
             foregroundColor: Colors.white,
             shape: const CircleBorder(),
             padding: const EdgeInsets.all(12),
+            minimumSize: const Size(
+              40,
+              40,
+            ), // fixed size to keep circle shape consistent
           ),
           child: Icon(_isFavorite ? Icons.favorite : Icons.favorite_border),
         ),

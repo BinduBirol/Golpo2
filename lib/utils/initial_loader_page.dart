@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../home/story_page.dart';
@@ -87,12 +87,6 @@ class _InitialLoaderPageState extends State<InitialLoaderPage> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    // Don't load on init — wait for tap
-  }
-
-  @override
   Widget build(BuildContext context) {
     final local = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
@@ -101,74 +95,92 @@ class _InitialLoaderPageState extends State<InitialLoaderPage> {
       onTap: _onTap,
       behavior: HitTestBehavior.opaque,
       child: Scaffold(
-        body: Stack(
-          children: [
-            // Background SVG
-            Positioned.fill(
-              child: SvgPicture.asset(
-                'assets/img/loader_background.svg',
-                fit: BoxFit.cover,
+        body: Center(
+          child: !_hasTappedToLoad
+              ? Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Lottie.asset(
+                'assets/animations/reading_girl.json',
+                width: 200,
+                height: 200,
+                repeat: true,
               ),
-            ),
-
-            // Foreground content
-            Center(
-              child: !_hasTappedToLoad
-                  ? Text(
-                      local.tapToValidateData,
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.primary,
-                      ),
-                      textAlign: TextAlign.center,
-                    )
-                  : !_loadingDone
-                  ? Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        TweenAnimationBuilder<double>(
-                          tween: Tween<double>(begin: 0, end: _progress),
-                          duration: const Duration(milliseconds: 500),
-                          builder: (context, value, _) {
-                            return CircularProgressIndicator(
-                              value: value,
-                              strokeWidth: 6,
-                              color: theme.colorScheme.primary,
-                            );
-                          },
-                        ),
-                        const SizedBox(height: 16),
-                        Text(
-                          _loadingStage,
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: theme.colorScheme.primary,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          '${local.loadingData} ${(100 * _progress).toInt()}%',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: theme.colorScheme.primary,
-                          ),
-                        ),
-                      ],
-                    )
-                  : Text(
-                      local.tapToContinue,
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: theme.colorScheme.primary,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-            ),
-          ],
+              const SizedBox(height: 20),
+              Text(
+                local.tapToValidateData,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: theme.colorScheme.primary,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          )
+              : !_loadingDone
+              ? Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Lottie.asset(
+                'assets/animations/medicating_girl.json',
+                width: 180,
+                height: 180,
+                repeat: true,
+              ),
+              const SizedBox(height: 16),
+              TweenAnimationBuilder<double>(
+                tween: Tween<double>(begin: 0, end: _progress),
+                duration: const Duration(milliseconds: 500),
+                builder: (context, value, _) {
+                  return CircularProgressIndicator(
+                    value: value,
+                    strokeWidth: 6,
+                    color: theme.colorScheme.primary,
+                  );
+                },
+              ),
+              const SizedBox(height: 16),
+              Text(
+                _loadingStage,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: theme.colorScheme.primary,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                '${local.loadingData} ${(100 * _progress).toInt()}%',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: theme.colorScheme.primary,
+                ),
+              ),
+            ],
+          )
+              : Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Lottie.asset(
+                'assets/animations/ok_girl.json',
+                width: 200,
+                height: 200,
+                repeat: true,
+              ),
+              const SizedBox(height: 20),
+              Text(
+                local.tapToContinue,
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: theme.colorScheme.primary,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
         ),
       ),
     );
