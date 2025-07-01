@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:golpo/widgets/number_formatter.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 
 import '../DTO/Book.dart';
@@ -10,12 +12,15 @@ import '../service/UserService.dart';
 import '../utils/confirm_dialog.dart';
 import '../widgets/ScrollableCategoryList.dart';
 import '../widgets/animated_coin.dart';
-import '../widgets/book_app_bar.dart';
+import '../widgets/app_bar/book_app_bar.dart';
+import '../widgets/button/button_decorators.dart';
 
 class BookDetailPage extends StatefulWidget {
   final Book book;
 
-  const BookDetailPage({super.key, required this.book});
+  // Pass the book.id as the key
+  BookDetailPage({required this.book, Key? key})
+    : super(key: ValueKey(book.id));
 
   @override
   State<BookDetailPage> createState() => _BookDetailPageState();
@@ -24,17 +29,35 @@ class BookDetailPage extends StatefulWidget {
 class _BookDetailPageState extends State<BookDetailPage> {
   bool _isExpanded = false;
   bool _isFavorite = false;
-  bool _isRedeemed = false; // Assume false by default
-  int _userCoins = 0; // Demo user coin balance
-  final GlobalKey _redeemButtonKey = GlobalKey(); // to track button position
-  OverlayEntry? _overlayEntry; // for animation overlay
+  bool _isRedeemed = false;
+  int _userCoins = 0;
+  final GlobalKey _redeemButtonKey = GlobalKey();
+  OverlayEntry? _overlayEntry;
 
-  void _toggleFavorite() {
+  late String _localeCode;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _localeCode = Localizations.localeOf(context).languageCode;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _isFavorite = widget.book.userActivity.isMyFavorite;
+    _isRedeemed = widget.book.userActivity.isUnlocked;
+  }
+
+  void _toggleFavorite() async {
     setState(() {
       _isFavorite = !_isFavorite;
     });
+    widget.book.userActivity.isMyFavorite = _isFavorite;
+
     _showToast(_isFavorite ? 'Added to favorites' : 'Removed from favorites');
   }
+
 
   void _showCoinAnimation() {
     final renderBox =
@@ -72,14 +95,13 @@ class _BookDetailPageState extends State<BookDetailPage> {
     );
   }
 
-  void _onRedeem() async {
+  Future<void> _onRedeem() async {
     User user = await UserService.getUser();
     _userCoins = user.walletCoin;
 
     if (_userCoins < widget.book.price) {
       final confirmBuy = await showConfirmDialog(
         context: context,
-        //title: "Confirm Redemption",
         content: AppLocalizations.of(context)!.notEnoughCoin,
         title: AppLocalizations.of(context)!.oops,
       );
@@ -94,18 +116,18 @@ class _BookDetailPageState extends State<BookDetailPage> {
     final confirm = await showConfirmDialog(
       context: context,
       title: AppLocalizations.of(context)!.confirmRedemption,
-      content:
-      AppLocalizations.of(context)!.sureRedemption,
+      content: AppLocalizations.of(context)!.sureRedemption,
     );
 
     if (confirm == true) {
       _showCoinAnimation();
-      await UserService.deductCoins(widget.book.price); // Wait for deduction
-      User updatedUser = await UserService.getUser(); // Fetch updated coins
+      await UserService.deductCoins(widget.book.price);
+      User updatedUser = await UserService.getUser();
 
       setState(() {
         _userCoins = updatedUser.walletCoin;
         _isRedeemed = true;
+        widget.book.userActivity.isUnlocked = true;
       });
 
       _showToast(AppLocalizations.of(context)!.redeemedSuccessfully);
@@ -114,28 +136,26 @@ class _BookDetailPageState extends State<BookDetailPage> {
 
   Widget _buildActionButton() {
     if (widget.book.price == 0 || _isRedeemed) {
-      return ElevatedButton.icon(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.green,
-          foregroundColor: Colors.white,
-        ),
-        icon: const Icon(Icons.menu_book),
-        label: Text(AppLocalizations.of(context)!.read),
+      return ButtonDecorators.defaultButton(
+        key: const ValueKey('read_button'),
+        context: context,
+        icon: Icons.book,
+        text: AppLocalizations.of(context)!.read,
         onPressed: () => _showToast('Reading: ${widget.book.title}'),
+        backgroundColor: Colors.green,
+        foregroundColor: Colors.white,
       );
     } else {
-      return ElevatedButton.icon(
-        key: _redeemButtonKey,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.orange,
-          foregroundColor: Colors.white,
-        ),
-        icon: const Icon(FontAwesomeIcons.coins),
-        label: Text(
-          'Redeem with ${widget.book.price} coins',
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
+      return ButtonDecorators.defaultButton(
+        key: const ValueKey('redeem_button'),
+        context: context,
+        icon: FontAwesomeIcons.coins,
+        iconIsFaIcon: true,
+        text: 'Redeem with ${widget.book.price} coins',
         onPressed: _onRedeem,
+        backgroundColor: Colors.orange,
+        foregroundColor: Colors.white,
+        labelTextStyle: const TextStyle(fontWeight: FontWeight.bold),
       );
     }
   }
@@ -143,7 +163,6 @@ class _BookDetailPageState extends State<BookDetailPage> {
   @override
   Widget build(BuildContext context) {
     final book = widget.book;
-    final appBarTheme = Theme.of(context).appBarTheme;
 
     return Scaffold(
       appBar: BookAppBar(title: book.title),
@@ -155,56 +174,30 @@ class _BookDetailPageState extends State<BookDetailPage> {
             book.imageUrl,
             fit: BoxFit.cover,
             loadingBuilder: (context, child, loadingProgress) {
-              if (loadingProgress == null) {
-                return child;
-              }
-              print("loading in progress");
-              return SizedBox(
-                width: 100,
-                height: 100,
-                child: Center(
-                  child: SizedBox(
-                    width: 150,
-                    child: Lottie.asset('assets/animations/image_loading.json'),
-                  ),
+              if (loadingProgress == null) return child;
+              return Center(
+                child: SizedBox(
+                  width: 150,
+                  child: Lottie.asset('assets/animations/image_loading.json'),
                 ),
               );
             },
-
             errorBuilder: (_, __, ___) => Container(
               color: Theme.of(context).scaffoldBackgroundColor,
-              child: Container(
-                width: double.infinity,
-                // Optional: set height if needed, e.g. height: 200,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 90),
-                  // padding from top
-                  child: Align(
-                    alignment: Alignment.topCenter, // top horizontal center
-                    child: const Icon(
-                      Icons.broken_image,
-                      size: 300,
-                      color: Colors.grey,
-                    ),
+              width: double.infinity,
+              child: const Padding(
+                padding: EdgeInsets.only(top: 90),
+                child: Align(
+                  alignment: Alignment.topCenter,
+                  child: Icon(
+                    Icons.broken_image,
+                    size: 300,
+                    color: Colors.grey,
                   ),
                 ),
               ),
             ),
-
-            /*
-            errorBuilder: (_, __, ___) => Container(
-              color: Theme.of(context).appBarTheme.foregroundColor,
-              width: double.infinity,
-              height: double.infinity,
-              child: SvgPicture.asset(
-                'assets/background_dark.svg',
-                fit: BoxFit.cover,
-                width: double.infinity,
-                height: double.infinity,
-              ),
-            ),*/
           ),
-
           Align(
             alignment: Alignment.bottomLeft,
             child: SafeArea(
@@ -257,7 +250,6 @@ class _BookDetailPageState extends State<BookDetailPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-
         Text(
           book.title,
           style: const TextStyle(
@@ -278,14 +270,9 @@ class _BookDetailPageState extends State<BookDetailPage> {
         const SizedBox(height: 12),
         _buildDescription(book.description),
         const SizedBox(height: 12),
-
-        /// ✅ This must be wrapped with fixed height to scroll!
         SizedBox(
           height: 30,
-          child: ScrollableCategoryList(
-            categories: book.category,
-            //onTap: (selected) => print('Selected: $selected'),
-          ),
+          child: ScrollableCategoryList(categories: book.category),
         ),
       ],
     );
@@ -374,90 +361,100 @@ class _BookDetailPageState extends State<BookDetailPage> {
   }
 
   Widget _buildStatsRow(Book book) {
-    return Row(
-      children: [
-        const Icon(Icons.menu_book, color: Colors.white70, size: 20),
-        const SizedBox(width: 4),
-        Text(
-          book.viewCount,
-          style: const TextStyle(
-            color: Colors.white70,
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: [
+          const Icon(Icons.menu_book, color: Colors.white70, size: 20),
+          const SizedBox(width: 4),
+          Text(
+            NumberFormatter.formatCount(book.viewCount, _localeCode),
+            style: const TextStyle(
+              color: Colors.white70,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-        const SizedBox(width: 16),
-        const Icon(Icons.star, color: Colors.yellowAccent, size: 18),
-        const SizedBox(width: 4),
-        Text(
-          book.rating.toString(),
-          style: const TextStyle(
-            color: Colors.yellowAccent,
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
+          const SizedBox(width: 16),
+          const Icon(Icons.star, color: Colors.yellowAccent, size: 20),
+          const SizedBox(width: 4),
+          Text(
+            NumberFormat.decimalPattern(_localeCode).format(book.rating),
+            style: const TextStyle(
+              color: Colors.yellowAccent,
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
           ),
-        ),
-        const SizedBox(width: 16),
-        const Icon(Icons.access_time, color: Colors.teal, size: 18),
-        const SizedBox(width: 4),
-        Text(
-          "${book.rating} Min",
-          style: const TextStyle(
-            color: Colors.teal,
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
+          const SizedBox(width: 16),
+          const Icon(Icons.access_time, color: Colors.teal, size: 20),
+          const SizedBox(width: 4),
+          Text(
+            NumberFormatter.formatDuration(book.storyTime as int, _localeCode),
+            style: const TextStyle(
+              color: Colors.teal,
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
   Widget _buildActionButtons(Book book) {
-    return Wrap(
-      spacing: 12,
-      runSpacing: 8,
-      alignment: WrapAlignment.center,
-      // center items in run
-      crossAxisAlignment: WrapCrossAlignment.center,
-      // vertically align centers
-      children: [
-        ElevatedButton.icon(
-          onPressed: () => _showToast('Opening preview...'),
-          icon: const Icon(Icons.auto_stories),
-          label: const Text('Read a Little'),
-          style: ElevatedButton.styleFrom(
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ButtonDecorators.defaultButton(
+            context: context,
+            icon: Icons.auto_stories,
+            text: AppLocalizations.of(context)!.readAlittle,
+            onPressed: () {
+              _showToast('Opening preview...');
+            },
             backgroundColor: Colors.teal,
             foregroundColor: Colors.white,
-            fixedSize: const Size.fromHeight(40), // fixed height & min width
           ),
-        ),
 
-        ElevatedButton.icon(
-          onPressed: () => _showToast('Loading comments...'),
-          icon: const Icon(Icons.comment),
-          label:  Text(book.commentsCount),
-          style: ElevatedButton.styleFrom(
+          const SizedBox(width: 12),
+          ButtonDecorators.defaultButton(
+            context: context,
+            icon: Icons.comment,
+            text: NumberFormatter.formatCount(book.commentsCount, _localeCode),
+            onPressed: () => _showToast('Loading comments...'),
             backgroundColor: Colors.cyan,
             foregroundColor: Colors.white,
-            fixedSize: const Size.fromHeight(40), // fixed height & min width
           ),
-        ),
 
-        ElevatedButton(
-          onPressed: _toggleFavorite,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: book.isMyFavorite ? Colors.red : Colors.grey,
-            foregroundColor: Colors.white,
-            shape: const CircleBorder(),
-            padding: const EdgeInsets.all(12),
-            minimumSize: const Size(
-              40,
-              40,
-            ), // fixed size to keep circle shape consistent
+          const SizedBox(width: 12),
+          ElevatedButton(
+            onPressed: _toggleFavorite,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.transparent,
+              shadowColor: Colors.transparent,
+              surfaceTintColor: Colors.transparent,
+              elevation: 0,
+              padding: EdgeInsets.zero,
+              shape: const CircleBorder(),
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                color: _isFavorite ? Colors.redAccent : Colors.grey.shade700,
+                shape: BoxShape.circle,
+              ),
+              padding: const EdgeInsets.all(12),
+              child: Icon(
+                _isFavorite ? Icons.favorite : Icons.favorite_border,
+                color: Colors.white,
+                size: 20,
+              ),
+            ),
           ),
-          child: Icon(book.isMyFavorite ? Icons.favorite : Icons.favorite_border),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

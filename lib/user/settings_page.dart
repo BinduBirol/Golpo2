@@ -3,7 +3,7 @@ import '../DTO/User.dart';
 import '../DTO/UserPreferences.dart';
 import '../service/UserService.dart';
 import '../utils/background_audio.dart';
-import '../widgets/my_app_bar.dart';
+import '../widgets/app_bar/my_app_bar.dart';
 import '../l10n/app_localizations.dart';
 
 class SettingsPage extends StatefulWidget {

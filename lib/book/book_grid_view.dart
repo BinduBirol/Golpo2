@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:golpo/widgets/number_formatter.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 
 import '../DTO/Book.dart';
@@ -13,14 +15,16 @@ class BookGridView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String localeCode = Localizations.localeOf(context).languageCode;
+
     return GridView.builder(
       padding: const EdgeInsets.all(8),
       itemCount: books.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3, // two items per row
+        crossAxisCount: 3,
         crossAxisSpacing: 8,
         mainAxisSpacing: 8,
-        childAspectRatio: 0.65, // height to width ratio for tiles
+        childAspectRatio: 0.65,
       ),
       itemBuilder: (context, index) {
         final book = books[index];
@@ -43,8 +47,6 @@ class BookGridView extends StatelessWidget {
                           fit: BoxFit.cover,
                           loadingBuilder: (context, child, loadingProgress) {
                             if (loadingProgress == null) return child;
-
-                            // While loading, show a spinner
                             return Center(
                               child: SizedBox(
                                 width: 150,
@@ -54,32 +56,15 @@ class BookGridView extends StatelessWidget {
                               ),
                             );
                           },
-
-                          errorBuilder: (_, __, ___) => Center(
+                          errorBuilder: (_, __, ___) => const Center(
                             child: Icon(
                               Icons.broken_image,
                               size: 50,
                               color: Colors.grey,
                             ),
                           ),
-
-                          /*    errorBuilder: (_, __, ___) => Container(
-                            color: Theme.of(
-                              context,
-                            ).appBarTheme.foregroundColor,
-                            width: double.infinity,
-                            height: double.infinity,
-                            child: SvgPicture.asset(
-                              'assets/svg/book_cover/1.svg',
-                              fit: BoxFit.cover,
-                              width: double.infinity,
-                              height: double.infinity,
-                              alignment: Alignment.topCenter,
-                            ),
-                          ),
-                    */
                         )
-                      : Center(
+                      : const Center(
                           child: Icon(Icons.book, size: 50, color: Colors.grey),
                         ),
                 ),
@@ -102,7 +87,9 @@ class BookGridView extends StatelessWidget {
                         Icon(Icons.star, size: 10, color: Colors.yellow[700]),
                         const SizedBox(width: 2),
                         Text(
-                          book.rating.toStringAsFixed(1),
+                          NumberFormat.decimalPattern(
+                            localeCode,
+                          ).format(book.rating),
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 8,
@@ -113,8 +100,8 @@ class BookGridView extends StatelessWidget {
                   ),
                 ),
 
-                // Top right - Premium badge
-                if (book.price == 0)
+                // Top right - price or free badge if locked
+                if (!book.userActivity.isUnlocked)
                   Positioned(
                     top: 8,
                     right: 8,
@@ -124,74 +111,79 @@ class BookGridView extends StatelessWidget {
                         vertical: 3,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.green.withOpacity(0.9),
+                        color: book.price == 0
+                            ? Colors.green.withOpacity(0.9)
+                            : Colors.deepOrange.withOpacity(0.9),
                         borderRadius: BorderRadius.circular(6),
                       ),
-                      child: const Text(
-                        'Free',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 8,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      child: book.price == 0
+                          ? const Text(
+                              'Free',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 8,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            )
+                          : Row(
+                              children: [
+                                Icon(
+                                  FontAwesomeIcons.coins,
+                                  size: 10,
+                                  color: Colors.yellow[700],
+                                ),
+                                const SizedBox(width: 2),
+                                Text(
+                                  NumberFormat.decimalPattern(
+                                    localeCode,
+                                  ).format(book.price),
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 8,
+                                  ),
+                                ),
+                              ],
+                            ),
                     ),
                   ),
 
-                if (book.price > 0)
+                if (book.userActivity.isUnlocked &&
+                    book.userActivity.isMyFavorite)
                   Positioned(
                     top: 8,
                     right: 8,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 3),
-                      decoration: BoxDecoration(
-                        color: Colors.deepOrange.withOpacity(0.9),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            FontAwesomeIcons.coins,
-                            size: 10,
-                            color: Colors.yellow[700],
-                          ),
-                          const SizedBox(width: 2),
-                          Text(
-                            book.price.toString(),
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 8,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    child: Icon(Icons.favorite, color: Colors.red, size: 12),
                   ),
 
-                // Bottom stacked: Read count + Title with shared gradient background
+                if (book.userActivity.isUnlocked &&
+                    !book.userActivity.isMyFavorite)
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: Icon(Icons.menu_book, color: Colors.grey, size: 12),
+                  ),
+                // Bottom: Read count + title with gradient overlay
                 Positioned(
                   left: 0,
                   right: 0,
                   bottom: 0,
                   child: Container(
                     padding: const EdgeInsets.only(
-                      top: 14, // 👈 padding on top
+                      top: 14,
                       left: 8,
                       right: 8,
                       bottom: 6,
                     ),
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       gradient: LinearGradient(
                         colors: [Colors.black, Colors.transparent],
                         begin: Alignment.bottomCenter,
                         end: Alignment.topCenter,
                       ),
                     ),
-
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
-
                       children: [
                         Row(
                           children: [
@@ -202,7 +194,10 @@ class BookGridView extends StatelessWidget {
                             ),
                             const SizedBox(width: 4),
                             Text(
-                              book.viewCount,
+                              NumberFormatter.formatCount(
+                                book.viewCount,
+                                localeCode,
+                              ),
                               style: const TextStyle(
                                 color: Colors.white70,
                                 fontSize: 8,

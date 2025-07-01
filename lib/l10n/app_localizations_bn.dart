@@ -109,4 +109,10 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get no => 'না';
+
+  @override
+  String get continueReading => 'পাঠ অব্যাহত রাখুন...';
+
+  @override
+  String get readAlittle => 'একটু পড়ে দেখুন';
 }

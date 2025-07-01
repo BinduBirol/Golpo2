@@ -29,9 +29,12 @@
   "confirmRedemption": "Confirm Redemption",
   "sureRedemption": "Are you sure you want to redeem this book?",
   "redeemedSuccessfully": "Redeemed successfully!",
-
   "notEnoughCoin": "Not enough coins to redeem. Want to get coins now?",
-  "oops" : "Oopss...",
+  "oops": "Oopss...",
   "yes": "Yes",
-  "no" : "No"
+  "no": "No",
+  "continueReading": "Continue Reading...",
+  "readAlittle" : "Read a little",
+  "seeMore" : "See more",
+  "seeLess": "See less"
 }

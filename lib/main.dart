@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:golpo/pages/BuyCoinsPage.dart';
 import 'package:golpo/service/UserService.dart';
-import 'package:golpo/widgets/splash_screen.dart';
 
 import 'DTO/User.dart';
 import 'home/story_page.dart';
@@ -25,7 +24,6 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   User? _user;
-  bool _isLoading = true;
 
   @override
   void initState() {
@@ -34,16 +32,8 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> _loadUser() async {
-    try {
-      final user = await UserService.getUser();
-      setState(() {
-        _user = user;
-        _isLoading = false;
-      });
-    } catch (e) {
-      setState(() => _isLoading = false);
-      // Optionally log or handle error
-    }
+    final user = await UserService.getUser();
+    setState(() => _user = user);
   }
 
   void _updateTheme(bool isDark) async {
@@ -60,17 +50,14 @@ class _MyAppState extends State<MyApp> {
     await UserService.setUser(updatedUser);
   }
 
+  Color hexToColor(String code) {
+    return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
+  }
+
   @override
   Widget build(BuildContext context) {
-    if (_isLoading || _user == null) {
-      return const MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: SplashScreen(),
-      );
-    }
-
-    final prefs = _user!.preferences;
-    final localeParts = prefs.language.split('_');
+    final prefs = _user?.preferences;
+    final localeParts = prefs?.language.split('_') ?? ['en'];
     final locale = localeParts.length == 1
         ? Locale(localeParts[0])
         : Locale(localeParts[0], localeParts[1]);
@@ -78,34 +65,32 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Interactive Story App',
-      themeMode: prefs.isDarkMode ? ThemeMode.dark : ThemeMode.light,
+      themeMode: prefs?.isDarkMode == true ? ThemeMode.dark : ThemeMode.light,
       theme: ThemeData(
         brightness: Brightness.light,
-        scaffoldBackgroundColor: Colors.white,
+        scaffoldBackgroundColor: const Color(0xFFFFF1F4),
         appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.pinkAccent,
+          backgroundColor: Color(0xFFE91E63),
           foregroundColor: Colors.white,
         ),
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
-        scaffoldBackgroundColor: Colors.black,
+        scaffoldBackgroundColor: const Color(0xFF16080F),
         appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.indigo,
+          backgroundColor: Color(0xFFAD1457),
           foregroundColor: Colors.white,
         ),
       ),
       locale: locale,
-      supportedLocales: const [
-        Locale('en'),
-        Locale('bn'),
-      ],
+      supportedLocales: const [Locale('en'), Locale('bn')],
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
+      // ✅ Always go to InitialLoaderPage — it will handle splash, loading, routing
       home: InitialLoaderPage(
         onThemeChange: _updateTheme,
         onLocaleChange: _updateLocale,

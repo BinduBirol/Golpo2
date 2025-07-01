@@ -109,4 +109,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get no => 'No';
+
+  @override
+  String get continueReading => 'Continue Reading...';
+
+  @override
+  String get readAlittle => 'Read a little';
 }

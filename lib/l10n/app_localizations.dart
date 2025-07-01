@@ -298,6 +298,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No'**
   String get no;
+
+  /// No description provided for @continueReading.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue Reading...'**
+  String get continueReading;
+
+  /// No description provided for @readAlittle.
+  ///
+  /// In en, this message translates to:
+  /// **'Read a little'**
+  String get readAlittle;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

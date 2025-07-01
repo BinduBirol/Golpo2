@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:golpo/widgets/my_app_bar.dart';
+
 
 import '../DTO/User.dart';
+import '../l10n/app_localizations.dart';
 import '../service/UserService.dart';
 import '../widgets/animated_coin.dart';
+import '../widgets/app_bar/my_app_bar.dart';
 
 class BuyCoinsPage extends StatefulWidget {
   const BuyCoinsPage({super.key});
@@ -83,7 +85,7 @@ class _BuyCoinsPageState extends State<BuyCoinsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const MyAppBar(title: 'Buy Coins'),
+      appBar:  MyAppBar(title: AppLocalizations.of(context)!.coinStore),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: GridView.builder(

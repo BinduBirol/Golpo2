@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
-import '../service/UserService.dart';
+
 import '../DTO/User.dart';
+import '../service/UserService.dart';
 
 class DrawerHeaderWidget extends StatelessWidget {
   const DrawerHeaderWidget({Key? key}) : super(key: key);
@@ -16,7 +17,9 @@ class DrawerHeaderWidget extends StatelessWidget {
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return const DrawerHeader(
-            child: Center(child: CircularProgressIndicator(color: Colors.white)),
+            child: Center(
+              child: CircularProgressIndicator(color: Colors.white),
+            ),
           );
         }
 
@@ -24,6 +27,16 @@ class DrawerHeaderWidget extends StatelessWidget {
 
         return DrawerHeader(
           decoration: BoxDecoration(
+            /*
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                appPrimaryColor ?? Colors.pink, // Top: colored
+                Colors.transparent, // Bottom: transparent
+              ],
+            ),
+            */
             color: appPrimaryColor,
           ),
           child: Row(
@@ -32,11 +45,7 @@ class DrawerHeaderWidget extends StatelessWidget {
               CircleAvatar(
                 radius: 40,
                 backgroundColor: Colors.white,
-                child: Icon(
-                  Icons.person,
-                  size: 40,
-                  color: appPrimaryColor,
-                ),
+                child: Icon(Icons.person, size: 40, color: appPrimaryColor),
               ),
 
               const SizedBox(width: 16),
@@ -74,7 +83,9 @@ class DrawerHeaderWidget extends StatelessWidget {
                             valueListenable: UserService.walletCoinNotifier,
                             builder: (context, coinValue, _) {
                               return Text(
-                                NumberFormat.decimalPattern('en_IN').format(coinValue),
+                                NumberFormat.decimalPattern(
+                                  Localizations.localeOf(context).toString(),
+                                ).format(coinValue),
                                 style: const TextStyle(
                                   fontSize: 14,
                                   color: Colors.amberAccent,

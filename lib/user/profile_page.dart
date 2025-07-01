@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:golpo/widgets/my_app_bar.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../widgets/app_bar/my_app_bar.dart';
 
 class ProfilePage extends StatefulWidget {
   @override

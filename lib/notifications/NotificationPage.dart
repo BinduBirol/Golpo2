@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:golpo/widgets/my_app_bar.dart';
 
 import '../l10n/app_localizations.dart';
+import '../widgets/app_bar/my_app_bar.dart';
 
 class NotificationPage extends StatelessWidget {
   @override

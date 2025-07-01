@@ -11,7 +11,7 @@ import '../l10n/app_localizations.dart';
 import '../user/profile_page.dart';
 import '../user/settings_page.dart';
 import '../widgets/CustomListTile.dart';
-import '../widgets/StoryAppBar.dart';
+import '../widgets/app_bar/StoryAppBar.dart';
 import 'category_page.dart';
 
 class StoryPage extends StatefulWidget {

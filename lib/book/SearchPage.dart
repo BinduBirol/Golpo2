@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:golpo/widgets/app_bar/my_app_bar.dart';
 import 'package:lottie/lottie.dart';
 import '../DTO/Book.dart';
 import '../book/BookDetailPage.dart';
@@ -59,7 +60,7 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     final appBarTheme = Theme.of(context).appBarTheme;
     return Scaffold(
-      appBar: AppBar(title: const Text("Search Books")),
+      appBar: MyAppBar(title: "Search Books"),
       body: Column(
         children: [
           Padding(
@@ -111,7 +112,7 @@ class _SearchPageState extends State<SearchPage> {
             child: _isLoading
                 ? Center(
               child: Lottie.asset(
-                'assets/animations/loading_girl.json',
+                'assets/animations/image_loading.json',
                 width: 300,
                 height: 300,
               ),
