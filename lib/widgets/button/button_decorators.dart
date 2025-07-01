@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ButtonDecorators {
-  static const double _buttonHeight = 48.0;
+  static const double _buttonHeight = 30.0;
   static const double _iconSize = 20.0;
 
   /// Circular filled icon button
@@ -13,12 +13,13 @@ class ButtonDecorators {
     Color? backgroundColor,
     double size = _iconSize,
     EdgeInsets padding = const EdgeInsets.all(8.0),
+    double? height
   }) {
     return Padding(
       padding: padding,
       child: Container(
         width: _buttonHeight,
-        height: _buttonHeight,
+        height:  height ?? _buttonHeight,
         decoration: BoxDecoration(
           color: backgroundColor ?? Colors.white24,
           shape: BoxShape.circle,

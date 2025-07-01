@@ -16,6 +16,7 @@ class BookGridView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final String localeCode = Localizations.localeOf(context).languageCode;
+    final appBarTheme = Theme.of(context).appBarTheme;
 
     return GridView.builder(
       padding: const EdgeInsets.all(8),
@@ -174,7 +175,7 @@ class BookGridView extends StatelessWidget {
                       right: 8,
                       bottom: 6,
                     ),
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [Colors.black, Colors.transparent],
                         begin: Alignment.bottomCenter,

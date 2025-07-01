@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:golpo/widgets/app_bar/my_app_bar.dart';
 import 'package:golpo/widgets/number_formatter.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
@@ -165,7 +166,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
     final book = widget.book;
 
     return Scaffold(
-      appBar: BookAppBar(title: book.title),
+      appBar: BookAppBar(title: 'Book no ${book.id}'),
       extendBodyBehindAppBar: true,
       body: Stack(
         fit: StackFit.expand,

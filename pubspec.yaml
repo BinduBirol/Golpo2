@@ -50,6 +50,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_native_splash: ^2.4.0
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -102,3 +103,11 @@ localizations:
   arb-dir: lib/l10n
   template-arb-file: app_en.arb
   output-localization-file: app_localizations.dart
+
+flutter_native_splash:
+  color: "#16080F" # Background color of your splash
+  image: assets/img/logo.png # OPTIONAL: If you have a static logo for splash
+  android: true
+  ios: true
+  fullscreen: true
+  android_gravity: center

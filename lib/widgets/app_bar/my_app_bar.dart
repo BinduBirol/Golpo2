@@ -26,12 +26,27 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     final appBarTheme = Theme.of(context).appBarTheme;
 
-    // Fallback color for gradient top if null
     final Color topGradientColor =
         appBarTheme.backgroundColor ?? const Color(0xFFB71C1C);
 
     return Stack(
       children: [
+        // 🔽 Gradient is drawn in the background
+        Container(
+          height: preferredSize.height,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                topGradientColor,
+                Theme.of(context).scaffoldBackgroundColor,
+              ],
+            ),
+          ),
+        ),
+
+        // 🔼 AppBar is drawn above the gradient
         AppBar(
           title: Text(
             title,
@@ -40,15 +55,16 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          leading: ButtonDecorators.circularIconButton(
-            icon: Icons.arrow_back_ios_new_rounded,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios_new_rounded),
             onPressed: () {
               Navigator.of(context).pop();
             },
-            iconColor: appBarTheme.foregroundColor,
-            backgroundColor: appBarTheme.backgroundColor,
-            padding: const EdgeInsets.only(left: 16),
+            color: appBarTheme.backgroundColor,
+            tooltip: 'back',
+            //padding: const EdgeInsets.only(left: 16),
           ),
+
           actions:
               actions ??
               [
@@ -96,27 +112,9 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                   },
                 ),
               ],
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-          foregroundColor: foregroundColor ?? appBarTheme.foregroundColor,
+          backgroundColor: Colors.transparent,
           elevation: 0,
-        ),
-        Positioned(
-          top: 0,
-          left: 0,
-          right: 0,
-          height: 40,
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  topGradientColor,
-                  Theme.of(context).scaffoldBackgroundColor,
-                ],
-              ),
-            ),
-          ),
+          foregroundColor: backgroundColor ?? appBarTheme.backgroundColor,
         ),
       ],
     );

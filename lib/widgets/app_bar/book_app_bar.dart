@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:golpo/widgets/wallet_coin_chip.dart';
 
 import '../../service/UserService.dart';
@@ -47,12 +48,14 @@ class BookAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
         AppBar(
-          leading: ButtonDecorators.circularIconButton(
-            icon: Icons.arrow_back_ios_new_rounded,
-            onPressed: () => Navigator.of(context).pop(),
-            iconColor: appBarTheme.foregroundColor,
-            backgroundColor: appBarTheme.backgroundColor,
-            padding: const EdgeInsets.only(left: 12),
+          leading: IconButton(
+            icon: const Icon(FontAwesomeIcons.times),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            color: appBarTheme.backgroundColor,
+            tooltip: 'Search',
+            //padding: const EdgeInsets.only(left: 16),
           ),
           actions: actions ??
               [
@@ -72,7 +75,7 @@ class BookAppBar extends StatelessWidget implements PreferredSizeWidget {
           title: Text(
             title,
             style: TextStyle(
-              color: foregroundColor ?? appBarTheme.foregroundColor,
+              color: backgroundColor ?? appBarTheme.backgroundColor,
               fontWeight: FontWeight.bold,
             ),
           ),
