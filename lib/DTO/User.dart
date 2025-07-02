@@ -5,6 +5,8 @@ class User {
   final String name;
   final String email;
   final int walletCoin;
+  final bool isVerified;
+  final int followers;
   final UserPreferences preferences;
 
   User({
@@ -12,6 +14,8 @@ class User {
     required this.name,
     required this.email,
     required this.walletCoin,
+    required this.isVerified,
+    required this.followers,
     required this.preferences,
   });
 
@@ -20,6 +24,8 @@ class User {
     name: json['name'],
     email: json['email'],
     walletCoin: json['walletCoin'] ?? 0,
+    isVerified: json['isVerified'] ?? false,
+    followers: json['followers'] ?? 0,
     preferences: json['preferences'] != null
         ? UserPreferences.fromJson(json['preferences'])
         : UserPreferences.defaultValues(),
@@ -30,6 +36,8 @@ class User {
     'name': name,
     'email': email,
     'walletCoin': walletCoin,
+    'isVerified': isVerified,
+    'followers': followers,
     'preferences': preferences.toJson(),
   };
 
@@ -38,6 +46,8 @@ class User {
     String? name,
     String? email,
     int? walletCoin,
+    bool? isVerified,
+    int? followers,
     UserPreferences? preferences,
   }) {
     return User(
@@ -45,6 +55,8 @@ class User {
       name: name ?? this.name,
       email: email ?? this.email,
       walletCoin: walletCoin ?? this.walletCoin,
+      isVerified: isVerified ?? this.isVerified,
+      followers: followers ?? this.followers,
       preferences: preferences ?? this.preferences,
     );
   }

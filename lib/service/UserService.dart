@@ -36,9 +36,11 @@ class UserService {
 
     _cachedUser = User(
       id: randomId,
-      name: 'Guest #$randomId',
+      name: 'Guest Karmaker Overoy',
       email: 'guest_$randomId@example.com',
       walletCoin: walletCoin,
+      isVerified: false,
+      followers: Random().nextInt(100),
       preferences: userPreferences,
     );
 

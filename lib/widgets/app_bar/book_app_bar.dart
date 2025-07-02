@@ -24,7 +24,7 @@ class BookAppBar extends StatelessWidget implements PreferredSizeWidget {
     final appBarTheme = Theme.of(context).appBarTheme;
 
     // Use fallback color if backgroundColor is null
-    final Color topGradientColor = appBarTheme.backgroundColor ?? const Color(0xFFB71C1C);
+    final Color topGradientColor = Theme.of(context).scaffoldBackgroundColor;
 
     return Stack(
       children: [
@@ -34,48 +34,60 @@ class BookAppBar extends StatelessWidget implements PreferredSizeWidget {
           right: 0,
           child: Container(
             width: double.infinity,
-            height: 40,
+            height: 45,
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
                   topGradientColor,
-                  Colors.transparent,
+                  topGradientColor.withOpacity(0.9),
+                  topGradientColor.withOpacity(0.6),
+                  topGradientColor.withOpacity(0),
                 ],
               ),
             ),
           ),
         ),
         AppBar(
-          leading: IconButton(
-            icon: const Icon(FontAwesomeIcons.times),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            color: appBarTheme.backgroundColor,
-            tooltip: 'Search',
-            //padding: const EdgeInsets.only(left: 16),
+          leading: Padding(
+            padding: const EdgeInsets.only(left: 12),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.5), // Translucent dark background
+                shape: BoxShape.circle,
+              ),
+              child: IconButton(
+                icon: const Icon(FontAwesomeIcons.arrowLeft, size: 18),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                color: Colors.white, // White for contrast
+                tooltip: 'Back',
+              ),
+            ),
           ),
           actions: actions ??
               [
-                ValueListenableBuilder<int>(
-                  valueListenable: UserService.walletCoinNotifier,
-                  builder: (context, walletCoin, _) {
-                    return const Padding(
-                      padding: EdgeInsets.only(right: 12),
-                      child: WalletCoinChip(),
-                    );
-                  },
+                Padding(
+                  padding: const EdgeInsets.only(right: 12),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.5),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: const WalletCoinChip(), // WalletChip text/icon should be white too
+                  ),
                 ),
               ],
+
           backgroundColor: backgroundColor ?? Colors.transparent,
           foregroundColor: foregroundColor ?? appBarTheme.foregroundColor,
           elevation: 0,
           title: Text(
             title,
             style: TextStyle(
-              color: backgroundColor ?? appBarTheme.backgroundColor,
+              color: foregroundColor ?? appBarTheme.foregroundColor,
               fontWeight: FontWeight.bold,
             ),
           ),

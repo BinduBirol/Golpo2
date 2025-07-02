@@ -8,9 +8,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../DTO/Book.dart';
 import '../book/book_grid_view.dart';
 import '../l10n/app_localizations.dart';
-import '../user/profile_page.dart';
-import '../user/settings_page.dart';
+import '../pages/profile_page.dart';
+import '../pages/settings_page.dart';
 import '../widgets/CustomListTile.dart';
+import '../widgets/MyLoadingIndicator.dart';
 import '../widgets/app_bar/StoryAppBar.dart';
 import 'category_page.dart';
 
@@ -48,6 +49,7 @@ class _StoryPageState extends State<StoryPage> {
 
   Future<void> _loadBooks() async {
     try {
+
       final books = await BookService.fetchBooks();
       setState(() {
         _books = books;
@@ -71,7 +73,7 @@ class _StoryPageState extends State<StoryPage> {
     final appBarTheme = Theme.of(context).appBarTheme;
 
     if (_isLoading) {
-      return Scaffold(body: Center(child: CircularProgressIndicator()));
+      return Scaffold(body: Center(child: MyLoadingIndicator(message: "Loading books..")));
     }
 
     if (_error != null) {

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:golpo/widgets/app_bar/my_app_bar.dart';
 import 'package:golpo/widgets/number_formatter.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
@@ -9,6 +8,7 @@ import 'package:lottie/lottie.dart';
 import '../DTO/Book.dart';
 import '../DTO/User.dart';
 import '../l10n/app_localizations.dart';
+import '../service/BookService.dart';
 import '../service/UserService.dart';
 import '../utils/confirm_dialog.dart';
 import '../widgets/ScrollableCategoryList.dart';
@@ -56,9 +56,10 @@ class _BookDetailPageState extends State<BookDetailPage> {
     });
     widget.book.userActivity.isMyFavorite = _isFavorite;
 
+    BookService.updateUserActivity(widget.book.id, widget.book.userActivity);
+
     _showToast(_isFavorite ? 'Added to favorites' : 'Removed from favorites');
   }
-
 
   void _showCoinAnimation() {
     final renderBox =
@@ -131,6 +132,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
         widget.book.userActivity.isUnlocked = true;
       });
 
+      BookService.updateUserActivity(widget.book.id, widget.book.userActivity);
       _showToast(AppLocalizations.of(context)!.redeemedSuccessfully);
     }
   }

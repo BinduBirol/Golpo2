@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:golpo/widgets/app_bar/my_app_bar.dart';
 import 'package:lottie/lottie.dart';
+
 import '../DTO/Book.dart';
 import '../book/BookDetailPage.dart';
 import 'book_grid_view.dart';
@@ -18,7 +19,6 @@ class _SearchPageState extends State<SearchPage> {
   final TextEditingController _searchController = TextEditingController();
   List<Book> _filteredBooks = [];
   bool _isLoading = false;
-
 
   void _onSearch([String? _]) async {
     final query = _searchController.text.trim();
@@ -102,7 +102,10 @@ class _SearchPageState extends State<SearchPage> {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: const Text("Search"),
+                    child: const Text(
+                      "Search",
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ),
               ],
@@ -111,25 +114,25 @@ class _SearchPageState extends State<SearchPage> {
           Expanded(
             child: _isLoading
                 ? Center(
-              child: Lottie.asset(
-                'assets/animations/image_loading.json',
-                width: 300,
-                height: 300,
-              ),
-            )
+                    child: Lottie.asset(
+                      'assets/animations/image_loading.json',
+                      width: 300,
+                      height: 300,
+                    ),
+                  )
                 : _filteredBooks.isEmpty
                 ? const Center(child: Text("No results yet. Type and search."))
                 : BookGridView(
-              books: _filteredBooks,
-              onBookTap: (book) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => BookDetailPage(book: book),
+                    books: _filteredBooks,
+                    onBookTap: (book) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => BookDetailPage(book: book),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
           ),
         ],
       ),

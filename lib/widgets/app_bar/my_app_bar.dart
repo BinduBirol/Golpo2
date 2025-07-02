@@ -3,7 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 
 import '../../service/UserService.dart';
-import '../button/button_decorators.dart';
+import '../wallet_coin_chip.dart';
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
@@ -32,6 +32,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
     return Stack(
       children: [
         // 🔽 Gradient is drawn in the background
+        /*
         Container(
           height: preferredSize.height,
           decoration: BoxDecoration(
@@ -40,18 +41,19 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
               end: Alignment.bottomCenter,
               colors: [
                 topGradientColor,
-                Theme.of(context).scaffoldBackgroundColor,
+                Colors.transparent,
               ],
             ),
           ),
         ),
+        */
 
         // 🔼 AppBar is drawn above the gradient
         AppBar(
           title: Text(
             title,
             style: TextStyle(
-              color: appBarTheme.backgroundColor,
+              //color: appBarTheme.backgroundColor,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -60,7 +62,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
             onPressed: () {
               Navigator.of(context).pop();
             },
-            color: appBarTheme.backgroundColor,
+            //color: appBarTheme.backgroundColor,
             tooltip: 'back',
             //padding: const EdgeInsets.only(left: 16),
           ),
@@ -68,53 +70,14 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
           actions:
               actions ??
               [
-                ValueListenableBuilder<int>(
-                  valueListenable: UserService.walletCoinNotifier,
-                  builder: (context, walletCoin, _) {
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 12),
-                      child: GestureDetector(
-                        onTap: () => Navigator.pushNamed(context, '/buy'),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.orange.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(color: Colors.orange, width: 1),
-                          ),
-                          child: Row(
-                            children: [
-                              const FaIcon(
-                                FontAwesomeIcons.coins,
-                                color: Colors.deepOrange,
-                                size: 14,
-                              ),
-                              const SizedBox(width: 6),
-                              Text(
-                                NumberFormat.decimalPattern(
-                                  Localizations.localeOf(context).toString(),
-                                ).format(walletCoin),
-                                style: const TextStyle(
-                                  color: Colors.deepOrange,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                  letterSpacing: 0.5,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  },
+                const Padding(
+                  padding: EdgeInsets.only(right: 12),
+                  child: WalletCoinChip(),
                 ),
               ],
           backgroundColor: Colors.transparent,
           elevation: 0,
-          foregroundColor: backgroundColor ?? appBarTheme.backgroundColor,
+          //foregroundColor: backgroundColor ?? appBarTheme.backgroundColor,
         ),
       ],
     );

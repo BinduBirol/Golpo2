@@ -29,6 +29,7 @@ class StoryAppBar extends StatelessWidget implements PreferredSizeWidget {
     return Stack(
       children: [
         // Gradient background behind the AppBar
+        /*
         Container(
           height: preferredSize.height,
           decoration: BoxDecoration(
@@ -37,11 +38,13 @@ class StoryAppBar extends StatelessWidget implements PreferredSizeWidget {
               end: Alignment.bottomCenter,
               colors: [
                 topGradientColor,
-                Theme.of(context).scaffoldBackgroundColor,
+                Colors.transparent,
               ],
             ),
           ),
         ),
+
+         */
 
         // Transparent AppBar layered on top
         AppBar(
@@ -52,14 +55,14 @@ class StoryAppBar extends StatelessWidget implements PreferredSizeWidget {
           leading: IconButton(
             icon: const FaIcon(FontAwesomeIcons.bars),
             onPressed: () => scaffoldKey.currentState?.openDrawer(),
-            color: appBarTheme.backgroundColor,
+            //color: appBarTheme.backgroundColor,
             tooltip: 'Menu',
           ),
 
           title: Text(
             title,
             style: TextStyle(
-              color: appBarTheme.backgroundColor,
+              //color: appBarTheme.backgroundColor,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -71,10 +74,11 @@ class StoryAppBar extends StatelessWidget implements PreferredSizeWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (_) => SearchPage(allBooks: books)),
+                    builder: (_) => SearchPage(allBooks: books),
+                  ),
                 );
               },
-              color: appBarTheme.backgroundColor,
+              //color: appBarTheme.backgroundColor,
               tooltip: 'Search',
             ),
             IconButton(
@@ -85,7 +89,7 @@ class StoryAppBar extends StatelessWidget implements PreferredSizeWidget {
                   MaterialPageRoute(builder: (_) => NotificationPage()),
                 );
               },
-              color: appBarTheme.backgroundColor,
+              //color: appBarTheme.backgroundColor,
               tooltip: 'Notifications',
             ),
             IconButton(
@@ -93,7 +97,7 @@ class StoryAppBar extends StatelessWidget implements PreferredSizeWidget {
               onPressed: () {
                 Navigator.pushNamed(context, '/settings');
               },
-              color: appBarTheme.backgroundColor,
+              //color: appBarTheme.backgroundColor,
               tooltip: 'Search',
             ),
           ],

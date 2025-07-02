@@ -34,6 +34,25 @@ class Book {
     required this.userActivity,
   });
 
+  Book copyWithUserActivity(UserActivity newUserActivity) {
+    return Book(
+      id: id,
+      title: title,
+      description: description,
+      imageUrl: imageUrl,
+      author: author,
+      genre: genre,
+      publishedYear: publishedYear,
+      price: price,
+      rating: rating,
+      viewCount: viewCount,
+      storyTime: storyTime,
+      commentsCount: commentsCount,
+      category: category,
+      userActivity: newUserActivity,
+    );
+  }
+
   factory Book.fromJson(Map<String, dynamic> json) {
     return Book(
       id: json['id'] ?? 0,
@@ -49,15 +68,36 @@ class Book {
           : (json['rating'] ?? 0.0),
       viewCount: json['viewCount'] ?? 0,
       storyTime: json['storyTime'] ?? 0,
-      commentsCount: json['commentsCount'] ?? 0, // fix here: int expected
-      category: (json['category'] as List<dynamic>?)
-          ?.map((e) => e.toString())
-          .toList() ??
+      commentsCount: json['commentsCount'] ?? 0,
+      // fix here: int expected
+      category:
+          (json['category'] as List<dynamic>?)
+              ?.map((e) => e.toString())
+              .toList() ??
           [],
       userActivity: json['userActivity'] != null
           ? UserActivity.fromJson(json['userActivity'])
           : UserActivity(isMyFavorite: false, isUnlocked: false),
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'description': description,
+      'imageUrl': imageUrl,
+      'author': author,
+      'genre': genre,
+      'publishedYear': publishedYear,
+      'price': price,
+      'rating': rating,
+      'viewCount': viewCount,
+      'storyTime': storyTime,
+      'commentsCount': commentsCount,
+      'category': category,
+      'userActivity': userActivity.toJson(), // nested toJson call
+    };
   }
 }
 
@@ -75,13 +115,14 @@ class UserActivity {
   }
 
   // Add copyWith method to allow immutable updates
-  UserActivity copyWith({
-    bool? isMyFavorite,
-    bool? isUnlocked,
-  }) {
+  UserActivity copyWith({bool? isMyFavorite, bool? isUnlocked}) {
     return UserActivity(
       isMyFavorite: isMyFavorite ?? this.isMyFavorite,
       isUnlocked: isUnlocked ?? this.isUnlocked,
     );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'isMyFavorite': isMyFavorite, 'isUnlocked': isUnlocked};
   }
 }

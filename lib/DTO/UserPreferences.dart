@@ -1,5 +1,5 @@
 class UserPreferences {
-  bool isDarkMode;
+  bool? isDarkMode; // nullable to support system default
   bool musicEnabled;
   bool sfxEnabled;
   double musicVolume;
@@ -7,7 +7,7 @@ class UserPreferences {
   String language;
 
   UserPreferences({
-    required this.isDarkMode,
+    this.isDarkMode, // nullable
     required this.musicEnabled,
     required this.sfxEnabled,
     required this.musicVolume,
@@ -15,9 +15,10 @@ class UserPreferences {
     required this.language,
   });
 
+  /// Default values with isDarkMode set to null (system default)
   factory UserPreferences.defaultValues() {
     return UserPreferences(
-      isDarkMode: true,
+      isDarkMode: null, // Follow system theme
       musicEnabled: true,
       sfxEnabled: true,
       musicVolume: 0.6,
@@ -26,9 +27,10 @@ class UserPreferences {
     );
   }
 
+  /// Load from JSON (null-safe for isDarkMode)
   factory UserPreferences.fromJson(Map<String, dynamic> json) {
     return UserPreferences(
-      isDarkMode: json['isDarkMode'] ?? false,
+      isDarkMode: json.containsKey('isDarkMode') ? json['isDarkMode'] : null,
       musicEnabled: json['musicEnabled'] ?? true,
       sfxEnabled: json['sfxEnabled'] ?? true,
       musicVolume: (json['musicVolume'] ?? 1.0).toDouble(),
@@ -37,8 +39,9 @@ class UserPreferences {
     );
   }
 
+  /// Convert to JSON (skips isDarkMode if null)
   Map<String, dynamic> toJson() => {
-    'isDarkMode': isDarkMode,
+    if (isDarkMode != null) 'isDarkMode': isDarkMode,
     'musicEnabled': musicEnabled,
     'sfxEnabled': sfxEnabled,
     'musicVolume': musicVolume,

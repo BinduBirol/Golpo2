@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:golpo/pages/BuyCoinsPage.dart';
-import 'package:golpo/service/UserService.dart';
 
 import 'DTO/User.dart';
 import 'home/story_page.dart';
 import 'l10n/app_localizations.dart';
-import 'user/age_input_page.dart';
-import 'user/settings_page.dart';
+import 'service/UserService.dart';
+import 'home/age_input_page.dart';
+import 'pages/settings_page.dart';
 import 'utils/initial_loader_page.dart';
 
 void main() async {
@@ -24,11 +25,29 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   User? _user;
+  Brightness? _systemBrightness;
 
   @override
   void initState() {
     super.initState();
     _loadUser();
+
+    _systemBrightness =
+        WidgetsBinding.instance.platformDispatcher.platformBrightness;
+
+    WidgetsBinding.instance.platformDispatcher.onPlatformBrightnessChanged =
+        () {
+          final newBrightness =
+              WidgetsBinding.instance.platformDispatcher.platformBrightness;
+          if (_systemBrightness != newBrightness) {
+            _systemBrightness = newBrightness;
+
+            // Update UI only if user wants system theme
+            if (_user?.preferences.isDarkMode == null) {
+              setState(() {});
+            }
+          }
+        };
   }
 
   Future<void> _loadUser() async {
@@ -36,12 +55,13 @@ class _MyAppState extends State<MyApp> {
     setState(() => _user = user);
   }
 
-  void _updateTheme(bool isDark) async {
+  void _updateTheme(bool? isDark) async {
     final updatedPrefs = _user!.preferences..isDarkMode = isDark;
     final updatedUser = _user!.copyWith(preferences: updatedPrefs);
     setState(() => _user = updatedUser);
     await UserService.setUser(updatedUser);
   }
+
 
   void _updateLocale(String langCode) async {
     final updatedPrefs = _user!.preferences..language = langCode;
@@ -50,14 +70,32 @@ class _MyAppState extends State<MyApp> {
     await UserService.setUser(updatedUser);
   }
 
-  Color hexToColor(String code) {
-    return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
-  }
-
   @override
   Widget build(BuildContext context) {
-    final prefs = _user?.preferences;
-    final localeParts = prefs?.language.split('_') ?? ['en'];
+    if (_user == null) {
+      return const Material(child: Center(child: CircularProgressIndicator()));
+    }
+
+    final prefs = _user!.preferences;
+    final isDarkMode =
+        prefs.isDarkMode ?? (_systemBrightness == Brightness.dark);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      SystemChrome.setSystemUIOverlayStyle(
+        SystemUiOverlayStyle(
+          statusBarIconBrightness: isDarkMode
+              ? Brightness.light
+              : Brightness.dark,
+          statusBarBrightness: isDarkMode ? Brightness.dark : Brightness.light,
+          systemNavigationBarColor: isDarkMode ? Colors.black : Colors.white,
+          systemNavigationBarIconBrightness: isDarkMode
+              ? Brightness.light
+              : Brightness.dark,
+        ),
+      );
+    });
+
+    final localeParts = prefs.language.split('_');
     final locale = localeParts.length == 1
         ? Locale(localeParts[0])
         : Locale(localeParts[0], localeParts[1]);
@@ -65,21 +103,24 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Interactive Story App',
-      themeMode: prefs?.isDarkMode == true ? ThemeMode.dark : ThemeMode.light,
+      themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
       theme: ThemeData(
         brightness: Brightness.light,
-        scaffoldBackgroundColor: const Color(0xFFFFF1F4),
+        //scaffoldBackgroundColor: const Color(0xFFFFF5F7),
+        scaffoldBackgroundColor:  Colors.white,
         appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFFE91E63),
-          foregroundColor: Colors.white,
+          backgroundColor: Color(0xFFB7416E),
+          foregroundColor: Colors.black,
+          systemOverlayStyle: SystemUiOverlayStyle.dark,
         ),
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
-        scaffoldBackgroundColor: const Color(0xFF16080F),
+        scaffoldBackgroundColor: const Color(0xFF1A0B10),
         appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFFAD1457),
+          backgroundColor: Color(0xFF8E244F),
           foregroundColor: Colors.white,
+          systemOverlayStyle: SystemUiOverlayStyle.light,
         ),
       ),
       locale: locale,
@@ -90,7 +131,6 @@ class _MyAppState extends State<MyApp> {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      // ✅ Always go to InitialLoaderPage — it will handle splash, loading, routing
       home: InitialLoaderPage(
         onThemeChange: _updateTheme,
         onLocaleChange: _updateLocale,

@@ -23,7 +23,7 @@ class CustomListTile extends StatelessWidget {
     return ListTile(
       leading: FaIcon(
         iconData,
-        color: color,
+        //color: color,
         size: 16,
       ),
       title: Text(
@@ -31,7 +31,7 @@ class CustomListTile extends StatelessWidget {
         style: TextStyle(
           fontWeight: FontWeight.w600,
           fontSize: 14,  // smaller font size
-          color: color,
+          //color: color,
         ),
       ),
       trailing: Icon(
