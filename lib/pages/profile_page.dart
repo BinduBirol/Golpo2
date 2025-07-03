@@ -229,23 +229,7 @@ class ProfilePage extends StatelessWidget {
             SizedBox(height: 16),
 
             // Preferences rows (2 per row)
-            Row(
-              children: [
-                _buildItem(
-                  Icons.brightness_6,
-                  'Dark Mode',
-                  prefs.isDarkMode == null
-                      ? 'System'
-                      : getReadableBool(prefs.isDarkMode!),
-                ),
-                SizedBox(width: spacing),
-                _buildItem(
-                  Icons.music_note,
-                  'Music Enabled',
-                  getReadableBool(prefs.musicEnabled),
-                ),
-              ],
-            ),
+
             Row(
               children: [
                 _buildItem(

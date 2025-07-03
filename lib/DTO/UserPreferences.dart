@@ -1,6 +1,5 @@
 class UserPreferences {
   bool? isDarkMode; // nullable to support system default
-  bool musicEnabled;
   bool sfxEnabled;
   String ageGroup;
   String language;
@@ -8,7 +7,6 @@ class UserPreferences {
 
   UserPreferences({
     this.isDarkMode,
-    required this.musicEnabled,
     required this.sfxEnabled,
     required this.ageGroup,
     required this.language,
@@ -20,7 +18,6 @@ class UserPreferences {
     return UserPreferences(
       isDarkMode: null,
       // Follow system theme
-      musicEnabled: true,
       sfxEnabled: true,
       ageGroup: '18_30',
       language: 'bn',
@@ -32,7 +29,7 @@ class UserPreferences {
   factory UserPreferences.fromJson(Map<String, dynamic> json) {
     return UserPreferences(
       isDarkMode: json.containsKey('isDarkMode') ? json['isDarkMode'] : null,
-      musicEnabled: json['musicEnabled'] ?? true,
+
       sfxEnabled: json['sfxEnabled'] ?? true,
 
       ageGroup: json['ageGroup'] ?? '18_30',
@@ -44,7 +41,7 @@ class UserPreferences {
   /// Convert to JSON (skips isDarkMode if null)
   Map<String, dynamic> toJson() => {
     if (isDarkMode != null) 'isDarkMode': isDarkMode,
-    'musicEnabled': musicEnabled,
+
     'sfxEnabled': sfxEnabled,
     'ageGroup': ageGroup,
     'language': language,
@@ -53,7 +50,6 @@ class UserPreferences {
 
   UserPreferences copyWith({
     bool? isDarkMode,
-    bool? musicEnabled,
     bool? sfxEnabled,
     String? ageGroup,
     String? language,
@@ -61,7 +57,7 @@ class UserPreferences {
   }) {
     return UserPreferences(
       isDarkMode: isDarkMode ?? this.isDarkMode,
-      musicEnabled: musicEnabled ?? this.musicEnabled,
+
       sfxEnabled: sfxEnabled ?? this.sfxEnabled,
 
       ageGroup: ageGroup ?? this.ageGroup,

@@ -148,20 +148,6 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
               ),
 
-              Expanded(
-                child: SwitchListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(AppLocalizations.of(context)!.audio),
-                  value: prefs.musicEnabled,
-                  onChanged: (val) {
-                    setState(() => prefs.musicEnabled = val);
-                    _savePreferences();
-                    BackgroundAudio.toggleMusic(val);
-                  },
-                  secondary: const Icon(Icons.music_note),
-                ),
-              ),
-
               //const SizedBox(width: 16),
             ],
           ),
