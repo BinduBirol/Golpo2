@@ -34,7 +34,7 @@ class BookAppBar extends StatelessWidget implements PreferredSizeWidget {
           right: 0,
           child: Container(
             width: double.infinity,
-            height: 45,
+            height: 40,
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
@@ -42,7 +42,7 @@ class BookAppBar extends StatelessWidget implements PreferredSizeWidget {
                 colors: [
                   topGradientColor,
                   topGradientColor.withOpacity(0.9),
-                  topGradientColor.withOpacity(0.6),
+                  topGradientColor.withOpacity(0.4),
                   topGradientColor.withOpacity(0),
                 ],
               ),
@@ -54,7 +54,8 @@ class BookAppBar extends StatelessWidget implements PreferredSizeWidget {
             padding: const EdgeInsets.only(left: 12),
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.5), // Translucent dark background
+                color: Colors.black.withOpacity(0.6),
+                // Translucent dark background
                 shape: BoxShape.circle,
               ),
               child: IconButton(
@@ -67,7 +68,8 @@ class BookAppBar extends StatelessWidget implements PreferredSizeWidget {
               ),
             ),
           ),
-          actions: actions ??
+          actions:
+              actions ??
               [
                 Padding(
                   padding: const EdgeInsets.only(right: 12),
@@ -76,7 +78,8 @@ class BookAppBar extends StatelessWidget implements PreferredSizeWidget {
                       color: Colors.black.withOpacity(0.5),
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: const WalletCoinChip(), // WalletChip text/icon should be white too
+                    child:
+                        const WalletCoinChip(), // WalletChip text/icon should be white too
                   ),
                 ),
               ],

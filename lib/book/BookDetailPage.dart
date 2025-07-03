@@ -10,9 +10,11 @@ import 'package:lottie/lottie.dart';
 
 import '../DTO/Book.dart';
 import '../DTO/User.dart';
+import '../DTO/UserPreferences.dart';
 import '../l10n/app_localizations.dart';
 import '../service/BookService.dart';
 import '../service/UserService.dart';
+import '../utils/background_audio.dart';
 import '../utils/confirm_dialog.dart';
 import '../widgets/ScrollableCategoryList.dart';
 import '../widgets/animated_coin.dart';
@@ -21,6 +23,8 @@ import '../widgets/button/button_decorators.dart';
 
 class BookDetailPage extends StatefulWidget {
   final Book book;
+
+
 
   // Pass the book.id as the key
   BookDetailPage({required this.book, Key? key})
@@ -39,6 +43,21 @@ class _BookDetailPageState extends State<BookDetailPage> {
   OverlayEntry? _overlayEntry;
 
   late String _localeCode;
+
+  late UserPreferences prefs;
+
+  @override
+  void initState() {
+    super.initState();
+    UserService.getUser().then((user) {
+      setState(() {
+        prefs = user.preferences;
+      });
+    });
+
+    _isFavorite = widget.book.userActivity.isMyFavorite;
+    _isRedeemed = widget.book.userActivity.isUnlocked;
+  }
 
   @override
   void didChangeDependencies() {
@@ -85,13 +104,6 @@ class _BookDetailPageState extends State<BookDetailPage> {
         ),
       ),
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _isFavorite = widget.book.userActivity.isMyFavorite;
-    _isRedeemed = widget.book.userActivity.isUnlocked;
   }
 
   void _toggleFavorite() async {

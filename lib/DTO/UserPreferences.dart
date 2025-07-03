@@ -2,7 +2,6 @@ class UserPreferences {
   bool? isDarkMode; // nullable to support system default
   bool musicEnabled;
   bool sfxEnabled;
-  double musicVolume;
   String ageGroup;
   String language;
   bool isConnected; // <-- newly added
@@ -11,7 +10,6 @@ class UserPreferences {
     this.isDarkMode,
     required this.musicEnabled,
     required this.sfxEnabled,
-    required this.musicVolume,
     required this.ageGroup,
     required this.language,
     this.isConnected = false, // default value
@@ -20,10 +18,10 @@ class UserPreferences {
   /// Default values with isDarkMode set to null (system default)
   factory UserPreferences.defaultValues() {
     return UserPreferences(
-      isDarkMode: null, // Follow system theme
+      isDarkMode: null,
+      // Follow system theme
       musicEnabled: true,
       sfxEnabled: true,
-      musicVolume: 0.6,
       ageGroup: '18_30',
       language: 'bn',
       isConnected: false,
@@ -36,7 +34,7 @@ class UserPreferences {
       isDarkMode: json.containsKey('isDarkMode') ? json['isDarkMode'] : null,
       musicEnabled: json['musicEnabled'] ?? true,
       sfxEnabled: json['sfxEnabled'] ?? true,
-      musicVolume: (json['musicVolume'] ?? 1.0).toDouble(),
+
       ageGroup: json['ageGroup'] ?? '18_30',
       language: json['language'] ?? 'bn',
       isConnected: json['isConnected'] ?? false,
@@ -48,7 +46,6 @@ class UserPreferences {
     if (isDarkMode != null) 'isDarkMode': isDarkMode,
     'musicEnabled': musicEnabled,
     'sfxEnabled': sfxEnabled,
-    'musicVolume': musicVolume,
     'ageGroup': ageGroup,
     'language': language,
     'isConnected': isConnected,
@@ -58,7 +55,6 @@ class UserPreferences {
     bool? isDarkMode,
     bool? musicEnabled,
     bool? sfxEnabled,
-    double? musicVolume,
     String? ageGroup,
     String? language,
     bool? isConnected,
@@ -67,11 +63,10 @@ class UserPreferences {
       isDarkMode: isDarkMode ?? this.isDarkMode,
       musicEnabled: musicEnabled ?? this.musicEnabled,
       sfxEnabled: sfxEnabled ?? this.sfxEnabled,
-      musicVolume: musicVolume ?? this.musicVolume,
+
       ageGroup: ageGroup ?? this.ageGroup,
       language: language ?? this.language,
       isConnected: isConnected ?? this.isConnected,
     );
   }
-
 }

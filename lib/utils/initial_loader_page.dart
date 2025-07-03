@@ -107,7 +107,7 @@ class _InitialLoaderPageState extends State<InitialLoaderPage> {
       onTap: () async {
         if (!_userHasTapped) {
           _userHasTapped = true;
-          await BackgroundAudio.initAndPlayIfEnabled();
+          //await BackgroundAudio.initAndPlayIfEnabled();
         }
       },
       behavior: HitTestBehavior.translucent,

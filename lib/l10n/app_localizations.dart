@@ -310,6 +310,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Read a little'**
   String get readAlittle;
+
+  /// No description provided for @seeMore.
+  ///
+  /// In en, this message translates to:
+  /// **'See more'**
+  String get seeMore;
+
+  /// No description provided for @seeLess.
+  ///
+  /// In en, this message translates to:
+  /// **'See less'**
+  String get seeLess;
+
+  /// No description provided for @offlineData.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline data'**
+  String get offlineData;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

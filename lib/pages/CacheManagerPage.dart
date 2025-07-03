@@ -6,6 +6,8 @@ import 'package:path/path.dart' as p;
 import 'dart:io' as io;
 import 'package:golpo/widgets/app_bar/my_app_bar.dart';
 
+import '../l10n/app_localizations.dart';
+
 class CacheManagerPage extends StatefulWidget {
   const CacheManagerPage({super.key});
 
@@ -72,7 +74,7 @@ class _CacheManagerPageState extends State<CacheManagerPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MyAppBar(title: "Cache Manager"),
+      appBar: MyAppBar(title: AppLocalizations.of(context)!.offlineData),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: kIsWeb

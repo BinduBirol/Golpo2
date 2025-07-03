@@ -115,4 +115,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get readAlittle => 'Read a little';
+
+  @override
+  String get seeMore => 'See more';
+
+  @override
+  String get seeLess => 'See less';
+
+  @override
+  String get offlineData => 'Offline data';
 }

@@ -143,7 +143,7 @@ class _StoryPageState extends State<StoryPage> {
             ),
             CustomListTile(
               iconData: FontAwesomeIcons.hardDrive,
-              title: "Saved data",
+              title: AppLocalizations.of(context)!.offlineData,
               onTap: () => Navigator.pushNamed(context, '/caches'),
             ),
           ],

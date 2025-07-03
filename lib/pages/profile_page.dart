@@ -253,12 +253,7 @@ class ProfilePage extends StatelessWidget {
                   'SFX Enabled',
                   getReadableBool(prefs.sfxEnabled),
                 ),
-                SizedBox(width: spacing),
-                _buildItem(
-                  Icons.volume_up,
-                  'Music Volume',
-                  '${(prefs.musicVolume * 100).toInt()}%',
-                ),
+
               ],
             ),
             Row(

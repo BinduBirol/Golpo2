@@ -115,4 +115,13 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get readAlittle => 'একটু পড়ে দেখুন';
+
+  @override
+  String get seeMore => 'আরও দেখুন';
+
+  @override
+  String get seeLess => 'কম দেখুন';
+
+  @override
+  String get offlineData => 'অফলাইন ডাটা';
 }

@@ -36,5 +36,6 @@
   "continueReading": "Continue Reading...",
   "readAlittle" : "Read a little",
   "seeMore" : "See more",
-  "seeLess": "See less"
+  "seeLess": "See less",
+  "offlineData": "Offline data"
 }

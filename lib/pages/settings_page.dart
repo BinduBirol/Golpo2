@@ -32,7 +32,6 @@ class _SettingsPageState extends State<SettingsPage> {
   void initState() {
     super.initState();
     prefs = widget.user.preferences;
-    BackgroundAudio.setVolume(prefs.musicVolume);
   }
 
   Future<void> _savePreferences() async {
@@ -164,36 +163,6 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
 
               //const SizedBox(width: 16),
-            ],
-          ),
-
-          const SizedBox(height: 8),
-
-          /// Music Volume
-          Text(
-            AppLocalizations.of(context)!.musicVolume,
-            style: const TextStyle(fontWeight: FontWeight.w600),
-          ),
-          Row(
-            children: [
-              Icon(prefs.musicVolume == 0 ? Icons.volume_off : Icons.volume_up),
-              const SizedBox(width: 4),
-              Expanded(
-                child: Slider(
-                  value: prefs.musicVolume,
-                  onChanged: prefs.musicEnabled
-                      ? (val) {
-                          setState(() => prefs.musicVolume = val);
-                          _savePreferences();
-                          BackgroundAudio.setVolume(val);
-                        }
-                      : null,
-                  min: 0.0,
-                  max: 1.0,
-                  divisions: 10,
-                  label: "${(prefs.musicVolume * 100).round()}%",
-                ),
-              ),
             ],
           ),
         ],
