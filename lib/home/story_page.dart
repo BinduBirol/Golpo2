@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:golpo/DTO/User.dart';
 import 'package:golpo/book/BookDetailPage.dart';
 import 'package:golpo/home/drawer_header_widget.dart';
 import 'package:golpo/service/BookService.dart';
+import 'package:golpo/service/UserService.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../DTO/Book.dart';
@@ -35,10 +37,13 @@ class _StoryPageState extends State<StoryPage> {
   bool _isLoading = true;
   String? _error;
 
+  late User _user;
+
   @override
   void initState() {
     super.initState();
     _loadBooks(); // <-- Load books here
+    _loadUser();
   }
 
   Future<void> _resetAge(BuildContext context) async {
@@ -53,6 +58,22 @@ class _StoryPageState extends State<StoryPage> {
       final books = await BookService.fetchBooks();
       setState(() {
         _books = books;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _error = e.toString();
+        _isLoading = true;
+      });
+    }
+  }
+
+  Future<void> _loadUser() async {
+    try {
+
+      final user = await UserService.getUser();
+      setState(() {
+        _user = user;
         _isLoading = false;
       });
     } catch (e) {
@@ -105,7 +126,9 @@ class _StoryPageState extends State<StoryPage> {
               iconData: Icons.person_outline,
 
               title: AppLocalizations.of(context)!.profile,
-              onTap: () => _navigateTo(context, ProfilePage()),
+              onTap: () => _navigateTo(context, ProfilePage(
+                user: _user,
+              )),
             ),
             CustomListTile(
               iconData: Icons.settings,
@@ -117,6 +140,11 @@ class _StoryPageState extends State<StoryPage> {
               iconData: FontAwesomeIcons.coins,
               title: AppLocalizations.of(context)!.coinStore,
               onTap: () => Navigator.pushNamed(context, '/buy'),
+            ),
+            CustomListTile(
+              iconData: FontAwesomeIcons.hardDrive,
+              title: "Saved data",
+              onTap: () => Navigator.pushNamed(context, '/caches'),
             ),
           ],
         ),

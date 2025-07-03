@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:golpo/pages/BuyCoinsPage.dart';
+import 'package:golpo/pages/CacheManagerPage.dart';
 
 import 'DTO/User.dart';
 import 'home/story_page.dart';
@@ -147,6 +148,7 @@ class _MyAppState extends State<MyApp> {
           onLocaleChange: _updateLocale,
         ),
         '/buy': (context) => const BuyCoinsPage(),
+        '/caches': (context) => const CacheManagerPage(),
       },
     );
   }

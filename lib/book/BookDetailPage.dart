@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -41,6 +44,47 @@ class _BookDetailPageState extends State<BookDetailPage> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _localeCode = Localizations.localeOf(context).languageCode;
+  }
+
+  Widget buildBookImage(BuildContext context, Book book) {
+    final cachedPath = book.cachedImagePath;
+
+    if (!kIsWeb && cachedPath != null && File(cachedPath).existsSync()) {
+      return Image.file(
+        File(cachedPath),
+        fit: BoxFit.cover,
+        errorBuilder: (_, __, ___) => _buildErrorWidget(context),
+      );
+    }
+
+    return Image.network(
+      book.imageUrl,
+      fit: BoxFit.cover,
+      loadingBuilder: (context, child, loadingProgress) {
+        if (loadingProgress == null) return child;
+        return Center(
+          child: SizedBox(
+            width: 150,
+            child: Lottie.asset('assets/animations/image_loading.json'),
+          ),
+        );
+      },
+      errorBuilder: (_, __, ___) => _buildErrorWidget(context),
+    );
+  }
+
+  Widget _buildErrorWidget(BuildContext context) {
+    return Container(
+      color: Theme.of(context).scaffoldBackgroundColor,
+      width: double.infinity,
+      child: const Padding(
+        padding: EdgeInsets.only(top: 90),
+        child: Align(
+          alignment: Alignment.topCenter,
+          child: Icon(Icons.broken_image, size: 300, color: Colors.grey),
+        ),
+      ),
+    );
   }
 
   @override
@@ -173,34 +217,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          Image.network(
-            book.imageUrl,
-            fit: BoxFit.cover,
-            loadingBuilder: (context, child, loadingProgress) {
-              if (loadingProgress == null) return child;
-              return Center(
-                child: SizedBox(
-                  width: 150,
-                  child: Lottie.asset('assets/animations/image_loading.json'),
-                ),
-              );
-            },
-            errorBuilder: (_, __, ___) => Container(
-              color: Theme.of(context).scaffoldBackgroundColor,
-              width: double.infinity,
-              child: const Padding(
-                padding: EdgeInsets.only(top: 90),
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: Icon(
-                    Icons.broken_image,
-                    size: 300,
-                    color: Colors.grey,
-                  ),
-                ),
-              ),
-            ),
-          ),
+          buildBookImage(context, book),
           Align(
             alignment: Alignment.bottomLeft,
             child: SafeArea(

@@ -28,6 +28,7 @@ class _InitialLoaderPageState extends State<InitialLoaderPage> {
   LoaderState _state = LoaderState.loading;
   double _progress = 0.0;
   String _loadingStage = "";
+  bool _userHasTapped = false;
 
   late bool isDarkMode;
   Locale _locale = const Locale('en');
@@ -44,11 +45,6 @@ class _InitialLoaderPageState extends State<InitialLoaderPage> {
   void _updateLocale(String langCode) => setState(() => _locale = Locale(langCode));
 
   Future<void> _loadEverything() async {
-    try {
-      await BackgroundAudio.initAndPlayIfEnabled();
-    } catch (e) {
-      print('Audio error: $e');
-    }
 
     await DataLoader.loadDataWithProgress((progress, stage) {
       setState(() {
@@ -107,60 +103,70 @@ class _InitialLoaderPageState extends State<InitialLoaderPage> {
     final local = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
-    return Scaffold(
-      body: Stack(
-        children: [
-          Center(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _buildLottieAnimation(
-                  'assets/animations/medicating_girl.json',
-                  'loading',
-                  width: 260,
-                  height: 260,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  _loadingStage,
-                  style: TextStyle(fontSize: 16, color: theme.colorScheme.primary),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  '${local.loadingData} ${(100 * _progress).toInt()}%',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: theme.colorScheme.primary,
+    return GestureDetector(
+      onTap: () async {
+        if (!_userHasTapped) {
+          _userHasTapped = true;
+          await BackgroundAudio.initAndPlayIfEnabled();
+        }
+      },
+      behavior: HitTestBehavior.translucent,
+      child: Scaffold(
+        body: Stack(
+          children: [
+            Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _buildLottieAnimation(
+                    'assets/animations/medicating_girl.json',
+                    'loading',
+                    width: 260,
+                    height: 260,
                   ),
-                ),
-              ],
-            ),
-          ),
-          Positioned(
-            bottom: 90,
-            left: 40,
-            right: 40,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: TweenAnimationBuilder<double>(
-                tween: Tween<double>(begin: 0, end: _progress),
-                duration: const Duration(milliseconds: 400),
-                curve: Curves.easeInOut,
-                builder: (context, value, _) {
-                  return LinearProgressIndicator(
-                    value: value,
-                    minHeight: 10,
-                    valueColor: AlwaysStoppedAnimation(theme.colorScheme.primary),
-                    backgroundColor: theme.colorScheme.surfaceVariant.withOpacity(0.3),
-                  );
-                },
+                  const SizedBox(height: 16),
+                  Text(
+                    _loadingStage,
+                    style: TextStyle(fontSize: 16, color: theme.colorScheme.primary),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    '${local.loadingData} ${(100 * _progress).toInt()}%',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.primary,
+                    ),
+                  ),
+                ],
               ),
             ),
-          ),
-        ],
+            Positioned(
+              bottom: 90,
+              left: 40,
+              right: 40,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: TweenAnimationBuilder<double>(
+                  tween: Tween<double>(begin: 0, end: _progress),
+                  duration: const Duration(milliseconds: 400),
+                  curve: Curves.easeInOut,
+                  builder: (context, value, _) {
+                    return LinearProgressIndicator(
+                      value: value,
+                      minHeight: 10,
+                      valueColor: AlwaysStoppedAnimation(theme.appBarTheme.backgroundColor),
+                      backgroundColor: Colors.grey.withOpacity(0.3),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
+
 }

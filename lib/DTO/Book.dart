@@ -6,16 +6,15 @@ class Book {
   final String author;
   final String genre;
   final String publishedYear;
-
   final int price;
-  double rating;
-  int viewCount;
-
+  final double rating;
+  final int viewCount;
   final int storyTime;
-  int commentsCount;
+  final int commentsCount;
   final List<String> category;
+  final UserActivity userActivity;
 
-  UserActivity userActivity; // <-- nested user activity
+  String? cachedImagePath; // mutable field for local use (not persisted)
 
   Book({
     required this.id,
@@ -32,27 +31,10 @@ class Book {
     required this.commentsCount,
     required this.category,
     required this.userActivity,
+    this.cachedImagePath,
   });
 
-  Book copyWithUserActivity(UserActivity newUserActivity) {
-    return Book(
-      id: id,
-      title: title,
-      description: description,
-      imageUrl: imageUrl,
-      author: author,
-      genre: genre,
-      publishedYear: publishedYear,
-      price: price,
-      rating: rating,
-      viewCount: viewCount,
-      storyTime: storyTime,
-      commentsCount: commentsCount,
-      category: category,
-      userActivity: newUserActivity,
-    );
-  }
-
+  /// Factory constructor from JSON
   factory Book.fromJson(Map<String, dynamic> json) {
     return Book(
       id: json['id'] ?? 0,
@@ -69,7 +51,6 @@ class Book {
       viewCount: json['viewCount'] ?? 0,
       storyTime: json['storyTime'] ?? 0,
       commentsCount: json['commentsCount'] ?? 0,
-      // fix here: int expected
       category:
           (json['category'] as List<dynamic>?)
               ?.map((e) => e.toString())
@@ -81,6 +62,7 @@ class Book {
     );
   }
 
+  /// To JSON (exclude cachedImagePath)
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -96,8 +78,50 @@ class Book {
       'storyTime': storyTime,
       'commentsCount': commentsCount,
       'category': category,
-      'userActivity': userActivity.toJson(), // nested toJson call
+      'userActivity': userActivity.toJson(),
     };
+  }
+
+  /// Copy Book with optional overrides (including cachedImagePath)
+  Book copyWith({
+    int? id,
+    String? title,
+    String? description,
+    String? imageUrl,
+    String? author,
+    String? genre,
+    String? publishedYear,
+    int? price,
+    double? rating,
+    int? viewCount,
+    int? storyTime,
+    int? commentsCount,
+    List<String>? category,
+    UserActivity? userActivity,
+    String? cachedImagePath,
+  }) {
+    return Book(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      imageUrl: imageUrl ?? this.imageUrl,
+      author: author ?? this.author,
+      genre: genre ?? this.genre,
+      publishedYear: publishedYear ?? this.publishedYear,
+      price: price ?? this.price,
+      rating: rating ?? this.rating,
+      viewCount: viewCount ?? this.viewCount,
+      storyTime: storyTime ?? this.storyTime,
+      commentsCount: commentsCount ?? this.commentsCount,
+      category: category ?? this.category,
+      userActivity: userActivity ?? this.userActivity,
+      cachedImagePath: cachedImagePath ?? this.cachedImagePath,
+    );
+  }
+
+  /// Copy only user activity safely (shortcut)
+  Book copyWithUserActivity(UserActivity newUserActivity) {
+    return copyWith(userActivity: newUserActivity);
   }
 }
 

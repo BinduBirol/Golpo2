@@ -81,7 +81,7 @@ class BookAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
               ],
 
-          backgroundColor: backgroundColor ?? Colors.transparent,
+          backgroundColor: Colors.transparent,
           foregroundColor: foregroundColor ?? appBarTheme.foregroundColor,
           elevation: 0,
           title: Text(

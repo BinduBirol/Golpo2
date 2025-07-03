@@ -84,7 +84,7 @@ class DrawerHeaderWidget extends StatelessWidget {
                             children: [
                               const FaIcon(
                                 FontAwesomeIcons.coins,
-                                size: 16,
+                                size: 12,
                                 color: Colors.amberAccent,
                               ),
                               const SizedBox(width: 6),
@@ -117,7 +117,7 @@ class DrawerHeaderWidget extends StatelessWidget {
                             children: [
                               const FaIcon(
                                 FontAwesomeIcons.users,
-                                size: 16,
+                                size: 10,
                                 color: Colors.tealAccent,
                               ),
                               const SizedBox(width: 6),

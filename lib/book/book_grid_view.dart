@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:golpo/widgets/number_formatter.dart';
@@ -42,7 +45,21 @@ class BookGridView extends StatelessWidget {
               children: [
                 // Full image
                 Positioned.fill(
-                  child: book.imageUrl.isNotEmpty
+                  child:
+                  !kIsWeb && book.cachedImagePath != null &&
+                          File(book.cachedImagePath!).existsSync()
+                      ? Image.file(
+                          File(book.cachedImagePath!),
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) => const Center(
+                            child: Icon(
+                              Icons.broken_image,
+                              size: 50,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        )
+                      : book.imageUrl.isNotEmpty
                       ? Image.network(
                           book.imageUrl,
                           fit: BoxFit.cover,

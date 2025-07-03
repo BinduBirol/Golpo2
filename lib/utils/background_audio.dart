@@ -1,12 +1,14 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import 'package:audioplayers/audioplayers.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter/foundation.dart'; // For kIsWeb
 
 class BackgroundAudio {
   static final AudioPlayer _player = AudioPlayer();
   static bool _isInitialized = false;
+
+  /// Get correct asset path based on platform
+  static String get _backgroundMusicPath =>
+      kIsWeb ? 'music/bg/szbg1.ogg' : 'music/bg/szbg1.mp3';
 
   /// Initialize and play background music if music is enabled in settings
   static Future<void> initAndPlayIfEnabled() async {
@@ -20,7 +22,7 @@ class BackgroundAudio {
     _player.setVolume(volume);
 
     if (isMusicEnabled) {
-      await _player.play(AssetSource('assets/music/bg/szbg1.mp3'));
+      await _player.play(AssetSource(_backgroundMusicPath));
     }
 
     _isInitialized = true;
@@ -32,7 +34,7 @@ class BackgroundAudio {
     await prefs.setBool('music', enabled);
 
     if (enabled) {
-      await _player.play(AssetSource('music/bg/szbg1.mp3'));
+      await _player.play(AssetSource(_backgroundMusicPath));
     } else {
       await _player.pause();
     }
@@ -42,7 +44,6 @@ class BackgroundAudio {
   static Future<void> setVolume(double volume) async {
     await _player.setVolume(volume);
 
-    // Save volume to preferences
     final prefs = await SharedPreferences.getInstance();
     await prefs.setDouble('music_volume', volume);
   }

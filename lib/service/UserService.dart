@@ -36,7 +36,7 @@ class UserService {
 
     _cachedUser = User(
       id: randomId,
-      name: 'Guest Karmaker Overoy',
+      name: 'Guest User',
       email: 'guest_$randomId@example.com',
       walletCoin: walletCoin,
       isVerified: false,

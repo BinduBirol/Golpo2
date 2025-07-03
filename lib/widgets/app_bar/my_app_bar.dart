@@ -70,9 +70,15 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
           actions:
               actions ??
               [
-                const Padding(
-                  padding: EdgeInsets.only(right: 12),
-                  child: WalletCoinChip(),
+                Padding(
+                  padding: const EdgeInsets.only(right: 12),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.5),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: const WalletCoinChip(), // WalletChip text/icon should be white too
+                  ),
                 ),
               ],
           backgroundColor: Colors.transparent,
