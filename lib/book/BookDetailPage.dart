@@ -14,6 +14,7 @@ import '../DTO/UserPreferences.dart';
 import '../l10n/app_localizations.dart';
 import '../service/BookService.dart';
 import '../service/UserService.dart';
+import '../utils/ImageCacheHelper.dart';
 import '../utils/background_audio.dart';
 import '../utils/confirm_dialog.dart';
 import '../widgets/ScrollableCategoryList.dart';
@@ -23,8 +24,6 @@ import '../widgets/button/button_decorators.dart';
 
 class BookDetailPage extends StatefulWidget {
   final Book book;
-
-
 
   // Pass the book.id as the key
   BookDetailPage({required this.book, Key? key})
@@ -75,7 +74,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
         errorBuilder: (_, __, ___) => _buildErrorWidget(context),
       );
     }
-
+    _maybeCacheImage(book);
     return Image.network(
       book.imageUrl,
       fit: BoxFit.cover,
@@ -90,6 +89,24 @@ class _BookDetailPageState extends State<BookDetailPage> {
       },
       errorBuilder: (_, __, ___) => _buildErrorWidget(context),
     );
+  }
+
+  void _maybeCacheImage(Book book) async {
+    if (kIsWeb || book.cachedImagePath != null) return;
+
+    final localPath = await ImageCacheHelper.cacheBookCover(
+      book.imageUrl,
+      book.id,
+    );
+    if (localPath != null) {
+      book.cachedImagePath = localPath;
+
+      // Also update the cache list and persist it
+      await BookService.updateUserActivity(
+        book.id,
+        book.userActivity.copyWith(), // or same if unchanged
+      );
+    }
   }
 
   Widget _buildErrorWidget(BuildContext context) {
@@ -112,7 +129,10 @@ class _BookDetailPageState extends State<BookDetailPage> {
     });
     widget.book.userActivity.isMyFavorite = _isFavorite;
 
-    await BookService.updateUserActivity(widget.book.id, widget.book.userActivity);
+    await BookService.updateUserActivity(
+      widget.book.id,
+      widget.book.userActivity,
+    );
 
     _showToast(_isFavorite ? 'Added to favorites' : 'Removed from favorites');
   }
