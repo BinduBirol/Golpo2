@@ -18,31 +18,37 @@ class BookService {
   static Future<List<Book>> fetchBooks() async {
     if (_cachedBooks != null) return _cachedBooks!;
 
-    if (kIsWeb) {
-      // ✅ Web: Always load from bundled asset
-      final jsonString = await rootBundle.loadString('assets/data/books/offlineBooks.json');
-      final List<dynamic> data = json.decode(jsonString);
+    final prefs = await SharedPreferences.getInstance();
+    final cachedJson = prefs.getString(_booksPrefsKey);
+
+    if (cachedJson != null) {
+      final List<dynamic> data = json.decode(cachedJson);
       _cachedBooks = data.map((json) => Book.fromJson(json)).toList();
       return _cachedBooks!;
     }
 
-    // ✅ Mobile/Desktop: Try loading from local file
-    final file = await _getOfflineJsonFile();
+    if (kIsWeb) {
+      // ✅ Web fallback
+      final jsonString = await rootBundle.loadString(
+        'assets/data/books/offlineBooks.json',
+      );
+      final List<dynamic> data = json.decode(jsonString);
+      _cachedBooks = data.map((json) => Book.fromJson(json)).toList();
+      await _saveBooksToPrefs(); // cache it for future
+      return _cachedBooks!;
+    }
 
+    // ✅ Mobile/Desktop fallback
+    final file = await _getOfflineJsonFile();
     if (await file.exists()) {
       final content = await file.readAsString();
       final List<dynamic> data = json.decode(content);
       _cachedBooks = data.map((json) => Book.fromJson(json)).toList();
+      await _saveBooksToPrefs(); // cache it for future
       return _cachedBooks!;
     }
 
-    // 🆕 First run: load from assets and save to file
-    final jsonString = await rootBundle.loadString('assets/data/books/offlineBooks.json');
-    final List<dynamic> data = json.decode(jsonString);
-
-    await file.writeAsString(jsonString);
-    _cachedBooks = data.map((json) => Book.fromJson(json)).toList();
-    return _cachedBooks!;
+    throw Exception('No offline books found.');
   }
 
   /// Get local file for storing offlineBooks.json
@@ -54,12 +60,17 @@ class BookService {
   }
 
   /// Update a book's userActivity and save to SharedPreferences
-  static Future<void> updateUserActivity(int bookId, UserActivity updatedActivity) async {
+  static Future<void> updateUserActivity(
+    int bookId,
+    UserActivity updatedActivity,
+  ) async {
     if (_cachedBooks == null) return;
 
     final index = _cachedBooks!.indexWhere((book) => book.id == bookId);
     if (index != -1) {
-      final updatedBook = _cachedBooks![index].copyWithUserActivity(updatedActivity);
+      final updatedBook = _cachedBooks![index].copyWithUserActivity(
+        updatedActivity,
+      );
       _cachedBooks![index] = updatedBook;
       await _saveBooksToPrefs();
     }
@@ -67,6 +78,7 @@ class BookService {
 
   /// Save current book list to SharedPreferences (optional backup)
   static Future<void> _saveBooksToPrefs() async {
+    if (_cachedBooks == null) return;
     final prefs = await SharedPreferences.getInstance();
     final jsonList = _cachedBooks!.map((book) => book.toJson()).toList();
     prefs.setString(_booksPrefsKey, json.encode(jsonList));

@@ -112,7 +112,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
     });
     widget.book.userActivity.isMyFavorite = _isFavorite;
 
-    BookService.updateUserActivity(widget.book.id, widget.book.userActivity);
+    await BookService.updateUserActivity(widget.book.id, widget.book.userActivity);
 
     _showToast(_isFavorite ? 'Added to favorites' : 'Removed from favorites');
   }
