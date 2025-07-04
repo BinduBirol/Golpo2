@@ -1,63 +1,62 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:golpo/service/BookService.dart';
 import 'package:golpo/service/UserService.dart';
 
 import '../DTO/Book.dart';
 import '../DTO/User.dart';
 
+import '../l10n/app_localizations.dart';
 import '../utils/NetworkUtil.dart';
 
 class DataLoader {
   static Future<void> loadDataWithProgress(
-    Function(double progress, String stage) onProgress,
-  ) async {
-    const steps = 9;
+      Function(double progress, String stage) onProgress,
+      ) async {
+    const steps = 10;
     int i = 0;
 
     onProgress(i++ / steps, "Checking previous session...");
-    await Future.delayed(const Duration(milliseconds: 1500)); // Simulate delay
-    User user = await UserService.getUser(); // Fetch once
+    await Future.delayed(const Duration(milliseconds: 1500));
+    User user = await UserService.getUser();
 
     onProgress(i++ / steps, "Checking internet connection...");
     await Future.delayed(const Duration(milliseconds: 1500));
     final isConnected = await NetworkUtil.hasInternet();
     if (!isConnected) {
-      onProgress(i++ / steps, "Offline mode: No internet connection.");
+      onProgress(i++ / steps, "No internet connection - offline mode.");
     } else {
-      onProgress(i++ / steps, "Internet connected.");
+      onProgress(i++ / steps, "Internet connection established.");
     }
     await Future.delayed(const Duration(milliseconds: 1500));
 
-    onProgress(i++ / steps, "Updating user...");
+    onProgress(i++ / steps, "Updating user data...");
     await Future.delayed(const Duration(milliseconds: 1500));
     user = user.copyWith(
       preferences: user.preferences.copyWith(isConnected: isConnected),
     );
 
-    print("Updated user connection : ${user.preferences.isConnected}");
-    onProgress(
-      i++ / steps,
-      "Updated user connection : ${user.preferences.isConnected}",
-    );
+    onProgress(i++ / steps, "User data updated.");
     await Future.delayed(const Duration(milliseconds: 1500));
-    // Step 1: Start download
+
+    onProgress(i++ / steps, "Copying assets to local storage...");
+    bool isCopied = await BookService.copyAssetJsonToLocalStorage();
+
+    onProgress(i++ / steps, "Assets copy " + (isCopied ? "successful." : "failed."));
+    await Future.delayed(const Duration(milliseconds: 1500));
+
     onProgress(i++ / steps, "Verifying offline book data...");
-    await Future.delayed(const Duration(milliseconds: 1500)); // Simulate delay
-    List<Book> books = await BookService.fetchBooks(); // Fetch once
+    await Future.delayed(const Duration(milliseconds: 1500));
+    List<Book> books = await BookService.fetchBooks();
 
     onProgress(i++ / steps, "Caching book covers...");
-    await Future.delayed(const Duration(milliseconds: 1500)); // Simulate delay
+    await Future.delayed(const Duration(milliseconds: 1500));
     await BookService.cacheCovers(books);
 
-    // Step 2: Simulate validation step
-    onProgress(i++ / steps, "Just a delay...");
-    await Future.delayed(const Duration(milliseconds: 500));
+    onProgress(i++ / steps, "Finalizing...");
+    await Future.delayed(const Duration(milliseconds: 1500));
 
-    // Step 3: Caching or preparing data
-    onProgress(i++ / steps, "Delaying...");
-    await Future.delayed(const Duration(milliseconds: 500));
-
-    onProgress(i++ / steps, "Preparing for launch...");
+    onProgress(i++ / steps, "Ready to launch.");
     await Future.delayed(const Duration(milliseconds: 500));
   }
 }

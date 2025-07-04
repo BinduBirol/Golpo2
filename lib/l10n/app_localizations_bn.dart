@@ -39,7 +39,7 @@ class AppLocalizationsBn extends AppLocalizations {
   String get audio => 'অডিও';
 
   @override
-  String get soundEffects => 'সাউন্ড ইফেক্ট (SFX)';
+  String get soundEffects => 'সংগীতের & সাউন্ড ইফেক্ট (SFX)';
 
   @override
   String get ageGroupSelect => 'অনুগ্রহ করে আপনার বয়স নির্বাচন করুন';
@@ -124,4 +124,43 @@ class AppLocalizationsBn extends AppLocalizations {
 
   @override
   String get offlineData => 'অফলাইন ডাটা';
+
+  @override
+  String get checkingSession => 'পূর্ববর্তী সেশন যাচাই করা হচ্ছে...';
+
+  @override
+  String get checkingInternet => 'ইন্টারনেট সংযোগ যাচাই করা হচ্ছে...';
+
+  @override
+  String get noInternet => 'কোনো ইন্টারনেট সংযোগ নেই - অফলাইন মোড।';
+
+  @override
+  String get internetConnected => 'ইন্টারনেট সংযোগ সফল হয়েছে।';
+
+  @override
+  String get updatingUser => 'ব্যবহারকারীর তথ্য আপডেট করা হচ্ছে...';
+
+  @override
+  String get userUpdated => 'ব্যবহারকারীর তথ্য আপডেট হয়েছে।';
+
+  @override
+  String get copyingAssets => 'অ্যাসেট লোকাল স্টোরেজে কপি করা হচ্ছে...';
+
+  @override
+  String get copySuccess => 'অ্যাসেট সফলভাবে কপি হয়েছে।';
+
+  @override
+  String get copyFailed => 'অ্যাসেট কপি ব্যর্থ হয়েছে।';
+
+  @override
+  String get verifyingBooks => 'অফলাইন বই যাচাই করা হচ্ছে...';
+
+  @override
+  String get cachingCovers => 'বইয়ের কভার ক্যাশ করা হচ্ছে...';
+
+  @override
+  String get finalizing => 'চূড়ান্ত প্রস্তুতি চলছে...';
+
+  @override
+  String get readyToLaunch => 'শুরু করার জন্য প্রস্তুত।';
 }

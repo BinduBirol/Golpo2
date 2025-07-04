@@ -27,36 +27,96 @@ class BookService {
       return _cachedBooks!;
     }
 
-    if (kIsWeb) {
-      // ✅ Web fallback
-      final jsonString = await rootBundle.loadString(
-        'assets/data/books/offlineBooks.json',
-      );
+    try {
+      String jsonString;
+
+      if (kIsWeb) {
+        // 🌐 Web: Always load from asset
+        jsonString = await rootBundle.loadString(
+          'assets/data/books/offlineBooks.json',
+        );
+      } else {
+        // 📱 Mobile/Desktop
+        final file = await _getOfflineJsonFile();
+
+        if (file != null && await file.exists()) {
+          // ✅ Local file exists: read it
+          jsonString = await file.readAsString();
+        } else {
+          // 🆘 Local file missing: fallback to asset and optionally copy
+          jsonString = await rootBundle.loadString(
+            'assets/data/books/offlineBooks.json',
+          );
+          await copyAssetJsonToLocalStorage(); // ensure future availability
+        }
+      }
+
       final List<dynamic> data = json.decode(jsonString);
       _cachedBooks = data.map((json) => Book.fromJson(json)).toList();
-      await _saveBooksToPrefs(); // cache it for future
+      await _saveBooksToPrefs();
       return _cachedBooks!;
+    } catch (e, stack) {
+      print('❌ Error while fetching books: $e');
+      print('📛 Stack trace:\n$stack');
+      rethrow;
     }
-
-    // ✅ Mobile/Desktop fallback
-    final file = await _getOfflineJsonFile();
-    if (await file.exists()) {
-      final content = await file.readAsString();
-      final List<dynamic> data = json.decode(content);
-      _cachedBooks = data.map((json) => Book.fromJson(json)).toList();
-      await _saveBooksToPrefs(); // cache it for future
-      return _cachedBooks!;
-    }
-
-    throw Exception('No offline books found.');
   }
 
   /// Get local file for storing offlineBooks.json
-  static Future<io.File> _getOfflineJsonFile() async {
-    final dir = await getApplicationDocumentsDirectory();
-    final path = '${dir.path}/booksJson';
-    await io.Directory(path).create(recursive: true);
-    return io.File('$path/$_offlineFileName');
+  static Future<io.File?> _getOfflineJsonFile() async {
+    try {
+      final dir = await getApplicationDocumentsDirectory();
+      final path = '${dir.path}/booksJson';
+
+      // Attempt to create the directory if it doesn't exist
+      final directory = io.Directory(path);
+      if (!(await directory.exists())) {
+        await directory.create(recursive: true);
+      }
+
+      final filePath = '$path/$_offlineFileName';
+      print('📄 Offline JSON file path: $filePath');
+
+      return io.File(filePath);
+    } catch (e, stack) {
+      print('❌ Failed to get offline JSON file: $e');
+      print('📛 Stack trace:\n$stack');
+      return null; // or rethrow or handle as needed
+    }
+  }
+
+  static Future<bool> copyAssetJsonToLocalStorage() async {
+    try {
+      if (kIsWeb) return false;
+
+      final dir = await getApplicationDocumentsDirectory();
+      final path = '${dir.path}/booksJson';
+      final file = io.File('$path/$_offlineFileName');
+
+      // If already exists, skip copying
+      if (await file.exists()) {
+        print('✅ Local JSON already exists at ${file.path}');
+        return true;
+      }
+
+      // Ensure directory exists
+      await io.Directory(path).create(recursive: true);
+
+      // Load JSON from assets
+      final jsonString = await rootBundle.loadString(
+        'assets/data/books/offlineBooks.json',
+      );
+
+      // Write to local file
+      await file.writeAsString(jsonString);
+
+      print('📁 Copied asset JSON to local path: ${file.path}');
+      return true;
+    } catch (e, stack) {
+      print('❌ Failed to copy asset JSON: $e');
+      print('📛 Stack trace:\n$stack');
+      return false;
+    }
   }
 
   /// Update a book's userActivity and save to SharedPreferences
@@ -96,12 +156,19 @@ class BookService {
   }
 
   /// Optional: Clear cached file (mobile/desktop only)
+  /// Clear cached file and memory (mobile/desktop only)
   static Future<void> clearOfflineCache() async {
     if (kIsWeb) return;
-    final file = await _getOfflineJsonFile();
-    if (await file.exists()) {
-      await file.delete();
+
+    try {
+      final file = await _getOfflineJsonFile();
+      if (file != null && await file.exists()) {
+        await file.delete();
+        print('🗑 Offline cache file deleted.');
+      }
+      _cachedBooks = null;
+    } catch (e) {
+      print('❌ Failed to clear offline cache: $e');
     }
-    _cachedBooks = null;
   }
 }

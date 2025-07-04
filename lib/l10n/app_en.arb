@@ -37,5 +37,19 @@
   "readAlittle" : "Read a little",
   "seeMore" : "See more",
   "seeLess": "See less",
-  "offlineData": "Offline data"
+  "offlineData": "Offline data",
+
+  "checkingSession": "Checking previous session...",
+  "checkingInternet": "Checking internet connection...",
+  "noInternet": "No internet connection - offline mode.",
+  "internetConnected": "Internet connection established.",
+  "updatingUser": "Updating user data...",
+  "userUpdated": "User data updated.",
+  "copyingAssets": "Copying assets to local storage...",
+  "copySuccess": "Assets copy successful.",
+  "copyFailed": "Assets copy failed.",
+  "verifyingBooks": "Verifying offline book data...",
+  "cachingCovers": "Caching book covers...",
+  "finalizing": "Finalizing...",
+  "readyToLaunch": "Ready to launch."
 }

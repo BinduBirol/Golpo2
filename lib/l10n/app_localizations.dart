@@ -158,7 +158,7 @@ abstract class AppLocalizations {
   /// No description provided for @soundEffects.
   ///
   /// In en, this message translates to:
-  /// **'Sound Effects (SFX)'**
+  /// **'Music & Sound Effects (SFX)'**
   String get soundEffects;
 
   /// No description provided for @ageGroupSelect.
@@ -328,6 +328,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Offline data'**
   String get offlineData;
+
+  /// No description provided for @checkingSession.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking previous session...'**
+  String get checkingSession;
+
+  /// No description provided for @checkingInternet.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking internet connection...'**
+  String get checkingInternet;
+
+  /// No description provided for @noInternet.
+  ///
+  /// In en, this message translates to:
+  /// **'No internet connection - offline mode.'**
+  String get noInternet;
+
+  /// No description provided for @internetConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Internet connection established.'**
+  String get internetConnected;
+
+  /// No description provided for @updatingUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Updating user data...'**
+  String get updatingUser;
+
+  /// No description provided for @userUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'User data updated.'**
+  String get userUpdated;
+
+  /// No description provided for @copyingAssets.
+  ///
+  /// In en, this message translates to:
+  /// **'Copying assets to local storage...'**
+  String get copyingAssets;
+
+  /// No description provided for @copySuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Assets copy successful.'**
+  String get copySuccess;
+
+  /// No description provided for @copyFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Assets copy failed.'**
+  String get copyFailed;
+
+  /// No description provided for @verifyingBooks.
+  ///
+  /// In en, this message translates to:
+  /// **'Verifying offline book data...'**
+  String get verifyingBooks;
+
+  /// No description provided for @cachingCovers.
+  ///
+  /// In en, this message translates to:
+  /// **'Caching book covers...'**
+  String get cachingCovers;
+
+  /// No description provided for @finalizing.
+  ///
+  /// In en, this message translates to:
+  /// **'Finalizing...'**
+  String get finalizing;
+
+  /// No description provided for @readyToLaunch.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready to launch.'**
+  String get readyToLaunch;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

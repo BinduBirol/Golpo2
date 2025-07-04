@@ -46,7 +46,7 @@ class _InitialLoaderPageState extends State<InitialLoaderPage> {
 
   Future<void> _loadEverything() async {
 
-    await DataLoader.loadDataWithProgress((progress, stage) {
+    await DataLoader.loadDataWithProgress(( progress, stage) {
       setState(() {
         _progress = progress;
         _loadingStage = stage;

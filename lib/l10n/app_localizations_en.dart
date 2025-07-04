@@ -39,7 +39,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get audio => 'Audio';
 
   @override
-  String get soundEffects => 'Sound Effects (SFX)';
+  String get soundEffects => 'Music & Sound Effects (SFX)';
 
   @override
   String get ageGroupSelect => 'Please select your age group';
@@ -124,4 +124,43 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get offlineData => 'Offline data';
+
+  @override
+  String get checkingSession => 'Checking previous session...';
+
+  @override
+  String get checkingInternet => 'Checking internet connection...';
+
+  @override
+  String get noInternet => 'No internet connection - offline mode.';
+
+  @override
+  String get internetConnected => 'Internet connection established.';
+
+  @override
+  String get updatingUser => 'Updating user data...';
+
+  @override
+  String get userUpdated => 'User data updated.';
+
+  @override
+  String get copyingAssets => 'Copying assets to local storage...';
+
+  @override
+  String get copySuccess => 'Assets copy successful.';
+
+  @override
+  String get copyFailed => 'Assets copy failed.';
+
+  @override
+  String get verifyingBooks => 'Verifying offline book data...';
+
+  @override
+  String get cachingCovers => 'Caching book covers...';
+
+  @override
+  String get finalizing => 'Finalizing...';
+
+  @override
+  String get readyToLaunch => 'Ready to launch.';
 }
