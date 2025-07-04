@@ -14,7 +14,6 @@ import '../DTO/UserPreferences.dart';
 import '../l10n/app_localizations.dart';
 import '../service/BookService.dart';
 import '../service/UserService.dart';
-import '../utils/ImageCacheHelper.dart';
 import '../utils/background_audio.dart';
 import '../utils/confirm_dialog.dart';
 import '../widgets/ScrollableCategoryList.dart';
@@ -24,6 +23,8 @@ import '../widgets/button/button_decorators.dart';
 
 class BookDetailPage extends StatefulWidget {
   final Book book;
+
+
 
   // Pass the book.id as the key
   BookDetailPage({required this.book, Key? key})
@@ -45,8 +46,6 @@ class _BookDetailPageState extends State<BookDetailPage> {
 
   late UserPreferences prefs;
 
-  String? _cachedImagePath;
-
   @override
   void initState() {
     super.initState();
@@ -58,27 +57,6 @@ class _BookDetailPageState extends State<BookDetailPage> {
 
     _isFavorite = widget.book.userActivity.isMyFavorite;
     _isRedeemed = widget.book.userActivity.isUnlocked;
-
-    _checkAndCacheImage();
-  }
-
-  void _checkAndCacheImage() async {
-    if (kIsWeb) return;
-
-    final cachedPath = widget.book.cachedImagePath;
-    if (cachedPath != null && File(cachedPath).existsSync()) {
-      setState(() {
-        _cachedImagePath = cachedPath;
-      });
-    } else {
-      await BookService.cacheCovers([widget.book]);
-      final newPath = widget.book.cachedImagePath;
-      if (newPath != null && File(newPath).existsSync()) {
-        setState(() {
-          _cachedImagePath = newPath;
-        });
-      }
-    }
   }
 
   @override
@@ -88,11 +66,11 @@ class _BookDetailPageState extends State<BookDetailPage> {
   }
 
   Widget buildBookImage(BuildContext context, Book book) {
-    if (!kIsWeb &&
-        _cachedImagePath != null &&
-        File(_cachedImagePath!).existsSync()) {
+    final cachedPath = book.cachedImagePath;
+
+    if (!kIsWeb && cachedPath != null && File(cachedPath).existsSync()) {
       return Image.file(
-        File(_cachedImagePath!),
+        File(cachedPath),
         fit: BoxFit.cover,
         errorBuilder: (_, __, ___) => _buildErrorWidget(context),
       );
