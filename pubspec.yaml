@@ -90,6 +90,7 @@ flutter:
     - assets/music/bg/szbg1.mp3
     - assets/music/bg/szbg1.ogg
     - assets/data/books/
+    - assets/data/essentials/
     - assets/img/
     - assets/img/logo.png
     - assets/animations/

@@ -3,10 +3,12 @@ import 'dart:io' as io;
 
 import 'package:flutter/foundation.dart'; // for kIsWeb
 import 'package:flutter/services.dart';
+import 'package:golpo/DTO/category.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../DTO/Book.dart';
+import '../DTO/Genre.dart';
 import '../utils/ImageCacheHelper.dart';
 
 class BookService {
@@ -171,4 +173,57 @@ class BookService {
       print('❌ Failed to clear offline cache: $e');
     }
   }
+
+  static const _categoryKey = 'cached_categories';
+  static const _genreKey = 'cached_genres';
+
+  /// Load genres from cache or assets
+  static Future<List<String>> loadGenres() async {
+    final prefs = await SharedPreferences.getInstance();
+    final cached = prefs.getString(_genreKey);
+
+    if (cached != null) {
+      return List<String>.from(json.decode(cached));
+    }
+
+    final jsonStr = await rootBundle.loadString('assets/data/essentials/genres.json');
+    final jsonData = json.decode(jsonStr);
+    final genres = List<String>.from(jsonData);  // <-- here
+
+    // Save to cache
+    await prefs.setString(_genreKey, json.encode(genres));
+    return genres;
+  }
+
+  /// Load categories from cache or assets
+  static Future<List<Category_>> loadCategories() async {
+    final prefs = await SharedPreferences.getInstance();
+    final cached = prefs.getString(_categoryKey);
+
+    if (cached != null) {
+      final List<dynamic> cachedList = json.decode(cached);
+      return cachedList.map((e) => Category_.fromJson(e)).toList();
+    }
+
+    final jsonStr = await rootBundle.loadString('assets/data/essentials/categories.json');
+    final List<dynamic> jsonList = json.decode(jsonStr);
+
+    final categories = jsonList.map((e) => Category_.fromJson(e)).toList();
+
+    // Store as simple string list
+    await prefs.setString(_categoryKey, json.encode(categories.map((c) => c.name).toList()));
+
+    return categories;
+  }
+
+
+  /// Clear both caches
+  static Future<void> clearCache() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_categoryKey);
+    await prefs.remove(_genreKey);
+  }
+
+
+
 }

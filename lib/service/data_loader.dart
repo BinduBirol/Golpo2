@@ -42,7 +42,7 @@ class DataLoader {
     onProgress(i++ / steps, "Copying assets to local storage...");
     bool isCopied = await BookService.copyAssetJsonToLocalStorage();
 
-    onProgress(i++ / steps, "Assets copy " + (isCopied ? "successful." : "failed."));
+    onProgress(i++ / steps, "Assets copy ${isCopied ? "successful." : "failed."}");
     await Future.delayed(const Duration(milliseconds: 1500));
 
     onProgress(i++ / steps, "Verifying offline book data...");

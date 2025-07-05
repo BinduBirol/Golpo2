@@ -12,8 +12,9 @@ import '../DTO/Book.dart';
 class BookGridView extends StatelessWidget {
   final List<Book> books;
   final void Function(Book) onBookTap;
+  final int? colCount;
 
-  const BookGridView({Key? key, required this.books, required this.onBookTap})
+  const BookGridView({Key? key, required this.books, required this.onBookTap, this.colCount,})
     : super(key: key);
 
   @override
@@ -21,11 +22,13 @@ class BookGridView extends StatelessWidget {
     final String localeCode = Localizations.localeOf(context).languageCode;
     final appBarTheme = Theme.of(context).appBarTheme;
 
+
+
     return GridView.builder(
       padding: const EdgeInsets.all(8),
       itemCount: books.length,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: colCount ?? 3,
         crossAxisSpacing: 8,
         mainAxisSpacing: 8,
         childAspectRatio: 0.65,

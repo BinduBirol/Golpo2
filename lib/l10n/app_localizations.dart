@@ -406,6 +406,438 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Ready to launch.'**
   String get readyToLaunch;
+
+  /// No description provided for @genreStory.
+  ///
+  /// In en, this message translates to:
+  /// **'Story'**
+  String get genreStory;
+
+  /// No description provided for @genreShortStory.
+  ///
+  /// In en, this message translates to:
+  /// **'Short Story'**
+  String get genreShortStory;
+
+  /// No description provided for @genreNovel.
+  ///
+  /// In en, this message translates to:
+  /// **'Novel'**
+  String get genreNovel;
+
+  /// No description provided for @genrePoem.
+  ///
+  /// In en, this message translates to:
+  /// **'Poem'**
+  String get genrePoem;
+
+  /// No description provided for @genreDrama.
+  ///
+  /// In en, this message translates to:
+  /// **'Drama'**
+  String get genreDrama;
+
+  /// No description provided for @genreEssay.
+  ///
+  /// In en, this message translates to:
+  /// **'Essay'**
+  String get genreEssay;
+
+  /// No description provided for @genreFable.
+  ///
+  /// In en, this message translates to:
+  /// **'Fable'**
+  String get genreFable;
+
+  /// No description provided for @genreFolktale.
+  ///
+  /// In en, this message translates to:
+  /// **'Folktale'**
+  String get genreFolktale;
+
+  /// No description provided for @genreFantasy.
+  ///
+  /// In en, this message translates to:
+  /// **'Fantasy'**
+  String get genreFantasy;
+
+  /// No description provided for @genreScienceFiction.
+  ///
+  /// In en, this message translates to:
+  /// **'Science Fiction'**
+  String get genreScienceFiction;
+
+  /// No description provided for @genreMystery.
+  ///
+  /// In en, this message translates to:
+  /// **'Mystery'**
+  String get genreMystery;
+
+  /// No description provided for @genreRomance.
+  ///
+  /// In en, this message translates to:
+  /// **'Romance'**
+  String get genreRomance;
+
+  /// No description provided for @genreHistorical.
+  ///
+  /// In en, this message translates to:
+  /// **'Historical'**
+  String get genreHistorical;
+
+  /// No description provided for @categoryFiction.
+  ///
+  /// In en, this message translates to:
+  /// **'Fiction'**
+  String get categoryFiction;
+
+  /// No description provided for @subcategoryHistoricalFiction.
+  ///
+  /// In en, this message translates to:
+  /// **'Historical Fiction'**
+  String get subcategoryHistoricalFiction;
+
+  /// No description provided for @subcategoryScienceFiction.
+  ///
+  /// In en, this message translates to:
+  /// **'Science Fiction'**
+  String get subcategoryScienceFiction;
+
+  /// No description provided for @subcategoryFantasy.
+  ///
+  /// In en, this message translates to:
+  /// **'Fantasy'**
+  String get subcategoryFantasy;
+
+  /// No description provided for @subcategoryMystery.
+  ///
+  /// In en, this message translates to:
+  /// **'Mystery'**
+  String get subcategoryMystery;
+
+  /// No description provided for @subcategoryThriller.
+  ///
+  /// In en, this message translates to:
+  /// **'Thriller'**
+  String get subcategoryThriller;
+
+  /// No description provided for @subcategoryRomance.
+  ///
+  /// In en, this message translates to:
+  /// **'Romance'**
+  String get subcategoryRomance;
+
+  /// No description provided for @subcategoryDrama.
+  ///
+  /// In en, this message translates to:
+  /// **'Drama'**
+  String get subcategoryDrama;
+
+  /// No description provided for @subcategoryHorror.
+  ///
+  /// In en, this message translates to:
+  /// **'Horror'**
+  String get subcategoryHorror;
+
+  /// No description provided for @subcategoryAdventure.
+  ///
+  /// In en, this message translates to:
+  /// **'Adventure'**
+  String get subcategoryAdventure;
+
+  /// No description provided for @categoryNonFiction.
+  ///
+  /// In en, this message translates to:
+  /// **'Non-Fiction'**
+  String get categoryNonFiction;
+
+  /// No description provided for @subcategoryBiography.
+  ///
+  /// In en, this message translates to:
+  /// **'Biography'**
+  String get subcategoryBiography;
+
+  /// No description provided for @subcategoryMemoir.
+  ///
+  /// In en, this message translates to:
+  /// **'Memoir'**
+  String get subcategoryMemoir;
+
+  /// No description provided for @subcategorySelfHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Self-Help'**
+  String get subcategorySelfHelp;
+
+  /// No description provided for @subcategoryHealthWellness.
+  ///
+  /// In en, this message translates to:
+  /// **'Health & Wellness'**
+  String get subcategoryHealthWellness;
+
+  /// No description provided for @subcategoryBusiness.
+  ///
+  /// In en, this message translates to:
+  /// **'Business'**
+  String get subcategoryBusiness;
+
+  /// No description provided for @subcategoryHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get subcategoryHistory;
+
+  /// No description provided for @subcategoryScience.
+  ///
+  /// In en, this message translates to:
+  /// **'Science'**
+  String get subcategoryScience;
+
+  /// No description provided for @subcategoryPhilosophy.
+  ///
+  /// In en, this message translates to:
+  /// **'Philosophy'**
+  String get subcategoryPhilosophy;
+
+  /// No description provided for @subcategoryPolitics.
+  ///
+  /// In en, this message translates to:
+  /// **'Politics'**
+  String get subcategoryPolitics;
+
+  /// No description provided for @categoryChildren.
+  ///
+  /// In en, this message translates to:
+  /// **'Children'**
+  String get categoryChildren;
+
+  /// No description provided for @subcategoryPictureBooks.
+  ///
+  /// In en, this message translates to:
+  /// **'Picture Books'**
+  String get subcategoryPictureBooks;
+
+  /// No description provided for @subcategoryEarlyReaders.
+  ///
+  /// In en, this message translates to:
+  /// **'Early Readers'**
+  String get subcategoryEarlyReaders;
+
+  /// No description provided for @subcategoryMiddleGrade.
+  ///
+  /// In en, this message translates to:
+  /// **'Middle Grade'**
+  String get subcategoryMiddleGrade;
+
+  /// No description provided for @subcategoryYoungAdult.
+  ///
+  /// In en, this message translates to:
+  /// **'Young Adult'**
+  String get subcategoryYoungAdult;
+
+  /// No description provided for @subcategoryEducational.
+  ///
+  /// In en, this message translates to:
+  /// **'Educational'**
+  String get subcategoryEducational;
+
+  /// No description provided for @categoryComics.
+  ///
+  /// In en, this message translates to:
+  /// **'Comics & Graphic Novels'**
+  String get categoryComics;
+
+  /// No description provided for @subcategoryManga.
+  ///
+  /// In en, this message translates to:
+  /// **'Manga'**
+  String get subcategoryManga;
+
+  /// No description provided for @subcategorySuperhero.
+  ///
+  /// In en, this message translates to:
+  /// **'Superhero'**
+  String get subcategorySuperhero;
+
+  /// No description provided for @subcategorySliceOfLife.
+  ///
+  /// In en, this message translates to:
+  /// **'Slice of Life'**
+  String get subcategorySliceOfLife;
+
+  /// No description provided for @categoryReligion.
+  ///
+  /// In en, this message translates to:
+  /// **'Religion & Spirituality'**
+  String get categoryReligion;
+
+  /// No description provided for @subcategoryChristianity.
+  ///
+  /// In en, this message translates to:
+  /// **'Christianity'**
+  String get subcategoryChristianity;
+
+  /// No description provided for @subcategoryIslam.
+  ///
+  /// In en, this message translates to:
+  /// **'Islam'**
+  String get subcategoryIslam;
+
+  /// No description provided for @subcategoryHinduism.
+  ///
+  /// In en, this message translates to:
+  /// **'Hinduism'**
+  String get subcategoryHinduism;
+
+  /// No description provided for @subcategoryBuddhism.
+  ///
+  /// In en, this message translates to:
+  /// **'Buddhism'**
+  String get subcategoryBuddhism;
+
+  /// No description provided for @subcategorySpiritualGrowth.
+  ///
+  /// In en, this message translates to:
+  /// **'Spiritual Growth'**
+  String get subcategorySpiritualGrowth;
+
+  /// No description provided for @categoryEducation.
+  ///
+  /// In en, this message translates to:
+  /// **'Education & Reference'**
+  String get categoryEducation;
+
+  /// No description provided for @subcategoryTextbooks.
+  ///
+  /// In en, this message translates to:
+  /// **'Textbooks'**
+  String get subcategoryTextbooks;
+
+  /// No description provided for @subcategoryStudyGuides.
+  ///
+  /// In en, this message translates to:
+  /// **'Study Guides'**
+  String get subcategoryStudyGuides;
+
+  /// No description provided for @subcategoryDictionaries.
+  ///
+  /// In en, this message translates to:
+  /// **'Dictionaries'**
+  String get subcategoryDictionaries;
+
+  /// No description provided for @subcategoryLanguageLearning.
+  ///
+  /// In en, this message translates to:
+  /// **'Language Learning'**
+  String get subcategoryLanguageLearning;
+
+  /// No description provided for @subcategoryTestPreparation.
+  ///
+  /// In en, this message translates to:
+  /// **'Test Preparation'**
+  String get subcategoryTestPreparation;
+
+  /// No description provided for @categoryArt.
+  ///
+  /// In en, this message translates to:
+  /// **'Art & Photography'**
+  String get categoryArt;
+
+  /// No description provided for @subcategoryArtHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'Art History'**
+  String get subcategoryArtHistory;
+
+  /// No description provided for @subcategoryPhotography.
+  ///
+  /// In en, this message translates to:
+  /// **'Photography'**
+  String get subcategoryPhotography;
+
+  /// No description provided for @subcategoryDesign.
+  ///
+  /// In en, this message translates to:
+  /// **'Design'**
+  String get subcategoryDesign;
+
+  /// No description provided for @subcategoryPainting.
+  ///
+  /// In en, this message translates to:
+  /// **'Painting'**
+  String get subcategoryPainting;
+
+  /// No description provided for @subcategoryArchitecture.
+  ///
+  /// In en, this message translates to:
+  /// **'Architecture'**
+  String get subcategoryArchitecture;
+
+  /// No description provided for @selectGenre.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Genre:'**
+  String get selectGenre;
+
+  /// No description provided for @chooseGenre.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Genre'**
+  String get chooseGenre;
+
+  /// No description provided for @selectCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Category:'**
+  String get selectCategory;
+
+  /// No description provided for @chooseCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Category'**
+  String get chooseCategory;
+
+  /// No description provided for @selectSubcategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Subcategory:'**
+  String get selectSubcategory;
+
+  /// No description provided for @chooseSubcategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Subcategory'**
+  String get chooseSubcategory;
+
+  /// No description provided for @filters.
+  ///
+  /// In en, this message translates to:
+  /// **'Filters:'**
+  String get filters;
+
+  /// No description provided for @genre.
+  ///
+  /// In en, this message translates to:
+  /// **'Genre'**
+  String get genre;
+
+  /// No description provided for @category.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get category;
+
+  /// No description provided for @subcategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Subcategory'**
+  String get subcategory;
+
+  /// No description provided for @none.
+  ///
+  /// In en, this message translates to:
+  /// **'None'**
+  String get none;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

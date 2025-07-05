@@ -163,4 +163,220 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get readyToLaunch => 'Ready to launch.';
+
+  @override
+  String get genreStory => 'Story';
+
+  @override
+  String get genreShortStory => 'Short Story';
+
+  @override
+  String get genreNovel => 'Novel';
+
+  @override
+  String get genrePoem => 'Poem';
+
+  @override
+  String get genreDrama => 'Drama';
+
+  @override
+  String get genreEssay => 'Essay';
+
+  @override
+  String get genreFable => 'Fable';
+
+  @override
+  String get genreFolktale => 'Folktale';
+
+  @override
+  String get genreFantasy => 'Fantasy';
+
+  @override
+  String get genreScienceFiction => 'Science Fiction';
+
+  @override
+  String get genreMystery => 'Mystery';
+
+  @override
+  String get genreRomance => 'Romance';
+
+  @override
+  String get genreHistorical => 'Historical';
+
+  @override
+  String get categoryFiction => 'Fiction';
+
+  @override
+  String get subcategoryHistoricalFiction => 'Historical Fiction';
+
+  @override
+  String get subcategoryScienceFiction => 'Science Fiction';
+
+  @override
+  String get subcategoryFantasy => 'Fantasy';
+
+  @override
+  String get subcategoryMystery => 'Mystery';
+
+  @override
+  String get subcategoryThriller => 'Thriller';
+
+  @override
+  String get subcategoryRomance => 'Romance';
+
+  @override
+  String get subcategoryDrama => 'Drama';
+
+  @override
+  String get subcategoryHorror => 'Horror';
+
+  @override
+  String get subcategoryAdventure => 'Adventure';
+
+  @override
+  String get categoryNonFiction => 'Non-Fiction';
+
+  @override
+  String get subcategoryBiography => 'Biography';
+
+  @override
+  String get subcategoryMemoir => 'Memoir';
+
+  @override
+  String get subcategorySelfHelp => 'Self-Help';
+
+  @override
+  String get subcategoryHealthWellness => 'Health & Wellness';
+
+  @override
+  String get subcategoryBusiness => 'Business';
+
+  @override
+  String get subcategoryHistory => 'History';
+
+  @override
+  String get subcategoryScience => 'Science';
+
+  @override
+  String get subcategoryPhilosophy => 'Philosophy';
+
+  @override
+  String get subcategoryPolitics => 'Politics';
+
+  @override
+  String get categoryChildren => 'Children';
+
+  @override
+  String get subcategoryPictureBooks => 'Picture Books';
+
+  @override
+  String get subcategoryEarlyReaders => 'Early Readers';
+
+  @override
+  String get subcategoryMiddleGrade => 'Middle Grade';
+
+  @override
+  String get subcategoryYoungAdult => 'Young Adult';
+
+  @override
+  String get subcategoryEducational => 'Educational';
+
+  @override
+  String get categoryComics => 'Comics & Graphic Novels';
+
+  @override
+  String get subcategoryManga => 'Manga';
+
+  @override
+  String get subcategorySuperhero => 'Superhero';
+
+  @override
+  String get subcategorySliceOfLife => 'Slice of Life';
+
+  @override
+  String get categoryReligion => 'Religion & Spirituality';
+
+  @override
+  String get subcategoryChristianity => 'Christianity';
+
+  @override
+  String get subcategoryIslam => 'Islam';
+
+  @override
+  String get subcategoryHinduism => 'Hinduism';
+
+  @override
+  String get subcategoryBuddhism => 'Buddhism';
+
+  @override
+  String get subcategorySpiritualGrowth => 'Spiritual Growth';
+
+  @override
+  String get categoryEducation => 'Education & Reference';
+
+  @override
+  String get subcategoryTextbooks => 'Textbooks';
+
+  @override
+  String get subcategoryStudyGuides => 'Study Guides';
+
+  @override
+  String get subcategoryDictionaries => 'Dictionaries';
+
+  @override
+  String get subcategoryLanguageLearning => 'Language Learning';
+
+  @override
+  String get subcategoryTestPreparation => 'Test Preparation';
+
+  @override
+  String get categoryArt => 'Art & Photography';
+
+  @override
+  String get subcategoryArtHistory => 'Art History';
+
+  @override
+  String get subcategoryPhotography => 'Photography';
+
+  @override
+  String get subcategoryDesign => 'Design';
+
+  @override
+  String get subcategoryPainting => 'Painting';
+
+  @override
+  String get subcategoryArchitecture => 'Architecture';
+
+  @override
+  String get selectGenre => 'Select Genre:';
+
+  @override
+  String get chooseGenre => 'Choose Genre';
+
+  @override
+  String get selectCategory => 'Select Category:';
+
+  @override
+  String get chooseCategory => 'Choose Category';
+
+  @override
+  String get selectSubcategory => 'Select Subcategory:';
+
+  @override
+  String get chooseSubcategory => 'Choose Subcategory';
+
+  @override
+  String get filters => 'Filters:';
+
+  @override
+  String get genre => 'Genre';
+
+  @override
+  String get category => 'Category';
+
+  @override
+  String get subcategory => 'Subcategory';
+
+  @override
+  String get none => 'None';
 }
