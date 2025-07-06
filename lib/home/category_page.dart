@@ -19,7 +19,7 @@ class _CategoryPageState extends State<CategoryPage> {
   List<Book> allBooks = [];
 
   Set<String> selectedGenres = {};
-  String? selectedSubcategory;
+  Set<String> selectedSubcategories = {};
 
   bool isLoading = true;
 
@@ -33,7 +33,7 @@ class _CategoryPageState extends State<CategoryPage> {
     setState(() => isLoading = true);
     final loadedGenres = await BookService.loadGenres();
     final loadedCategories = await BookService.loadCategories();
-    List<Book> loadedBooks = await BookService.fetchBooks();
+    final loadedBooks = await BookService.fetchBooks();
 
     setState(() {
       genres = loadedGenres;
@@ -45,10 +45,20 @@ class _CategoryPageState extends State<CategoryPage> {
 
   List<Book> _filteredBooks() {
     return allBooks.where((book) {
-      final matchesGenre = selectedGenres.isEmpty || selectedGenres.contains(book.genre);
-      final matchesSub = selectedSubcategory == null || book.category == selectedSubcategory;
+      final matchesGenre =
+          selectedGenres.isEmpty || selectedGenres.contains(book.genre);
+      final matchesSub =
+          selectedSubcategories.isEmpty ||
+          selectedSubcategories.contains(book.category);
       return matchesGenre && matchesSub;
     }).toList();
+  }
+
+  void _resetFilters() {
+    setState(() {
+      selectedGenres.clear();
+      selectedSubcategories.clear();
+    });
   }
 
   @override
@@ -68,101 +78,86 @@ class _CategoryPageState extends State<CategoryPage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ✅ Top Genre Filter
+          // 🔝 Top Filters
+          // 🔝 Top Filters
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(loc.selectGenre, style: Theme.of(context).textTheme.titleMedium),
-                const SizedBox(height: 8),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: genres.map((genre) {
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 8),
-                        child: FilterChip(
-                          label: Text(LocalizationHelper.localizeGenre(loc, genre)),
-                          selected: selectedGenres.contains(genre),
-                          onSelected: (isSelected) {
-                            setState(() {
-                              isSelected ? selectedGenres.add(genre) : selectedGenres.remove(genre);
-                            });
-                          },
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          const Divider(height: 1),
-
-          // ✅ Lower Section
-          Expanded(
-            child: Row(
-              children: [
-                // ⬅️ Left: Subcategory List
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.33,
-                  child: ListView(
-                    children: categories.map((cat) {
-                      final isSelected = selectedSubcategory == cat.name;
-                      return ListTile(
-                        title: Text(
-                          LocalizationHelper.localizeSubcategory(loc, cat.name),
-                          style: const TextStyle(fontSize: 12),
-                        ),
-                        selected: isSelected,
-                        selectedTileColor: Theme.of(context).appBarTheme.backgroundColor?.withOpacity(0.1),
-                        onTap: () {
-                          setState(() {
-                            selectedSubcategory = cat.name;
-                          });
-                        },
-                      );
-                    }).toList(),
-                  ),
-                ),
-
-                const VerticalDivider(width: 1),
-
-                // ➡️ Right: Book Results
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(12),
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxHeight: 200),
+                  // Adjust height as needed
+                  child: SingleChildScrollView(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // 🧭 Filters Summary
+                        // 🎯 Genre Filter
                         Text(
-                          loc.filters,
-                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          loc.selectGenre,
+                          style: Theme.of(context).textTheme.titleMedium,
                         ),
                         const SizedBox(height: 8),
-                        Text('${loc.genre}: ${selectedGenres.isNotEmpty ? selectedGenres.map((g) => LocalizationHelper.localizeGenre(loc, g)).join(', ') : loc.none}'),
-                        Text('${loc.subcategory}: ${selectedSubcategory != null ? LocalizationHelper.localizeSubcategory(loc, selectedSubcategory!) : loc.none}'),
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 4,
+                          children: genres.map((genre) {
+                            return FilterChip(
+                              label: Text(
+                                LocalizationHelper.localizeGenre(loc, genre),
+                                style: const TextStyle(fontSize: 10),
+                              ),
+                              selected: selectedGenres.contains(genre),
+                              visualDensity: VisualDensity.compact,
+                              materialTapTargetSize:
+                                  MaterialTapTargetSize.shrinkWrap,
+                              onSelected: (isSelected) {
+                                setState(() {
+                                  isSelected
+                                      ? selectedGenres.add(genre)
+                                      : selectedGenres.remove(genre);
+                                });
+                              },
+                            );
+                          }).toList(),
+                        ),
+
                         const SizedBox(height: 16),
 
-                        // 📚 Book Grid
-                        Expanded(
-                          child: filtered.isEmpty
-                              ? Center(child: Text(loc.searchBoxText))
-                              : BookGridView(
-                            books: filtered,
-                            colCount: 2,
-                            onBookTap: (book) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => BookDetailPage(book: book),
+                        // 🎯 Subcategory Filter
+                        Text(
+                          loc.selectSubcategory,
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
+                        const SizedBox(height: 8),
+                        Wrap(
+                          spacing: 8,
+                          runSpacing: 4,
+                          children: categories.map((cat) {
+                            final isSelected = selectedSubcategories.contains(
+                              cat.name,
+                            );
+                            return FilterChip(
+                              label: Text(
+                                LocalizationHelper.localizeSubcategory(
+                                  loc,
+                                  cat.name,
                                 ),
-                              );
-                            },
-                          ),
+                                style: const TextStyle(fontSize: 10),
+                              ),
+                              selected: isSelected,
+                              visualDensity: VisualDensity.compact,
+                              materialTapTargetSize:
+                                  MaterialTapTargetSize.shrinkWrap,
+                              onSelected: (isSelected) {
+                                setState(() {
+                                  isSelected
+                                      ? selectedSubcategories.add(cat.name)
+                                      : selectedSubcategories.remove(cat.name);
+                                });
+                              },
+                            );
+                          }).toList(),
                         ),
                       ],
                     ),
@@ -171,36 +166,68 @@ class _CategoryPageState extends State<CategoryPage> {
               ],
             ),
           ),
-        ],
-      ),
-    );
-  }
 
-  Widget _buildBookCard(Book book) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (book.imageUrl != null)
-            ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
-              child: AspectRatio(
-                aspectRatio: 3 / 4,
-                child: Image.network(book.imageUrl!, fit: BoxFit.cover),
-              ),
-            ),
+          const Divider(height: 1),
+
+          // 📋 Filter Summary + Reset
           Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(book.title, maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.bold)),
-                const SizedBox(height: 4),
-                Text(book.author, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                // 🧾 Left scrollable filter summary
+                Expanded(
+                  child: SizedBox(
+                    height: 42, // Limit vertical height for clean layout
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${loc.genre}: ${selectedGenres.isNotEmpty ? selectedGenres.map((g) => LocalizationHelper.localizeGenre(loc, g)).join(', ') : loc.none}',
+                          ),
+                          Text(
+                            '${loc.subcategory}: ${selectedSubcategories.isNotEmpty ? selectedSubcategories.map((s) => LocalizationHelper.localizeSubcategory(loc, s)).join(', ') : loc.none}',
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+
+                // 🔄 Right reset button
+                TextButton.icon(
+                  onPressed: _resetFilters,
+                  icon: const Icon(Icons.refresh),
+                  label: Text("loc.reset"), // ✅ fixed localization
+                ),
               ],
             ),
+          ),
+
+          // 📝 Filter Info
+          const SizedBox(height: 12),
+
+          // 📚 Book Grid
+          Expanded(
+            child: filtered.isEmpty
+                ? Center(child: Text(loc.searchBoxText))
+                : Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 0),
+                    child: BookGridView(
+                      books: filtered,
+                      onBookTap: (book) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => BookDetailPage(book: book),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
           ),
         ],
       ),
