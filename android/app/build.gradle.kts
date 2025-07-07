@@ -1,14 +1,14 @@
 plugins {
     id("com.android.application")
     id("kotlin-android")
-    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
+    id("com.google.gms.google-services") version "4.4.0" apply false
 }
 
 android {
     namespace = "com.golpo.golpo"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = "27.0.12077973" // Custom NDK version as required
+    ndkVersion = "27.0.12077973"
 
     defaultConfig {
         applicationId = "com.golpo.golpo"
@@ -37,3 +37,6 @@ android {
 flutter {
     source = "../.."
 }
+
+// ✅ Apply Google Services plugin at the end
+apply(plugin = "com.google.gms.google-services")

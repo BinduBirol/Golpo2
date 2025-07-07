@@ -2,6 +2,8 @@ import 'UserPreferences.dart';
 
 class User {
   final String id;
+  final String? googleId;       // NEW
+  final String? photoUrl;       // NEW
   final String name;
   final String email;
   final int walletCoin;
@@ -11,6 +13,8 @@ class User {
 
   User({
     required this.id,
+    this.googleId,
+    this.photoUrl,
     required this.name,
     required this.email,
     required this.walletCoin,
@@ -21,6 +25,8 @@ class User {
 
   factory User.fromJson(Map<String, dynamic> json) => User(
     id: json['id'],
+    googleId: json['googleId'],               // NEW
+    photoUrl: json['photoUrl'],               // NEW
     name: json['name'],
     email: json['email'],
     walletCoin: json['walletCoin'] ?? 0,
@@ -33,6 +39,8 @@ class User {
 
   Map<String, dynamic> toJson() => {
     'id': id,
+    'googleId': googleId,                      // NEW
+    'photoUrl': photoUrl,                      // NEW
     'name': name,
     'email': email,
     'walletCoin': walletCoin,
@@ -43,6 +51,8 @@ class User {
 
   User copyWith({
     String? id,
+    String? googleId,                           // NEW
+    String? photoUrl,                           // NEW
     String? name,
     String? email,
     int? walletCoin,
@@ -52,6 +62,8 @@ class User {
   }) {
     return User(
       id: id ?? this.id,
+      googleId: googleId ?? this.googleId,
+      photoUrl: photoUrl ?? this.photoUrl,
       name: name ?? this.name,
       email: email ?? this.email,
       walletCoin: walletCoin ?? this.walletCoin,

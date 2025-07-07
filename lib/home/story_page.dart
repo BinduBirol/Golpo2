@@ -126,9 +126,7 @@ class _StoryPageState extends State<StoryPage> {
               iconData: Icons.person_outline,
 
               title: AppLocalizations.of(context)!.profile,
-              onTap: () => _navigateTo(context, ProfilePage(
-                user: _user,
-              )),
+              onTap: () => _navigateTo(context, ProfilePage()),
             ),
             CustomListTile(
               iconData: Icons.settings,

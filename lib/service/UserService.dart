@@ -1,37 +1,45 @@
 import 'dart:convert';
 import 'dart:math';
-
-import 'package:flutter/foundation.dart'; // For ValueNotifier
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../DTO/User.dart';
 import '../DTO/UserPreferences.dart';
+import 'google_auth_service.dart';
 
 class UserService {
   static User? _cachedUser;
 
-  // ValueNotifier to notify listeners about coin updates
   static final ValueNotifier<int> walletCoinNotifier = ValueNotifier<int>(0);
 
-  // Key for SharedPreferences user data
   static const _userPrefsKey = 'user_preferences';
   static const _userWalletKey = 'user_wallet_coin';
+  static const _userJsonKey = 'app_user_full_json';
 
-  // Get user, from cache if possible
   static Future<User> getUser() async {
     if (_cachedUser != null) return _cachedUser!;
 
     final prefs = await SharedPreferences.getInstance();
 
-    final prefJson = prefs.getString(_userPrefsKey);
+    // ✅ Load full user JSON if exists
+    final userJsonString = prefs.getString(_userJsonKey);
+    if (userJsonString != null) {
+      try {
+        final Map<String, dynamic> jsonMap = jsonDecode(userJsonString);
+        _cachedUser = User.fromJson(jsonMap);
+        walletCoinNotifier.value = _cachedUser!.walletCoin;
+        return _cachedUser!;
+      } catch (e) {
+        print("[UserService] Error decoding stored user: $e");
+      }
+    }
 
+    // Fallback: generate guest user
+    final prefJson = prefs.getString(_userPrefsKey);
     final userPreferences = prefJson != null
         ? UserPreferences.fromJson(jsonDecode(prefJson))
         : UserPreferences.defaultValues();
 
-    // Load wallet coin from prefs or generate random for first time
     final walletCoin = prefs.getInt(_userWalletKey) ?? Random().nextInt(100);
-
     final randomId = Random().nextInt(100000).toString();
 
     _cachedUser = User(
@@ -44,27 +52,21 @@ class UserService {
       preferences: userPreferences,
     );
 
-    // Update notifier so UI gets initial value
     walletCoinNotifier.value = _cachedUser!.walletCoin;
-
     return _cachedUser!;
   }
 
-  // Save user preferences and wallet coins persistently
-  static Future<void> _saveUserToPrefs() async {
-    if (_cachedUser == null) return;
-
-    final prefs = await SharedPreferences.getInstance();
-
-    await prefs.setString(_userPrefsKey, jsonEncode(_cachedUser!.preferences.toJson()));
-    await prefs.setInt(_userWalletKey, _cachedUser!.walletCoin);
-  }
-
+  /// ✅ Save full User JSON persistently
   static Future<void> setUser(User user) async {
     _cachedUser = user;
     walletCoinNotifier.value = user.walletCoin;
 
-    await _saveUserToPrefs();
+    final prefs = await SharedPreferences.getInstance();
+    final jsonString = jsonEncode(user.toJson());
+
+    await prefs.setString(_userJsonKey, jsonString);
+    await prefs.setString(_userPrefsKey, jsonEncode(user.preferences.toJson()));
+    await prefs.setInt(_userWalletKey, user.walletCoin);
   }
 
   static void clearCache() {
@@ -78,20 +80,40 @@ class UserService {
         walletCoin: _cachedUser!.walletCoin + amount,
       );
       walletCoinNotifier.value = _cachedUser!.walletCoin;
-      await _saveUserToPrefs();
+      await setUser(_cachedUser!);
     }
   }
 
-  // Return updated User or null if insufficient coins
   static Future<User?> deductCoins(int amount) async {
     if (_cachedUser != null && _cachedUser!.walletCoin >= amount) {
       _cachedUser = _cachedUser!.copyWith(
         walletCoin: _cachedUser!.walletCoin - amount,
       );
       walletCoinNotifier.value = _cachedUser!.walletCoin;
-      await _saveUserToPrefs();
+      await setUser(_cachedUser!);
       return _cachedUser!;
     }
     return null;
   }
+
+  static Future<void> clearUser() async {
+    _cachedUser = null;
+    walletCoinNotifier.value = 0;
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_userJsonKey);
+    await prefs.remove(_userPrefsKey);
+    await prefs.remove(_userWalletKey);
+
+    // ✅ Google sign-out via your service
+    try {
+      final googleAuthService = GoogleAuthService();
+      await googleAuthService.signOut();
+      print("[UserService] Signed out from Google.");
+    } catch (e) {
+      print("[UserService] Error during Google sign-out: $e");
+    }
+  }
+
+
 }

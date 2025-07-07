@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:firebase_core/firebase_core.dart'; // ✅ Add this
 import 'package:golpo/pages/BuyCoinsPage.dart';
 import 'package:golpo/pages/CacheManagerPage.dart';
 
@@ -11,9 +12,13 @@ import 'service/UserService.dart';
 import 'home/age_input_page.dart';
 import 'pages/settings_page.dart';
 import 'utils/initial_loader_page.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -36,19 +41,17 @@ class _MyAppState extends State<MyApp> {
     _systemBrightness =
         WidgetsBinding.instance.platformDispatcher.platformBrightness;
 
-    WidgetsBinding.instance.platformDispatcher.onPlatformBrightnessChanged =
-        () {
-          final newBrightness =
-              WidgetsBinding.instance.platformDispatcher.platformBrightness;
-          if (_systemBrightness != newBrightness) {
-            _systemBrightness = newBrightness;
+    WidgetsBinding.instance.platformDispatcher.onPlatformBrightnessChanged = () {
+      final newBrightness =
+          WidgetsBinding.instance.platformDispatcher.platformBrightness;
+      if (_systemBrightness != newBrightness) {
+        _systemBrightness = newBrightness;
 
-            // Update UI only if user wants system theme
-            if (_user?.preferences.isDarkMode == null) {
-              setState(() {});
-            }
-          }
-        };
+        if (_user?.preferences.isDarkMode == null) {
+          setState(() {});
+        }
+      }
+    };
   }
 
   Future<void> _loadUser() async {
@@ -62,7 +65,6 @@ class _MyAppState extends State<MyApp> {
     setState(() => _user = updatedUser);
     await UserService.setUser(updatedUser);
   }
-
 
   void _updateLocale(String langCode) async {
     final updatedPrefs = _user!.preferences..language = langCode;
@@ -78,20 +80,16 @@ class _MyAppState extends State<MyApp> {
     }
 
     final prefs = _user!.preferences;
-    final isDarkMode =
-        prefs.isDarkMode ?? (_systemBrightness == Brightness.dark);
+    final isDarkMode = prefs.isDarkMode ?? (_systemBrightness == Brightness.dark);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(
-          statusBarIconBrightness: isDarkMode
-              ? Brightness.light
-              : Brightness.dark,
+          statusBarIconBrightness: isDarkMode ? Brightness.light : Brightness.dark,
           statusBarBrightness: isDarkMode ? Brightness.dark : Brightness.light,
           systemNavigationBarColor: isDarkMode ? Colors.black : Colors.white,
-          systemNavigationBarIconBrightness: isDarkMode
-              ? Brightness.light
-              : Brightness.dark,
+          systemNavigationBarIconBrightness:
+          isDarkMode ? Brightness.light : Brightness.dark,
         ),
       );
     });
@@ -107,8 +105,7 @@ class _MyAppState extends State<MyApp> {
       themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
       theme: ThemeData(
         brightness: Brightness.light,
-        //scaffoldBackgroundColor: const Color(0xFFFFF5F7),
-        scaffoldBackgroundColor:  Colors.white,
+        scaffoldBackgroundColor: Colors.white,
         appBarTheme: const AppBarTheme(
           backgroundColor: Color(0xFFB7416E),
           foregroundColor: Colors.black,

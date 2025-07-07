@@ -1,274 +1,279 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:golpo/l10n/app_localizations.dart';
+import 'package:golpo/l10n/app_localizations_en.dart';
+import 'package:golpo/utils/confirm_dialog.dart';
 import 'package:golpo/widgets/app_bar/my_app_bar.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
 import '../DTO/User.dart';
-import '../l10n/app_localizations.dart';
+import '../DTO/UserPreferences.dart';
+import '../service/UserService.dart';
 
-class ProfilePage extends StatelessWidget {
-  final User user;
-  final VoidCallback? onConnectWithGoogle;
-  final VoidCallback? onGreenButtonPressed;
-  final VoidCallback? onLogoutPressed;
+class ProfilePage extends StatefulWidget {
+  const ProfilePage({super.key});
 
-  const ProfilePage({
-    Key? key,
-    required this.user,
-    this.onConnectWithGoogle,
-    this.onGreenButtonPressed,
-    this.onLogoutPressed,
-  }) : super(key: key);
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
 
-  String getReadableGroup(String group) {
-    switch (group) {
-      case 'under_18':
-        return 'Under 18';
-      case '18_30':
-        return '18 – 30';
-      case 'over_30':
-        return 'Over 30';
-      default:
-        return 'Unknown';
+class _ProfilePageState extends State<ProfilePage> {
+  User? user;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUser();
+  }
+
+  Future<void> _loadUser() async {
+    final loadedUser = await UserService.getUser();
+    if (mounted) {
+      setState(() => user = loadedUser);
     }
   }
 
-  String getReadableBool(bool? val) => (val ?? false) ? 'Yes' : 'No';
-
-  Widget _buildGoogleButton(BuildContext context) {
-    return ElevatedButton.icon(
-      onPressed: onConnectWithGoogle,
-      icon: FaIcon(FontAwesomeIcons.google, color: Colors.redAccent, size: 24),
-      label: Text(
-        'Connect with Google',
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 16,
-          color: Colors.black87,
-        ),
-      ),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.white,
-        elevation: 3,
-        padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-      ),
+  Future<void> _handleGoogleSignOut() async {
+    final confirmed = showConfirmDialog(
+      context: context,
+      title: "Confirm Sign Out",
+      content: "Are you sure you want to sign out?",
     );
-  }
 
-  Widget _buildGreenButton(BuildContext context) {
-    return Expanded(
-      child: ElevatedButton(
-        onPressed: onGreenButtonPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.green.shade600,
-          padding: EdgeInsets.symmetric(vertical: 14),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30),
-          ),
-        ),
-        child: Text(
-          'Green Button',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLogoutButton(BuildContext context) {
-    return Expanded(
-      child: ElevatedButton(
-        onPressed: onLogoutPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.red.shade600,
-          padding: EdgeInsets.symmetric(vertical: 14),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30),
-          ),
-        ),
-        child: Text(
-          'Logout',
-          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildItem(IconData icon, String label, String value) {
-    return Expanded(
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-        decoration: BoxDecoration(
-          color: Colors.deepPurple.shade50,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          children: [
-            Icon(icon, color: Colors.deepPurple.shade400),
-            SizedBox(width: 12),
-            Flexible(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    label,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.deepPurple.shade700,
-                      fontSize: 14,
-                    ),
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    value,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                      color: Colors.deepPurple.shade900,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+    if (confirmed == true) {
+      final googleSignIn = GoogleSignIn();
+      await googleSignIn.signOut();
+      await UserService.clearUser();
+      if (mounted) Navigator.of(context).pop();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final prefs = user.preferences;
-    final double spacing = 12;
+    if (user == null) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
 
+    final prefs = user!.preferences;
+    final isOnline = prefs.isConnected;
+    final theme = Theme.of(context);
+    final Map<String, String> localizedMap = {
+      'en': 'English',
+      'bn': 'বাংলা',
+      'hi': 'Hindi',
+    };
+    final label = localizedMap[prefs.language] ?? 'Unknown';
     return Scaffold(
-      appBar: MyAppBar(title: AppLocalizations.of(context)!.profile),
+      appBar: MyAppBar(
+        title: AppLocalizations.of(context)!.profile,
+        backgroundColor: Colors.deepPurple,
+      ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(12),
         child: Column(
           children: [
-            // Avatar and user basic info
-            CircleAvatar(
-              radius: 52,
-              backgroundColor: Colors.deepPurple.shade400,
-              child: Icon(Icons.person, size: 60, color: Colors.white),
-            ),
-            SizedBox(height: 16),
-            Text(
-              user.name,
-              style: TextStyle(
-                fontSize: 26,
-                fontWeight: FontWeight.bold,
-                color: Colors.deepPurple.shade900,
-              ),
-            ),
-            SizedBox(height: 6),
-            Text(
-              user.email,
-              style: TextStyle(fontSize: 16, color: Colors.grey.shade700),
-            ),
-
-            SizedBox(height: 24),
-
-            // Google Connect Button
-            SizedBox(height: 28),
-
-            Row(
+            Stack(
               children: [
-                _buildGoogleButton(context),
-                SizedBox(width: spacing),
-                _buildGreenButton(context),
-                SizedBox(width: spacing),
-                _buildLogoutButton(context),
-              ],
-            ),
+                Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  color: theme.appBarTheme.backgroundColor,
+                  elevation: 3,
+                  child: Padding(
+                    padding: const EdgeInsets.all(18),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // LEFT - Avatar with status dot
+                        Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            CircleAvatar(
+                              radius: 64,
+                              backgroundColor: Colors.deepPurple.shade100,
+                              backgroundImage: user!.photoUrl != null
+                                  ? NetworkImage(
+                                      'https://images.weserv.nl/?url=${Uri.encodeComponent(user!.photoUrl!)}',
+                                    )
+                                  : null,
+                              child: user!.photoUrl == null
+                                  ? Icon(
+                                      Icons.person,
+                                      size: 70,
+                                      color: Colors.deepPurple.shade600,
+                                    )
+                                  : null,
+                            ),
+                          ],
+                        ),
 
-            SizedBox(height: 28),
+                        const SizedBox(width: 16),
 
-            // User info rows (2 per row)
-            Row(
-              children: [
-                _buildItem(Icons.perm_identity, 'User ID', user.id),
-                SizedBox(width: spacing),
-                _buildItem(
-                  FontAwesomeIcons.coins,
-                  'Wallet Coins',
-                  user.walletCoin.toString(),
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                _buildItem(
-                  Icons.verified_user,
-                  'Verified',
-                  getReadableBool(user.isVerified),
-                ),
-                SizedBox(width: spacing),
-                _buildItem(
-                  Icons.people,
-                  'Followers',
-                  user.followers.toString(),
-                ),
-              ],
-            ),
+                        // RIGHT - Info & badges
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Flexible(
+                                    child: Text(
+                                      user!.name,
+                                      style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  if (user!.isVerified)
+                                    const SizedBox(width: 6),
+                                  if (user!.isVerified)
+                                    Container(
+                                      padding: const EdgeInsets.all(4),
+                                      decoration: BoxDecoration(
+                                        color: Colors.greenAccent.shade100,
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
+                                      child: const Icon(
+                                        Icons.verified,
+                                        size: 14,
+                                        color: Colors.green,
+                                      ),
+                                    ),
+                                ],
+                              ),
+                              const SizedBox(height: 6),
+                              Text(
+                                user!.email,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.blueAccent,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: 4),
+                              if (user!.googleId != null &&
+                                  user!.googleId!.isNotEmpty)
+                                Text(
+                                  'Google ID: ${user!.googleId}',
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.white,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              Text(
+                                'User ID: ${user!.id}',
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.white,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: 8),
 
-            SizedBox(height: 24),
+                              // Quick Info Icons
+                              Wrap(
+                                spacing: 14,
+                                runSpacing: 8,
+                                children: [
+                                  _iconValueCard(
+                                    icon: FontAwesomeIcons.coins,
+                                    label: "${user!.walletCoin}",
+                                    iconColor: Colors.amberAccent,
+                                    labelColor: Colors.amberAccent,
+                                  ),
+                                  _iconValueCard(
+                                    icon: Icons.group,
+                                    label: "${user!.followers}",
+                                    iconColor: Colors.blueAccent,
+                                    labelColor: Colors.blueAccent,
+                                  ),
+                                  _iconValueCard(
+                                    icon: Icons.wifi,
+                                    label: isOnline ? "Online" : "Offline",
+                                    iconColor: isOnline
+                                        ? Colors.greenAccent
+                                        : Colors.grey,
+                                    labelColor: isOnline
+                                        ? Colors.greenAccent
+                                        : Colors.grey,
+                                  ),
+                                  _iconValueCard(
+                                    icon: Icons.language,
+                                    label: label ?? "Not set",
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
 
-            // Preferences label
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                'Preferences',
-                style: TextStyle(
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.deepPurple.shade800,
-                ),
-              ),
-            ),
-            SizedBox(height: 16),
+                // Positioned Buttons (top-right)
+                Positioned(
+                  top: 8,
+                  right: 12,
+                  child: Row(
+                    children: [
 
-            // Preferences rows (2 per row)
+                      IconButton(
+                        icon: const Icon(Icons.edit, color: Colors.white),
+                        tooltip: 'Change name',
+                        onPressed: () {
 
-            Row(
-              children: [
-                _buildItem(
-                  Icons.surround_sound,
-                  'SFX Enabled',
-                  getReadableBool(prefs.sfxEnabled),
-                ),
+                        },
+                      ),
 
-              ],
-            ),
-            Row(
-              children: [
-                _buildItem(
-                  Icons.cake,
-                  'Age Group',
-                  getReadableGroup(prefs.ageGroup),
+                      IconButton(
+                        icon: const Icon(Icons.settings, color: Colors.white),
+                        tooltip: 'Settings',
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/settings');
+                        },
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.logout, color: Colors.white),
+                        tooltip: 'Sign Out',
+                        onPressed: _handleGoogleSignOut,
+                      ),
+                    ],
+                  ),
                 ),
-                SizedBox(width: spacing),
-                _buildItem(
-                  Icons.language,
-                  'Language',
-                  prefs.language.toUpperCase(),
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                _buildItem(
-                  Icons.wifi,
-                  'Connected',
-                  getReadableBool(prefs.isConnected),
-                ),
-                SizedBox(width: spacing),
-                Expanded(child: Container()), // empty for alignment
               ],
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _iconValueCard({
+    required IconData icon,
+    required String label,
+    Color iconColor = Colors.white,
+    Color labelColor = Colors.white,
+  }) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: 14, color: iconColor),
+        const SizedBox(width: 6),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w500,
+            color: labelColor,
+          ),
+        ),
+      ],
     );
   }
 }

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "937469130987",
+    "project_id": "golpo-4e336",
+    "storage_bucket": "golpo-4e336.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:937469130987:android:dc1a8460c30b77fe1d26ae",
+        "android_client_info": {
+          "package_name": "com.golpo.golpo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "937469130987-9gn2fs37gf62vcemtlur6l5o8l1pfm44.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAeKESofcFdUdL6AoktyQyxlFh6_jkWstM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "937469130987-9gn2fs37gf62vcemtlur6l5o8l1pfm44.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

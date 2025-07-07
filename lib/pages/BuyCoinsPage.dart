@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:oktoast/oktoast.dart';
 
 
 import '../DTO/User.dart';
@@ -54,12 +54,13 @@ class _BuyCoinsPageState extends State<BuyCoinsPage> {
 
     await UserService.addCoins(package.amount);
 
-    Fluttertoast.showToast(
-      msg: "Purchased ${package.amount} coins for \$${package.price}",
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
+    showToast(
+      "Purchased ${package.amount} coins for \$${package.price}",
+      duration: const Duration(seconds: 2),       // Toast.LENGTH_SHORT ~ 2 seconds
+      position: ToastPosition.bottom,              // ToastGravity.BOTTOM equivalent
       backgroundColor: Colors.green[700],
-      textColor: Colors.white,
+      radius: 8.0,                                 // optional rounded corners
+      textStyle: const TextStyle(color: Colors.white),
     );
   }
 

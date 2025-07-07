@@ -42,13 +42,17 @@ dependencies:
     sdk: flutter
   intl: any
 
-  fluttertoast: ^8.2.1
+  oktoast: ^3.0.0
   flutter_svg: ^2.0.7
   lottie: ^3.1.0
   flutter_animate: ^4.2.0
   http: ^1.0.0
   connectivity_plus: ^5.0.2
   path_provider: ^2.1.2
+  #google auth
+  google_sign_in: ^6.2.1
+  firebase_auth: ^4.17.6
+  firebase_core: ^2.30.0
 
 dev_dependencies:
   flutter_test:

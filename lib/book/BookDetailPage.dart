@@ -2,11 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:golpo/widgets/number_formatter.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
+import 'package:oktoast/oktoast.dart';
 
 import '../DTO/Book.dart';
 import '../DTO/User.dart';
@@ -163,14 +163,17 @@ class _BookDetailPageState extends State<BookDetailPage> {
   }
 
   void _showToast(String message) {
-    Fluttertoast.showToast(
-      msg: message,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
+    showToast(
+      message,
+      duration: const Duration(seconds: 2),         // equivalent to Toast.LENGTH_SHORT
+      position: ToastPosition.bottom,                // equivalent to ToastGravity.BOTTOM
       backgroundColor: Colors.black87,
-      textColor: Colors.white,
-      fontSize: 16.0,
+      textStyle: const TextStyle(
+        color: Colors.white,
+        fontSize: 16.0,
+      ),
     );
+
   }
 
   Future<void> _onRedeem() async {
