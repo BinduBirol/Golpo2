@@ -22,8 +22,6 @@ import '../widgets/app_bar/book_app_bar.dart';
 import '../widgets/button/button_decorators.dart';
 import 'content/book_content_page.dart';
 
-
-
 class BookDetailPage extends StatefulWidget {
   final Book book;
 
@@ -79,6 +77,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
     _maybeCacheImage(book);
     return Image.network(
       book.imageUrl,
+
       fit: BoxFit.cover,
       loadingBuilder: (context, child, loadingProgress) {
         if (loadingProgress == null) return child;
@@ -167,15 +166,11 @@ class _BookDetailPageState extends State<BookDetailPage> {
   void _showToast(String message) {
     showToast(
       message,
-      duration: const Duration(seconds: 2),         // equivalent to Toast.LENGTH_SHORT
-      position: ToastPosition.bottom,                // equivalent to ToastGravity.BOTTOM
+      duration: const Duration(seconds: 2), // equivalent to Toast.LENGTH_SHORT
+      position: ToastPosition.bottom, // equivalent to ToastGravity.BOTTOM
       backgroundColor: Colors.black87,
-      textStyle: const TextStyle(
-        color: Colors.white,
-        fontSize: 16.0,
-      ),
+      textStyle: const TextStyle(color: Colors.white, fontSize: 16.0),
     );
-
   }
 
   Future<void> _onRedeem() async {
