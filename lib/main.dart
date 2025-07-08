@@ -140,7 +140,6 @@ class _MyAppState extends State<MyApp> {
           onLocaleChange: _updateLocale,
         ),
         '/settings': (context) => SettingsPage(
-          user: _user!,
           onThemeChange: _updateTheme,
           onLocaleChange: _updateLocale,
         ),

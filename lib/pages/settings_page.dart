@@ -8,13 +8,11 @@ import '../utils/background_audio.dart';
 import '../widgets/app_bar/my_app_bar.dart';
 
 class SettingsPage extends StatefulWidget {
-  final User user;
   final Function(bool? isDarkMode) onThemeChange;
   final Function(String) onLocaleChange;
 
   const SettingsPage({
     super.key,
-    required this.user,
     required this.onThemeChange,
     required this.onLocaleChange,
   });
@@ -24,17 +22,28 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  late UserPreferences prefs;
+  UserPreferences? prefs;
+  User? user;
+  bool isLoading = true;
 
   final languageOptions = {'en': 'English', 'bn': 'বাংলা'};
 
   @override
   void initState() {
     super.initState();
-    prefs = widget.user.preferences;
+    _loadUserPreferences();
+  }
+
+  Future<void> _loadUserPreferences() async {
+    user = await UserService.getUser();
+    prefs = user!.preferences;
+    setState(() {
+      isLoading = false;
+    });
   }
 
   Future<void> _savePreferences() async {
+    if (prefs == null) return;
     final latestUser = await UserService.getUser();
     final updatedUser = latestUser.copyWith(preferences: prefs);
     await UserService.setUser(updatedUser);
@@ -60,6 +69,12 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (isLoading || prefs == null) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
     final ageOptions = {
       'under_18': AppLocalizations.of(context)!.under18,
       '18_30': AppLocalizations.of(context)!.ageGroup18to30,
@@ -77,16 +92,16 @@ class _SettingsPageState extends State<SettingsPage> {
               Expanded(
                 child: _buildDropdownField(
                   label: AppLocalizations.of(context)!.theme,
-                  value: _themeValueFromPrefs(prefs.isDarkMode),
+                  value: _themeValueFromPrefs(prefs!.isDarkMode),
                   items: const {
                     'system': 'System',
                     'light': 'Light',
                     'dark': 'Dark',
                   },
-                  onChanged: (val) {
+                  onChanged: (val) async {
                     final newPref = _prefsValueFromTheme(val);
-                    setState(() => prefs.isDarkMode = newPref);
-                    _savePreferences();
+                    setState(() => prefs!.isDarkMode = newPref);
+                    await _savePreferences();
                     widget.onThemeChange(newPref);
                   },
                 ),
@@ -95,12 +110,12 @@ class _SettingsPageState extends State<SettingsPage> {
               Expanded(
                 child: _buildDropdownField(
                   label: AppLocalizations.of(context)!.language,
-                  value: prefs.language,
+                  value: prefs!.language,
                   items: languageOptions,
-                  onChanged: (val) {
+                  onChanged: (val) async {
                     if (val != null) {
-                      setState(() => prefs.language = val);
-                      _savePreferences();
+                      setState(() => prefs!.language = val);
+                      await _savePreferences();
                       widget.onLocaleChange(val);
                     }
                   },
@@ -111,45 +126,45 @@ class _SettingsPageState extends State<SettingsPage> {
 
           const SizedBox(height: 16),
 
-          /// Age Group (single row)
-          Row(
-            children: [
-              Expanded(
-                child: SwitchListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(AppLocalizations.of(context)!.soundEffects),
-                  value: prefs.sfxEnabled,
-                  onChanged: (val) {
-                    setState(() => prefs.sfxEnabled = val);
-                    _savePreferences();
-                  },
-                  secondary: const Icon(Icons.surround_sound),
-                ),
-              ),
-            ],
+          /// Sound Effects switch
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text(AppLocalizations.of(context)!.soundEffects),
+            value: prefs!.sfxEnabled,
+            onChanged: (val) async {
+              setState(() => prefs!.sfxEnabled = val);
+              await _savePreferences();
+            },
+            secondary: const Icon(Icons.surround_sound),
+          ),
+
+          const SizedBox(height: 16),
+
+          /// Sound Effects switch
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text("Auto reading"),
+            value: prefs!.autoReadEnabled,
+            onChanged: (val) async {
+              setState(() => prefs!.autoReadEnabled = val);
+              await _savePreferences();
+            },
+            secondary: const Icon(Icons.play_circle),
           ),
 
           const Divider(height: 32),
 
-          /// Audio Settings (switches in a row)
-          Row(
-            children: [
-              Expanded(
-                child: _buildDropdownField(
-                  label: AppLocalizations.of(context)!.ageGroup,
-                  value: prefs.ageGroup,
-                  items: ageOptions,
-                  onChanged: (val) {
-                    if (val != null) {
-                      setState(() => prefs.ageGroup = val);
-                      _savePreferences();
-                    }
-                  },
-                ),
-              ),
-
-              //const SizedBox(width: 16),
-            ],
+          /// Age Group dropdown
+          _buildDropdownField(
+            label: AppLocalizations.of(context)!.ageGroup,
+            value: prefs!.ageGroup,
+            items: ageOptions,
+            onChanged: (val) async {
+              if (val != null) {
+                setState(() => prefs!.ageGroup = val);
+                await _savePreferences();
+              }
+            },
           ),
         ],
       ),
@@ -158,7 +173,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Widget _buildDropdownField({
     required String label,
-    required String value,
+    required String? value,
     required Map<String, String> items,
     required ValueChanged<String?> onChanged,
   }) {
@@ -175,10 +190,10 @@ class _SettingsPageState extends State<SettingsPage> {
           items: items.entries
               .map(
                 (entry) => DropdownMenuItem(
-                  value: entry.key,
-                  child: Text(entry.value),
-                ),
-              )
+              value: entry.key,
+              child: Text(entry.value),
+            ),
+          )
               .toList(),
           onChanged: onChanged,
           decoration: const InputDecoration(
