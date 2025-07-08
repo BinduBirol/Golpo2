@@ -54,6 +54,9 @@ dependencies:
   firebase_auth: ^4.17.6
   firebase_core: ^2.30.0
 
+  wakelock_plus: ^1.1.3
+  dio: ^5.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -94,6 +97,7 @@ flutter:
     - assets/music/bg/szbg1.mp3
     - assets/music/bg/szbg1.ogg
     - assets/data/books/
+    - assets/data/books/content/
     - assets/data/essentials/
     - assets/img/
     - assets/img/logo.png

@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:golpo/l10n/app_localizations.dart';
-import 'package:golpo/l10n/app_localizations_en.dart';
 import 'package:golpo/utils/confirm_dialog.dart';
 import 'package:golpo/widgets/app_bar/my_app_bar.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
 import '../DTO/User.dart';
 import '../DTO/UserPreferences.dart';
 import '../service/UserService.dart';
@@ -28,21 +26,18 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> _loadUser() async {
     final loadedUser = await UserService.getUser();
-    if (mounted) {
-      setState(() => user = loadedUser);
-    }
+    if (mounted) setState(() => user = loadedUser);
   }
 
   Future<void> _handleGoogleSignOut() async {
-    final confirmed = showConfirmDialog(
+    final confirmed = await showConfirmDialog(
       context: context,
       title: "Confirm Sign Out",
       content: "Are you sure you want to sign out?",
     );
 
     if (confirmed == true) {
-      final googleSignIn = GoogleSignIn();
-      await googleSignIn.signOut();
+      await GoogleSignIn().signOut();
       await UserService.clearUser();
       if (mounted) Navigator.of(context).pop();
     }
@@ -54,199 +49,157 @@ class _ProfilePageState extends State<ProfilePage> {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
+    final theme = Theme.of(context);
     final prefs = user!.preferences;
     final isOnline = prefs.isConnected;
-    final theme = Theme.of(context);
-    final Map<String, String> localizedMap = {
+    final loc = AppLocalizations.of(context)!;
+    final languageLabel = {
       'en': 'English',
       'bn': 'বাংলা',
       'hi': 'Hindi',
-    };
-    final label = localizedMap[prefs.language] ?? 'Unknown';
+    }[prefs.language] ?? 'Unknown';
+
     return Scaffold(
       appBar: MyAppBar(
-        title: AppLocalizations.of(context)!.profile,
-        backgroundColor: Colors.deepPurple,
+        title: loc.profile,
+        backgroundColor: theme.primaryColor,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          children: [
-            Stack(
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final isWide = constraints.maxWidth > 600;
+
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
               children: [
                 Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  elevation: 4,
                   color: theme.appBarTheme.backgroundColor,
-                  elevation: 3,
                   child: Padding(
-                    padding: const EdgeInsets.all(18),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
                       children: [
-                        // LEFT - Avatar with status dot
-                        Stack(
-                          clipBehavior: Clip.none,
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             CircleAvatar(
-                              radius: 64,
+                              radius: 48,
                               backgroundColor: Colors.deepPurple.shade100,
                               backgroundImage: user!.photoUrl != null
-                                  ? NetworkImage(
-                                      'https://images.weserv.nl/?url=${Uri.encodeComponent(user!.photoUrl!)}',
-                                    )
+                                  ? NetworkImage('https://images.weserv.nl/?url=${Uri.encodeComponent(user!.photoUrl!)}')
                                   : null,
                               child: user!.photoUrl == null
-                                  ? Icon(
-                                      Icons.person,
-                                      size: 70,
-                                      color: Colors.deepPurple.shade600,
-                                    )
+                                  ? Icon(Icons.person, size: 50, color: Colors.deepPurple.shade600)
                                   : null,
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          user!.name,
+                                          style: theme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                      if (user!.isVerified)
+                                        Padding(
+                                          padding: const EdgeInsets.only(left: 4),
+                                          child: Icon(Icons.verified, size: 18, color: Colors.green),
+                                        ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 6),
+                                  Text(user!.email, style: theme.textTheme.bodySmall?.copyWith(color: Colors.blue)),
+                                  const SizedBox(height: 4),
+                                  if (user!.googleId != null)
+                                    Text("Google ID: ${user!.googleId}", style: theme.textTheme.bodySmall),
+                                  Text("User ID: ${user!.id}", style: theme.textTheme.bodySmall),
+                                ],
+                              ),
                             ),
                           ],
                         ),
+                        const SizedBox(height: 16),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            _expandedInfoBox(FontAwesomeIcons.coins, "${user!.walletCoin}", Colors.amberAccent),
+                            _expandedInfoBox(Icons.group, "${user!.followers}", Colors.blueAccent),
+                            _expandedInfoBox(
+                              Icons.wifi,
+                              isOnline ? "Online" : "Offline",
+                              isOnline ? Colors.greenAccent : Colors.grey,
+                            ),
+                            _expandedInfoBox(Icons.language, languageLabel, Colors.white),
+                          ],
+                        ),
 
-                        const SizedBox(width: 16),
 
-                        // RIGHT - Info & badges
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Flexible(
-                                    child: Text(
-                                      user!.name,
-                                      style: const TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                  if (user!.isVerified)
-                                    const SizedBox(width: 6),
-                                  if (user!.isVerified)
-                                    Container(
-                                      padding: const EdgeInsets.all(4),
-                                      decoration: BoxDecoration(
-                                        color: Colors.greenAccent.shade100,
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: const Icon(
-                                        Icons.verified,
-                                        size: 14,
-                                        color: Colors.green,
-                                      ),
-                                    ),
-                                ],
-                              ),
-                              const SizedBox(height: 6),
-                              Text(
-                                user!.email,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.blueAccent,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              const SizedBox(height: 4),
-                              if (user!.googleId != null &&
-                                  user!.googleId!.isNotEmpty)
-                                Text(
-                                  'Google ID: ${user!.googleId}',
-                                  style: const TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.white,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              Text(
-                                'User ID: ${user!.id}',
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.white,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                              const SizedBox(height: 8),
-
-                              // Quick Info Icons
-                              Wrap(
-                                spacing: 14,
-                                runSpacing: 8,
-                                children: [
-                                  _iconValueCard(
-                                    icon: FontAwesomeIcons.coins,
-                                    label: "${user!.walletCoin}",
-                                    iconColor: Colors.amberAccent,
-                                    labelColor: Colors.amberAccent,
-                                  ),
-                                  _iconValueCard(
-                                    icon: Icons.group,
-                                    label: "${user!.followers}",
-                                    iconColor: Colors.blueAccent,
-                                    labelColor: Colors.blueAccent,
-                                  ),
-                                  _iconValueCard(
-                                    icon: Icons.wifi,
-                                    label: isOnline ? "Online" : "Offline",
-                                    iconColor: isOnline
-                                        ? Colors.greenAccent
-                                        : Colors.grey,
-                                    labelColor: isOnline
-                                        ? Colors.greenAccent
-                                        : Colors.grey,
-                                  ),
-                                  _iconValueCard(
-                                    icon: Icons.language,
-                                    label: label ?? "Not set",
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
+                        const SizedBox(height: 16),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.edit),
+                              tooltip: 'Edit Name',
+                              onPressed: () {},
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.settings),
+                              tooltip: 'Settings',
+                              onPressed: () {
+                                Navigator.pushNamed(context, '/settings');
+                              },
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.logout),
+                              tooltip: 'Sign Out',
+                              onPressed: _handleGoogleSignOut,
+                            ),
+                          ],
                         ),
                       ],
                     ),
                   ),
                 ),
-
-                // Positioned Buttons (top-right)
-                Positioned(
-                  top: 8,
-                  right: 12,
-                  child: Row(
-                    children: [
-
-                      IconButton(
-                        icon: const Icon(Icons.edit, color: Colors.white),
-                        tooltip: 'Change name',
-                        onPressed: () {
-
-                        },
-                      ),
-
-                      IconButton(
-                        icon: const Icon(Icons.settings, color: Colors.white),
-                        tooltip: 'Settings',
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/settings');
-                        },
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.logout, color: Colors.white),
-                        tooltip: 'Sign Out',
-                        onPressed: _handleGoogleSignOut,
-                      ),
-                    ],
-                  ),
-                ),
               ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _expandedInfoBox(IconData icon, String label, Color color) {
+    return Expanded(
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 4),
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 14, color: color),
+            const SizedBox(width: 6),
+            Flexible(
+              child: Text(
+                label,
+                style: TextStyle(
+                  color: color,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 12
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           ],
         ),
@@ -254,26 +207,5 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _iconValueCard({
-    required IconData icon,
-    required String label,
-    Color iconColor = Colors.white,
-    Color labelColor = Colors.white,
-  }) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, size: 14, color: iconColor),
-        const SizedBox(width: 6),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.w500,
-            color: labelColor,
-          ),
-        ),
-      ],
-    );
-  }
+
 }

@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:math';
+
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../DTO/User.dart';
 import '../DTO/UserPreferences.dart';
 import 'google_auth_service.dart';
@@ -115,5 +117,35 @@ class UserService {
     }
   }
 
+  static Future<void> updateAutoReadPreference(bool isEnabled) async {
+    final prefs = await SharedPreferences.getInstance();
 
+    // Load current user
+    final user = await getUser();
+    final updatedPrefs = user.preferences.copyWith(autoReadEnabled: isEnabled);
+
+    // Update user with new preferences
+    final updatedUser = user.copyWith(preferences: updatedPrefs);
+    await setUser(updatedUser);
+
+    if (kDebugMode) {
+      print('[UserService] Auto-read preference updated to: $isEnabled');
+    }
+  }
+
+  static Future<void> updateMusicPreference(bool isEnabled) async {
+    final prefs = await SharedPreferences.getInstance();
+
+    // Load current user
+    final user = await getUser();
+    final updatedPrefs = user.preferences.copyWith(sfxEnabled: isEnabled);
+
+    // Update user with new preferences
+    final updatedUser = user.copyWith(preferences: updatedPrefs);
+    await setUser(updatedUser);
+
+    if (kDebugMode) {
+      print('[UserService] Auto-read preference updated to: $isEnabled');
+    }
+  }
 }

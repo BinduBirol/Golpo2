@@ -15,12 +15,14 @@ import '../l10n/app_localizations.dart';
 import '../service/BookService.dart';
 import '../service/UserService.dart';
 import '../utils/ImageCacheHelper.dart';
-import '../utils/background_audio.dart';
 import '../utils/confirm_dialog.dart';
 import '../widgets/ScrollableCategoryList.dart';
 import '../widgets/animated_coin.dart';
 import '../widgets/app_bar/book_app_bar.dart';
 import '../widgets/button/button_decorators.dart';
+import 'content/book_content_page.dart';
+
+
 
 class BookDetailPage extends StatefulWidget {
   final Book book;
@@ -223,7 +225,14 @@ class _BookDetailPageState extends State<BookDetailPage> {
         context: context,
         icon: Icons.book,
         text: AppLocalizations.of(context)!.read,
-        onPressed: () => _showToast('Reading: ${widget.book.title}'),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BookContentPage(book: widget.book),
+            ),
+          );
+        },
         backgroundColor: Colors.green,
         foregroundColor: Colors.white,
       );
