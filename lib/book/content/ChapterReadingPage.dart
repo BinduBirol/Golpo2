@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:golpo/book/content/service/BookContentService.dart';
 import 'package:golpo/book/content/utils/BookTextBackground.dart';
 import 'package:golpo/service/UserService.dart';
@@ -125,6 +126,7 @@ class _ChapterReadingPageState extends State<ChapterReadingPage> {
     return Scaffold(
       appBar: ChapterAppBar(
         chapterTitle: "অধ্যায় ${chapter.chapterNumber}: ${chapter.title}",
+        book: widget.book,
         autoPlay: _autoPlay,
         musicOn: _musicOn,
         onAutoPlayToggle: () {
@@ -214,7 +216,86 @@ class _ChapterReadingPageState extends State<ChapterReadingPage> {
     );
   }
 
+
   Widget _buildChapterTitleView() {
+    final chapter = widget.chapter;
+
+    return SizedBox.expand(
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+
+          Image.asset(
+            'assets/img/chapter_bg1.png',
+            fit: BoxFit.cover,
+            width: 200,
+            height: 200,
+          ),
+
+
+
+          Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "অধ্যায় ${chapter.chapterNumber}",
+                  style: const TextStyle(
+                    fontSize: 48,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    shadows: [
+                      Shadow(
+                        color: Colors.black87,
+                        offset: Offset(2, 2),
+                        blurRadius: 6,
+                      ),
+                    ],
+                  ),
+                ),
+
+
+
+                const SizedBox(height: 16),
+                Text(
+                  chapter.title,
+                  style: const TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white70,
+                    fontStyle: FontStyle.italic,
+                    shadows: [
+                      Shadow(
+                        color: Colors.black87,
+                        offset: Offset(1, 1),
+                        blurRadius: 5,
+                      ),
+                    ],
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 40),
+                const Text(
+                  "Tap to start reading",
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 16,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+
+
+
+
+  Widget _buildChapterTitleView_old() {
     final chapter = widget.chapter;
     return Center(
       child: Column(

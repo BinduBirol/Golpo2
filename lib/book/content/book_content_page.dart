@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:golpo/book/content/service/BookContentService.dart';
+import 'package:golpo/widgets/app_bar/my_app_bar.dart';
 
 import '../../DTO/Book.dart';
 import '../../DTO/content/Line.dart';
@@ -70,9 +71,9 @@ class _BookContentPageState extends State<BookContentPage> {
   Widget build(BuildContext context) {
     if (isLoading) {
       return Scaffold(
-        appBar: AppBar(
-          title: const Text('লোড হচ্ছে...'),
-          backgroundColor: Colors.deepPurple,
+        appBar: MyAppBar(
+          title: 'লোড হচ্ছে...',
+
         ),
         body: const Center(child: CircularProgressIndicator()),
       );
@@ -80,9 +81,9 @@ class _BookContentPageState extends State<BookContentPage> {
 
     if (errorMessage != null) {
       return Scaffold(
-        appBar: AppBar(
-          title: const Text('ত্রুটি'),
-          backgroundColor: Colors.deepPurple,
+        appBar: MyAppBar(
+          title: 'ত্রুটি',
+
         ),
         body: Center(
           child: Text(
@@ -94,9 +95,8 @@ class _BookContentPageState extends State<BookContentPage> {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("অধ্যায়সমূহ"),
-        backgroundColor: Colors.deepPurple,
+      appBar: MyAppBar(
+        title: widget.book.title,
       ),
       body: chapters.isEmpty
           ? const Center(child: Text("এই বইয়ে কোনো অধ্যায় নেই।"))
